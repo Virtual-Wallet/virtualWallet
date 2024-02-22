@@ -2,7 +2,7 @@ create table cards
 (
     card_id     int auto_increment
         primary key,
-    card_number mediumtext  null,
+    card_number varchar(16) null,
     card_holder varchar(50) null
 );
 
@@ -53,6 +53,10 @@ create table external_transactions
     user_id                 int                            null,
     card_id                 int                            null,
     timestamp               datetime                       null,
+    currency_id             int                            null,
+    amount                  double                         null,
+    constraint external_transactions_currencies_currency_id_fk
+        foreign key (currency_id) references currencies (currency_id),
     constraint external_transactions_ibfk_1
         foreign key (user_id) references users (user_id),
     constraint external_transactions_ibfk_2
