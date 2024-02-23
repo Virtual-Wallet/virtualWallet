@@ -1,9 +1,12 @@
 create table cards
 (
-    card_id     int auto_increment
+    card_id         int auto_increment
         primary key,
-    card_number varchar(16) null,
-    card_holder varchar(50) null
+    card_number     varchar(16)          null,
+    card_holder     varchar(50)          null,
+    expiration_date date                 not null,
+    card_csv        int                  not null,
+    isDeleted       tinyint(1) default 0 not null
 );
 
 create table currencies
@@ -118,9 +121,10 @@ create table wallets
 (
     wallet_id   int auto_increment
         primary key,
-    balance     double null,
-    currency_id int    null,
-    user_id     int    null,
+    balance     double               null,
+    currency_id int                  null,
+    user_id     int                  null,
+    isActive    tinyint(1) default 1 null,
     constraint wallets_ibfk_1
         foreign key (currency_id) references currencies (currency_id),
     constraint wallets_ibfk_2
