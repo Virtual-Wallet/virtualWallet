@@ -1,4 +1,4 @@
-package configuration;
+package org.example.virtual_wallet.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +29,7 @@ public class HibernateConfig {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan("org.forum.web.forum.models");
+        sessionFactory.setPackagesToScan("org.example.virtual_wallet.models");
         sessionFactory.setHibernateProperties(hibernateProperties());
 
         return sessionFactory;
