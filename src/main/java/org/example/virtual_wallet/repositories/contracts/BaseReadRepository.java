@@ -1,4 +1,4 @@
-package org.example.virtual_wallet.repositorys.contracts;
+package org.example.virtual_wallet.repositories.contracts;
 
 import java.util.List;
 

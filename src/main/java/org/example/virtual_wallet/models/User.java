@@ -3,13 +3,20 @@ package org.example.virtual_wallet.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
+import org.example.virtual_wallet.enums.AccountStatus;
+import org.example.virtual_wallet.enums.Role;
+import org.example.virtual_wallet.exceptions.InvalidOperationException;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
+    private final AccountStatus INITIAL_STATUS = AccountStatus.PENDING_EMAIL;
+    private final AccountStatus FINAL_STATUS = AccountStatus.ACTIVE;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -26,27 +33,26 @@ public class User {
     @JsonIgnore
     private String picture;
 
-    //todo ask for status
     @Column(name = "status")
-    private String accountStatus;
+    private AccountStatus accountStatus = AccountStatus.PENDING_EMAIL;
 
+    @OneToOne
+    @JoinTable(
+            name = "wallets",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
+    private Wallet wallet;
 
-    //todo Wait for wallet
-//    @OneToOne
-//    @JoinTable(
-//            name = "wallets",
-//            joinColumns = @JoinColumn(name = "user_id")
-//    )
-//    private Wallet wallet;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_cards",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "card_id")
+    )
+    private Set<Card> cards;
 
-    //todo Wait for card
-//    @OneToMany(fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "users_cards",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "card_id")
-//    )
-//    private Set<Card> cards;
+    private Role role;
+
     public User() {
     }
 
@@ -98,15 +104,53 @@ public class User {
         this.picture = picture;
     }
 
-    public String getAccountStatus() {
+    public AccountStatus getAccountStatus() {
         return accountStatus;
     }
 
-    public void setAccountStatus(String accountStatus) {
+    public void setAccountStatus(AccountStatus accountStatus) {
         this.accountStatus = accountStatus;
-
     }
 
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
+
+    public Set<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(Set<Card> cards) {
+        this.cards = cards;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void advanceAccountStatus(AccountStatus accountStatus) {
+        if (accountStatus != FINAL_STATUS) {
+            setAccountStatus(AccountStatus.values()[accountStatus.ordinal() + 1]);
+        } else {
+            throw new InvalidOperationException("Can't advance account status, already at " + getAccountStatus());
+        }
+    }
+
+    public void revertAccountStatus(AccountStatus accountStatus) {
+        if (accountStatus != INITIAL_STATUS) {
+            setAccountStatus(AccountStatus.values()[accountStatus.ordinal() - 1]);
+        } else {
+            throw new InvalidOperationException("Can't revert account status, already at " + getAccountStatus());
+        }
+    }
 
     @Override
     public boolean equals(Object object) {

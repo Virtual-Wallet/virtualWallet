@@ -1,4 +1,4 @@
-package org.example.virtual_wallet.repositorys.contracts;
+package org.example.virtual_wallet.repositories.contracts;
 
 import org.example.virtual_wallet.filters.UserFilterOptions;
 import org.example.virtual_wallet.models.User;

@@ -1,4 +1,4 @@
-package org.example.virtual_wallet.repositorys.contracts;
+package org.example.virtual_wallet.repositories.contracts;
 
 public interface BaseCRUDRepository <T> extends BaseReadRepository<T>{
     void create(T entity);
