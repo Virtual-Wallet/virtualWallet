@@ -1,9 +1,9 @@
-package org.example.virtual_wallet.repositorys;
+package org.example.virtual_wallet.repositories;
 
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.filters.UserFilterOptions;
 import org.example.virtual_wallet.models.User;
-import org.example.virtual_wallet.repositorys.contracts.UserRepository;
+import org.example.virtual_wallet.repositories.contracts.UserRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

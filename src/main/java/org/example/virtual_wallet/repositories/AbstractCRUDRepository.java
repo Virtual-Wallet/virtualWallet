@@ -1,6 +1,6 @@
-package org.example.virtual_wallet.repositorys;
+package org.example.virtual_wallet.repositories;
 
-import org.example.virtual_wallet.repositorys.contracts.BaseCRUDRepository;
+import org.example.virtual_wallet.repositories.contracts.BaseCRUDRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 

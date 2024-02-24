@@ -1,8 +1,8 @@
-package org.example.virtual_wallet.repositorys;
+package org.example.virtual_wallet.repositories;
 
 
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
-import org.example.virtual_wallet.repositorys.contracts.BaseReadRepository;
+import org.example.virtual_wallet.repositories.contracts.BaseReadRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 

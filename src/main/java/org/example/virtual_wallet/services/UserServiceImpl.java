@@ -1,7 +1,7 @@
 package org.example.virtual_wallet.services;
 
 import org.example.virtual_wallet.models.User;
-import org.example.virtual_wallet.repositorys.contracts.UserRepository;
+import org.example.virtual_wallet.repositories.contracts.UserRepository;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
