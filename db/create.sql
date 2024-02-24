@@ -4,8 +4,8 @@ create table cards
         primary key,
     card_number     varchar(16)          null,
     card_holder     varchar(50)          null,
-    expiration_date date                 not null,
-    card_csv        int                  not null,
+    expiration_date varchar(5)           not null,
+    card_csv        varchar(3)           not null,
     isDeleted       tinyint(1) default 0 not null
 );
 
