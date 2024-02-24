@@ -14,7 +14,7 @@ import java.util.Set;
 public class Card {
 
     public static final String INVALID_CSV_FORMAT = "Invalid CSV format - please use 3 digits only.";
-    public static final String INVALID_CARD_NUMBER = "Card number must consist of three groups of four digits separated by dashes.";
+    public static final String INVALID_CARD_NUMBER = "Card number must be 16 digits";
     public static final String INVALID_CARDHOLDER_NAME = "Cardholder name must contain between 2 and 40 characters which are capital or small Latin letters, or spaces.";
     public static final String INVALID_EXPIRATION_DATE = "Expiration date must be in the format MM/YY.";
 
@@ -25,7 +25,7 @@ public class Card {
     private int id;
 
     @Column(name = "card_number")
-    @Pattern(regexp = "([\\d]{4}-){3}[\\d]{4}", message = INVALID_CARD_NUMBER)
+    @Pattern(regexp = "[0-9]+", message = INVALID_CARD_NUMBER)
     private String cardNumber;
 
     @Column(name = "card_holder")
