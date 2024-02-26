@@ -14,8 +14,8 @@ import java.util.Set;
 @Table(name = "users")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
-    private final AccountStatus INITIAL_STATUS = AccountStatus.PENDING_EMAIL;
-    private final AccountStatus FINAL_STATUS = AccountStatus.ACTIVE;
+//    private final AccountStatus INITIAL_STATUS = AccountStatus.PENDING_EMAIL;
+//    private final AccountStatus FINAL_STATUS = AccountStatus.ACTIVE;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,13 +33,15 @@ public class User {
     @JsonIgnore
     private String picture;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private AccountStatus accountStatus = AccountStatus.PENDING_EMAIL;
 
     @OneToOne
     @JoinTable(
             name = "wallets",
-            joinColumns = @JoinColumn(name = "user_id")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "wallet_id")
     )
     private Wallet wallet;
 
@@ -51,7 +53,12 @@ public class User {
     )
     private Set<Card> cards;
 
-    private Role role;
+//    @OneToOne(mappedBy = "role")
+//    @JoinTable(
+//            name = "roles",
+//            joinColumns = @JoinColumn(name = "user_id")
+//    )
+//    private Role role = Role.REGULAR;
 
     public User() {
     }
@@ -128,16 +135,16 @@ public class User {
         this.cards = cards;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
+//    public Role getRole() {
+//        return role;
+//    }
+//
+//    public void setRole(Role role) {
+//        this.role = role;
+//    }
 
     public void advanceAccountStatus(AccountStatus accountStatus) {
-        if (accountStatus != FINAL_STATUS) {
+        if (accountStatus != AccountStatus.ACTIVE) {
             setAccountStatus(AccountStatus.values()[accountStatus.ordinal() + 1]);
         } else {
             throw new InvalidOperationException("Can't advance account status, already at " + getAccountStatus());
@@ -145,7 +152,7 @@ public class User {
     }
 
     public void revertAccountStatus(AccountStatus accountStatus) {
-        if (accountStatus != INITIAL_STATUS) {
+        if (accountStatus != AccountStatus.PENDING_EMAIL) {
             setAccountStatus(AccountStatus.values()[accountStatus.ordinal() - 1]);
         } else {
             throw new InvalidOperationException("Can't revert account status, already at " + getAccountStatus());

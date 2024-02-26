@@ -23,6 +23,27 @@ public class UserRepositoryImpl extends AbstractCRUDRepository<User> implements 
         super(User.class, sessionFactory);
     }
 
+
+    @Override
+    public List<User> getAll() {
+        try(Session session = sessionFactory.openSession()){
+            Query<User> query = session.createQuery("from User", User.class);
+            return query.list();
+        }
+    }
+
+    @Override
+    public User getById(int id) {
+        try(Session session = sessionFactory.openSession()) {
+            Query <User> query = session.createQuery("from User where id =:id",User.class);
+            query.setParameter("id",id);
+            if (query.list().isEmpty()) {
+                throw new EntityNotFoundException("User",id);
+            }
+            return query.list().get(0);
+        }
+    }
+
     @Override
     public User getByUsername(String username) {
         try (Session session = sessionFactory.openSession()) {

@@ -15,13 +15,14 @@ public class UserDto {
                     "one uppercase letter, " +
                     "one special character, " +
                     "no space, and " +
-                    "it must be 8 at least 8 symbols.")
+                    "it must be at least 8 symbols.")
     private String password;
     @NotEmpty(message = "You must confirm your password!")
     private String passwordConfirm;
     @NotEmpty(message = "E-mail name can't be empty!")
     @Email(message = "E-mail should be valid!")
     private String email;
+    private String phoneNumber;
     private String photoUrl;
 
     public UserDto() {
@@ -66,5 +67,13 @@ public class UserDto {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
