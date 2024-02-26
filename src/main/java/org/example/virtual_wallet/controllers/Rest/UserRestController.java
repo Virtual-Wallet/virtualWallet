@@ -2,6 +2,7 @@ package org.example.virtual_wallet.controllers.Rest;
 
 import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
+import org.example.virtual_wallet.filters.UserFilterOptions;
 import org.example.virtual_wallet.helpers.mappers.UserMapper;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.dtos.UserDto;
@@ -24,13 +25,25 @@ public class UserRestController {
         this.userService = userService;
         this.userMapper = userMapper;
     }
+
     @GetMapping
-    public List<User>getAll(){
+    public List<User> getAll() {
         return userService.getAll();
     }
 
+    @GetMapping("/search")
+    public List<User> getFiltered(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortOrder) {
+        UserFilterOptions userFilterOptions = new UserFilterOptions(username, phoneNumber, email, sortBy, sortOrder);
+        return userService.getAllFiltered(userFilterOptions);
+    }
+
     @GetMapping("/{id}")
-    public User getById(@PathVariable int id){
+    public User getById(@PathVariable int id) {
         return userService.getById(id);
     }
 
