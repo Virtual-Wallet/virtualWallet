@@ -1,7 +1,7 @@
 package org.example.virtual_wallet.enums;
 
 public enum AccountStatus {
-
+    BLOCKED,
     PENDING_EMAIL,
     EMAIL_CONFIRMED,
     PENDING_ID,
@@ -9,6 +9,8 @@ public enum AccountStatus {
 
     public String toString() {
         switch (this) {
+            case BLOCKED:
+                return "blocked";
             case PENDING_EMAIL:
                 return "pending email";
             case EMAIL_CONFIRMED:

@@ -1,5 +1,7 @@
 package org.example.virtual_wallet.services;
 
+import org.example.virtual_wallet.exceptions.EntityDuplicateException;
+import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.repositories.contracts.UserRepository;
 import org.example.virtual_wallet.services.contracts.UserService;
@@ -15,6 +17,32 @@ public class UserServiceImpl implements UserService {
     }
 
     public void create(User user) {
+        boolean duplicateExists = true;
+        try {
+            userRepository.getByUsername(user.getUsername());
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "username", user.getUsername());
+        }
+
+        duplicateExists = true;
+
+        try {
+            userRepository.getByEmail(user.getEmail());
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "e-mail", user.getEmail());
+        }
+
+
+        user.setPassword(user.getPassword());
+
         userRepository.create(user);
     }
 
