@@ -25,10 +25,19 @@ public class IdentityMvcController {
     public ResponseEntity<Map<String, String>> createVerificationObject() throws StripeException {
         Stripe.apiKey = "sk_test_51OnmGhDmJUkFXVmIja9A5hf1B0czvxYcdSZeHWQF9dLKYKv3BDs4KnqHXwqkHWSz5pyUOVzYLaEU8Wz69aUP10A900QPBpu8mk";
 
-        VerificationSessionCreateParams params = VerificationSessionCreateParams.builder()
-                .setType(VerificationSessionCreateParams.Type.DOCUMENT)
-                .putMetadata("user_id", "{{USER_ID}}")
-                .build();
+        VerificationSessionCreateParams params =
+                VerificationSessionCreateParams.builder()
+                        .setType(VerificationSessionCreateParams.Type.DOCUMENT)
+                        .setOptions(
+                                VerificationSessionCreateParams.Options.builder()
+                                        .setDocument(
+                                                VerificationSessionCreateParams.Options.Document.builder()
+                                                        .setRequireMatchingSelfie(true)
+                                                        .build()
+                                        )
+                                        .build()
+                        )
+                        .build();
 
         VerificationSession verificationSession = VerificationSession.create(params);
 
@@ -36,5 +45,10 @@ public class IdentityMvcController {
         responseBody.put("client_secret", verificationSession.getClientSecret());
 
         return ResponseEntity.ok(responseBody);
+    }
+
+    @GetMapping("/submit-verification-session")
+    public String getConfirmation() {
+        return "submitted";
     }
 }
