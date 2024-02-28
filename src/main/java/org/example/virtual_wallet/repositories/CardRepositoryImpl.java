@@ -37,7 +37,6 @@ public class CardRepositoryImpl extends AbstractCRUDRepository<Card> implements 
                             "SELECT c FROM Card c WHERE c.id = :id AND c.isDeleted = false", Card.class)
                     .setParameter("id", id)
                     .uniqueResult();
-
             if (card == null) {
                 throw new EntityNotFoundException("Wallet", id);
             }
@@ -50,7 +49,8 @@ public class CardRepositoryImpl extends AbstractCRUDRepository<Card> implements 
     @Override
     public List<Card> getUserCards(int userId){
         try (Session session = sessionFactory.openSession()) {
-            Query<Card> query = session.createQuery("SELECT c FROM Card c WHERE c.user.id = :userId AND c.isDeleted = false", Card.class);
+            Query<Card> query = session.createQuery("SELECT c FROM Card c WHERE c.user.id = :userId AND c.isDeleted = false", Card.class)
+            .setParameter("userId",userId);
             return query.list();
         }
     }
@@ -63,7 +63,7 @@ public class CardRepositoryImpl extends AbstractCRUDRepository<Card> implements 
             Card card = session.createQuery(
                             "SELECT c FROM Card c WHERE c.cardNumber = :cardNumber AND c.isDeleted = false", Card.class)
                     .uniqueResult();
-
+//todo set parameters
             if (card == null) {
                 throw new EntityNotFoundException("Wallet", "cardNumber", cardNumber);
             }
