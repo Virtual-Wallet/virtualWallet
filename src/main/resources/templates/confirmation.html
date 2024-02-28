@@ -16,7 +16,7 @@
     verifyButton.addEventListener('click', function() {
         // Get the VerificationSession client secret using the server-side
         // endpoint you created in step 3.
-        fetch('/users/create-verification-session', {
+        fetch('/create-verification-session', {
             method: 'POST',
         })
             .then(function(response) {
