@@ -27,11 +27,13 @@ public class Wallet {
     @JoinColumn(name = "currency_id")
     private Currency currency;
 
+//    @OneToOne
+//    @JoinTable(
+//            name = "users",
+//            joinColumns = @JoinColumn(name = "user_id")
+//    )
     @OneToOne
-    @JoinTable(
-            name = "users",
-            joinColumns = @JoinColumn(name = "user_id")
-    )
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "isActive")

@@ -7,6 +7,7 @@ import org.example.virtual_wallet.enums.AccountStatus;
 import org.example.virtual_wallet.enums.Role;
 import org.example.virtual_wallet.exceptions.InvalidOperationException;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,8 +15,6 @@ import java.util.Set;
 @Table(name = "users")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
-//    private final AccountStatus INITIAL_STATUS = AccountStatus.PENDING_EMAIL;
-//    private final AccountStatus FINAL_STATUS = AccountStatus.ACTIVE;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +31,8 @@ public class User {
     @Column(name = "picture")
     @JsonIgnore
     private String picture;
+    @Column(name = "creation_date")
+    private Timestamp creationDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -53,10 +54,11 @@ public class User {
     )
     private Set<Card> cards;
 
-//    @OneToOne(mappedBy = "role")
+//    @Enumerated(EnumType.STRING)
 //    @JoinTable(
 //            name = "roles",
-//            joinColumns = @JoinColumn(name = "user_id")
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id")
 //    )
 //    private Role role = Role.REGULAR;
 
@@ -135,7 +137,14 @@ public class User {
         this.cards = cards;
     }
 
-//    public Role getRole() {
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
+    }
+    //    public Role getRole() {
 //        return role;
 //    }
 //
