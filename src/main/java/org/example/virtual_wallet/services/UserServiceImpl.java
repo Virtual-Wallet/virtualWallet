@@ -3,17 +3,20 @@ package org.example.virtual_wallet.services;
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.filters.UserFilterOptions;
+import org.example.virtual_wallet.models.Card;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.repositories.contracts.UserRepository;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -29,40 +32,25 @@ public class UserServiceImpl implements UserService {
         return userRepository.getAllFiltered(userFilterOptions);
     }
 
-
-    public void create(User user) {
-        boolean duplicateExists = true;
-        try {
-            userRepository.getByUsername(user.getUsername());
-        } catch (EntityNotFoundException e) {
-            duplicateExists = false;
-        }
-
-        if (duplicateExists) {
-            throw new EntityDuplicateException("User", "username", user.getUsername());
-        }
-
-        duplicateExists = true;
-
-        try {
-            userRepository.getByEmail(user.getEmail());
-        } catch (EntityNotFoundException e) {
-            duplicateExists = false;
-        }
-
-        if (duplicateExists) {
-            throw new EntityDuplicateException("User", "e-mail", user.getEmail());
-        }
-
-
-        user.setPassword(user.getPassword());
-
-        userRepository.create(user);
+    @Override
+    public List<Card> getAllUserCards(int userId) {
+        return userRepository.getAllUserCards(userId);
     }
 
 
+    public void create(User user) {
+        checkIfUsernameExist(user);
+        checkIfEmailExist(user);
+        checkIfPhoneNumberExist(user);
+        user.setPassword(user.getPassword());
+        user.setCreationDate(new Timestamp(System.currentTimeMillis()));
+        userRepository.create(user);
+    }
+
     @Override
     public void update(User user) {
+        checkIfEmailExist(user);
+        checkIfPhoneNumberExist(user);
         userRepository.update(user);
     }
 
@@ -91,4 +79,49 @@ public class UserServiceImpl implements UserService {
         return userRepository.getByEmail(email);
     }
 
+    private void checkIfEmailExist(User user) {
+        boolean duplicateExists = true;
+        try {
+            userRepository.getByEmail(user.getEmail());
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+        if (user.getEmail().equals(user.getEmail())) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "e-mail", user.getEmail());
+        }
+
+    }
+
+    private void checkIfUsernameExist(User user) {
+        boolean duplicateExists = true;
+        try {
+            userRepository.getByUsername(user.getUsername());
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "username", user.getUsername());
+        }
+    }
+
+    private void checkIfPhoneNumberExist(User user) {
+        boolean duplicateExists = true;
+        try {
+            userRepository.getByPhoneNumber(user.getPhoneNumber());
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+        if (user.getPhoneNumber().equals(user.getPhoneNumber())) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "phone number", user.getPhoneNumber());
+        }
+    }
 }

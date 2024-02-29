@@ -2,6 +2,7 @@ package org.example.virtual_wallet.repositories;
 
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.filters.UserFilterOptions;
+import org.example.virtual_wallet.models.Card;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.repositories.contracts.UserRepository;
 import org.hibernate.Session;
@@ -78,6 +79,18 @@ public class UserRepositoryImpl extends AbstractCRUDRepository<User> implements 
                 throw new EntityNotFoundException("User", "email", email);
             }
             return query.list().get(0);
+        }
+    }
+
+    @Override
+    public List<Card> getAllUserCards(int userId) {
+        try(Session session = sessionFactory.openSession()){
+            Query<Card> query = session.createQuery("from Card where user.id =:userId", Card.class);
+            query.setParameter("userId",userId);
+            if (query.list().isEmpty()){
+                throw new EntityNotFoundException("There is no cards!");
+            }
+            return query.list();
         }
     }
 

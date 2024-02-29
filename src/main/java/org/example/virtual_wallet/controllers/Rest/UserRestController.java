@@ -2,10 +2,13 @@ package org.example.virtual_wallet.controllers.Rest;
 
 import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
+import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.filters.UserFilterOptions;
 import org.example.virtual_wallet.helpers.mappers.UserMapper;
+import org.example.virtual_wallet.models.Card;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.dtos.UserDto;
+import org.example.virtual_wallet.services.contracts.CardService;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,11 +22,13 @@ import java.util.List;
 public class UserRestController {
     private final UserService userService;
     private final UserMapper userMapper;
+    private final CardService cardService;
 
     @Autowired
-    public UserRestController(UserService userService, UserMapper userMapper) {
+    public UserRestController(UserService userService, UserMapper userMapper, CardService cardService) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.cardService = cardService;
     }
 
     @GetMapping
@@ -56,4 +61,23 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
+
+    @PutMapping("/{id}")
+    public void update(@PathVariable int id, @Valid @RequestBody UserDto userDto) {
+        try {
+            User user = userMapper.updateUser(id, userDto);
+            userService.update(user);
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+    @GetMapping("/{userId}/cards")
+    public List<Card> getAllUserCards(@PathVariable int userId){
+        User user = userService.getById(userId);
+        return cardService.getUserCards(user,user);
+    }
+
+
 }

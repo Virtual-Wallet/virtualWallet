@@ -22,6 +22,7 @@ public class UserDto {
     @NotEmpty(message = "E-mail name can't be empty!")
     @Email(message = "E-mail should be valid!")
     private String email;
+    @Size(max = 10, message = "Invalid phone format!")
     private String phoneNumber;
     private String photoUrl;
 
