@@ -5,11 +5,11 @@ import org.example.virtual_wallet.models.Currency;
 import java.util.List;
 
 public interface CurrencyService {
-    List<Currency> getAll();
-
     void create(Currency currency);
 
-    void update(Currency currency);
+    Currency get(String abbreviation);
 
-    void getByAbbreviation (String abbreviation);
+    List<Currency> getAll();
+
+    void update(Currency currency);
 }

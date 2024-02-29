@@ -6,11 +6,11 @@ import org.example.virtual_wallet.models.dtos.CurrencyDto;
 import java.util.List;
 
 public interface CurrencyRepository {
-    List<Currency> getAll();
-
     void create(Currency currency);
 
-    void update(Currency currency);
+    Currency get(String abbreviation);
 
-    void getByAbbreviation(String abbreviation);
+    List<Currency> getAll();
+
+    void update(Currency currency);
 }
