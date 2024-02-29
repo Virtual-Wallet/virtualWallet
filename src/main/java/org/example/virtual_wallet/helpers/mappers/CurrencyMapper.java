@@ -13,7 +13,7 @@ private final CurrencyService currencyService;
         this.currencyService = currencyService;
     }
 
-    public Currency currencyDto (CurrencyDto currencyDto){
+    public Currency createCurrencyDto(CurrencyDto currencyDto){
         Currency currency = new Currency();
         currency.setCurrency(currencyDto.getAbbreviation());
         return currency;
