@@ -63,7 +63,7 @@ public class IdentityMvcController {
     }
 
     @PostMapping("/webhook")
-    public String handleWebhook(@RequestBody String payload,
+    public ResponseEntity<String> handleWebhook(@RequestBody String payload,
                                 @RequestHeader("Stripe-Signature") String sigHeader,
                                 Model model) throws StripeException {
         Stripe.apiKey = "sk_test_51OnmGhDmJUkFXVmIja9A5hf1B0czvxYcdSZeHWQF9dLKYKv3BDs4KnqHXwqkHWSz5pyUOVzYLaEU8Wz69aUP10A900QPBpu8mk";
@@ -78,7 +78,7 @@ public class IdentityMvcController {
             model.addAttribute("statusCode", HttpStatus.BAD_REQUEST.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             System.out.println("Webhook error while parsing basic request.");
-            return "";
+            return ResponseEntity.badRequest().build();
         }
 
         VerificationSession verificationSession = null;
@@ -125,10 +125,9 @@ public class IdentityMvcController {
                 break;
         }
         // Response status 200:
-        return "";
+        return ResponseEntity.ok().build();
     }
 }
-
 
 //    @GetMapping("/processing-session")
 //    public String processingSession() {
