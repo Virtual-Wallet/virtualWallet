@@ -9,14 +9,12 @@ import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.identity.VerificationSession;
 import com.stripe.net.Webhook;
 import com.stripe.param.identity.VerificationSessionCreateParams;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
 import java.util.HashMap;
 import java.util.Map;
 
