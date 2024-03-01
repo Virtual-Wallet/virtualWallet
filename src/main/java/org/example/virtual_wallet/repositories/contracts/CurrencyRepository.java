@@ -7,10 +7,13 @@ import java.util.List;
 
 public interface CurrencyRepository {
     void create(Currency currency);
+    Currency getById(int id);
 
     Currency get(String abbreviation);
 
     List<Currency> getAll();
 
     void update(Currency currency);
+
+    void delete(int id);
 }
