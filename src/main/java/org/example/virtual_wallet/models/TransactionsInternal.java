@@ -12,16 +12,11 @@ public class TransactionsInternal {
     @Column(name = "internal_transaction_id")
     private int id;
 
-    @Column(name = "type")
-    @Enumerated(EnumType.STRING)
-    private String type;
-
     @Column(name = "sender_wallet_id")
-
     private int senderWalletId;
 
     @Column(name = "recipient_wallet_id")
-    private int recipient_wallet_id;
+    private int recipientWalletId;
 
     @Column(name = "amount")
     private double amount;
@@ -42,16 +37,12 @@ public class TransactionsInternal {
         return id;
     }
 
-    public String getType() {
-        return type;
-    }
-
     public int getSenderWalletId() {
         return senderWalletId;
     }
 
-    public int getRecipient_wallet_id() {
-        return recipient_wallet_id;
+    public int getRecipientWalletId() {
+        return recipientWalletId;
     }
 
     public double getAmount() {
@@ -74,16 +65,12 @@ public class TransactionsInternal {
         this.id = id;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public void setSenderWalletId(int senderWalletId) {
         this.senderWalletId = senderWalletId;
     }
 
-    public void setRecipient_wallet_id(int recipient_wallet_id) {
-        this.recipient_wallet_id = recipient_wallet_id;
+    public void setRecipientWalletId(int recipient_wallet_id) {
+        this.recipientWalletId = recipient_wallet_id;
     }
 
     public void setAmount(double amount) {
