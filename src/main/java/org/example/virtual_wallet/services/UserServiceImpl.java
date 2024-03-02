@@ -82,14 +82,13 @@ public class UserServiceImpl implements UserService {
     private void checkIfEmailExist(User user) {
         boolean duplicateExists = true;
         try {
-            userRepository.getByEmail(user.getEmail());
+            User existingMail = userRepository.getByEmail(user.getEmail());
+            if (existingMail.getId() == user.getId()) {
+                duplicateExists = false;
+            }
         } catch (EntityNotFoundException e) {
             duplicateExists = false;
         }
-        if (user.getEmail().equals(user.getEmail())) {
-            duplicateExists = false;
-        }
-
         if (duplicateExists) {
             throw new EntityDuplicateException("User", "e-mail", user.getEmail());
         }
@@ -99,7 +98,10 @@ public class UserServiceImpl implements UserService {
     private void checkIfUsernameExist(User user) {
         boolean duplicateExists = true;
         try {
-            userRepository.getByUsername(user.getUsername());
+            User existingUsername = userRepository.getByUsername(user.getUsername());
+            if (existingUsername.getId() == user.getId()) {
+                duplicateExists = false;
+            }
         } catch (EntityNotFoundException e) {
             duplicateExists = false;
         }
@@ -112,14 +114,13 @@ public class UserServiceImpl implements UserService {
     private void checkIfPhoneNumberExist(User user) {
         boolean duplicateExists = true;
         try {
-            userRepository.getByPhoneNumber(user.getPhoneNumber());
+           User existingNumber = userRepository.getByPhoneNumber(user.getPhoneNumber());
+    if (existingNumber.getId() == user.getId()) {
+                    duplicateExists = false;
+                }
         } catch (EntityNotFoundException e) {
             duplicateExists = false;
         }
-        if (user.getPhoneNumber().equals(user.getPhoneNumber())) {
-            duplicateExists = false;
-        }
-
         if (duplicateExists) {
             throw new EntityDuplicateException("User", "phone number", user.getPhoneNumber());
         }
