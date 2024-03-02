@@ -7,6 +7,7 @@ import org.example.virtual_wallet.helpers.AuthorizationHelper;
 import org.example.virtual_wallet.models.Card;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.repositories.contracts.CardRepository;
+import org.example.virtual_wallet.repositories.contracts.UserRepository;
 import org.example.virtual_wallet.services.contracts.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
 
     @Autowired
-    public CardServiceImpl(AuthorizationHelper authorizationHelper, CardRepository cardRepository) {
+    public CardServiceImpl(AuthorizationHelper authorizationHelper,
+                           CardRepository cardRepository) {
         this.authorizationHelper = authorizationHelper;
         this.cardRepository = cardRepository;
     }
@@ -27,9 +29,9 @@ public class CardServiceImpl implements CardService {
     @Override
     public void create(Card card, User user) {
         verifyCardNumber(card);
-        user.getCards().add(card);
         card.setUser(user);
         cardRepository.create(card);
+        user.getCards().add(card);
     }
 
     @Override

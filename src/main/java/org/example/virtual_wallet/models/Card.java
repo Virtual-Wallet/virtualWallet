@@ -1,7 +1,10 @@
 package org.example.virtual_wallet.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
@@ -43,17 +46,20 @@ public class Card {
     @Column(name = "isDeleted")
     private boolean isDeleted;
 
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
-// todo do we need the table users_cards?
-//    @OneToOne(fetch = FetchType.EAGER)
+//// todo do we need the table users_cards?
+//    @ManyToOne(fetch = FetchType.EAGER)
 //    @JoinTable(
 //            name = "users_cards",
 //            joinColumns = @JoinColumn(name = "card_id"),
 //            inverseJoinColumns = @JoinColumn(name = "user_id")
 //    )
+//    @JsonManagedReference
 //    private User user;
 
     public Card() {

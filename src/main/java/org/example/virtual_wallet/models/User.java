@@ -2,6 +2,7 @@ package org.example.virtual_wallet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.example.virtual_wallet.enums.AccountStatus;
 import org.example.virtual_wallet.enums.Role;
@@ -46,12 +47,14 @@ public class User {
     )
     private Wallet wallet;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "users_cards",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "card_id")
-    )
+//    @OneToMany(fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "users_cards",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "card_id")
+//    )
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Card> cards;
 
 //    @Enumerated(EnumType.STRING)
