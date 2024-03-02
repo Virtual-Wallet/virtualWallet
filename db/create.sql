@@ -125,10 +125,11 @@ create table wallets
 (
     wallet_id   int auto_increment
         primary key,
-    balance     double               null,
+    balance     double     default 0 null,
     currency_id int                  null,
     user_id     int                  null,
     isActive    tinyint(1) default 1 null,
+    isDeleted   tinyint(1) default 0 not null,
     constraint wallets_ibfk_1
         foreign key (currency_id) references currencies (currency_id),
     constraint wallets_ibfk_2
