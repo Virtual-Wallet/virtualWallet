@@ -19,27 +19,29 @@ public class Wallet {
     private int id;
     @Column(name = "balance")
     private double balance;
-
-    // alternative to ManyToOne
-//    @Formula("(SELECT c.currency FROM currencies AS c WHERE c.id = id)")
-//    private String currency;
     @ManyToOne
     @JoinColumn(name = "currency_id")
     private Currency currency;
 
-//    @OneToOne
-//    @JoinTable(
-//            name = "users",
-//            joinColumns = @JoinColumn(name = "user_id")
-//    )
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "isActive")
     private boolean isActive;
+    @Column(name = "isDeleted")
+    private boolean isDeleted;
 
     public Wallet() {
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public User getUser() {
