@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @Repository
 public class CardRepositoryImpl extends AbstractCRUDRepository<Card> implements CardRepository {
 
+    @Autowired
     public CardRepositoryImpl(SessionFactory sessionFactory) {
         super(Card.class, sessionFactory);
     }
@@ -38,7 +40,7 @@ public class CardRepositoryImpl extends AbstractCRUDRepository<Card> implements 
                     .setParameter("id", id)
                     .uniqueResult();
             if (card == null) {
-                throw new EntityNotFoundException("Wallet", id);
+                throw new EntityNotFoundException("Card", id);
             }
 
             transaction.commit();
@@ -62,12 +64,11 @@ public class CardRepositoryImpl extends AbstractCRUDRepository<Card> implements 
 
             Card card = session.createQuery(
                             "SELECT c FROM Card c WHERE c.cardNumber = :cardNumber AND c.isDeleted = false", Card.class)
+                    .setParameter("cardNumber", cardNumber)
                     .uniqueResult();
-//todo set parameters
             if (card == null) {
-                throw new EntityNotFoundException("Wallet", "cardNumber", cardNumber);
+                throw new EntityNotFoundException("Card", "cardNumber", cardNumber);
             }
-
             transaction.commit();
             return card;
         }
