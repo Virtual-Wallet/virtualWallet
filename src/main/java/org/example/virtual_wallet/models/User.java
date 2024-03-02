@@ -39,12 +39,7 @@ public class User {
     @Column(name = "status")
     private AccountStatus accountStatus = AccountStatus.PENDING_EMAIL;
 
-    @OneToOne
-    @JoinTable(
-            name = "wallets",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "wallet_id")
-    )
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     private Wallet wallet;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -66,7 +61,7 @@ public class User {
 //    @OneToMany(mappedBy = "user")
 //    private Set<Role>roles;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",fetch = FetchType.EAGER)
     private List<ContactList> contactLists;
 
     public User() {
