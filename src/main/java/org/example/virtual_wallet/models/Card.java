@@ -43,13 +43,18 @@ public class Card {
     @Column(name = "isDeleted")
     private boolean isDeleted;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "users_cards",
-            joinColumns = @JoinColumn(name = "card_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private User user;
+
+// todo do we need the table users_cards?
+//    @OneToOne(fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "users_cards",
+//            joinColumns = @JoinColumn(name = "card_id"),
+//            inverseJoinColumns = @JoinColumn(name = "user_id")
+//    )
+//    private User user;
 
     public Card() {
     }
@@ -101,6 +106,14 @@ public class Card {
     public void setDeleted(boolean deleted) {
         this.isDeleted = deleted;
     }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 
     @Override
     public boolean equals(Object o) {
