@@ -114,10 +114,10 @@ public class UserServiceImpl implements UserService {
     private void checkIfPhoneNumberExist(User user) {
         boolean duplicateExists = true;
         try {
-           User existingNumber = userRepository.getByPhoneNumber(user.getPhoneNumber());
-    if (existingNumber.getId() == user.getId()) {
-                    duplicateExists = false;
-                }
+            User existingNumber = userRepository.getByPhoneNumber(user.getPhoneNumber());
+            if (existingNumber.getId() == user.getId()) {
+                duplicateExists = false;
+            }
         } catch (EntityNotFoundException e) {
             duplicateExists = false;
         }
