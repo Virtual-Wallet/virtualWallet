@@ -3,25 +3,18 @@ package org.example.virtual_wallet.helpers.mappers;
 import org.example.virtual_wallet.models.Card;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.dtos.CardDto;
-import org.example.virtual_wallet.models.dtos.UserDto;
 import org.example.virtual_wallet.services.contracts.CardService;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 @Component
-public class CardModelMapper {
+public class CardMapper {
 
     private final CardService cardService;
-    private final UserService userService;
-
     @Autowired
-    public CardModelMapper(CardService cardService, UserService userService) {
+    public CardMapper(CardService cardService) {
         this.cardService = cardService;
-        this.userService = userService;
     }
 
     public Card dtoCardCreate(CardDto cardDto, User user) {

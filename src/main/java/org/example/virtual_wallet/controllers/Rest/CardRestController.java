@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.AuthorizationException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
-import org.example.virtual_wallet.helpers.mappers.CardModelMapper;
+import org.example.virtual_wallet.helpers.mappers.CardMapper;
 import org.example.virtual_wallet.models.Card;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.dtos.CardDto;
@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
 public class CardRestController {
 
     private final CardService cardService;
-    private final CardModelMapper cardModelMapper;
+    private final CardMapper cardModelMapper;
     private final AuthenticationHelper authenticationHelper;
 
     @Autowired
     public CardRestController(CardService cardService,
-                              CardModelMapper cardModelMapper,
+                              CardMapper cardModelMapper,
                               AuthenticationHelper authenticationHelper) {
         this.cardService = cardService;
         this.cardModelMapper = cardModelMapper;
