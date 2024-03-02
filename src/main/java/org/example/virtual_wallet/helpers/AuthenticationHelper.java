@@ -73,4 +73,7 @@ public class AuthenticationHelper {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
         }
     }
+    public User getById(int id){
+        return userService.getById(id);
+    }
 }
