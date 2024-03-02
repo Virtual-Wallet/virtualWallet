@@ -135,13 +135,12 @@ create table internal_transactions
 (
     internal_transaction_id int auto_increment
         primary key,
-    type                    enum ('INCOMING', 'OUTGOING') null,
-    sender_wallet_id        int                           null,
-    recipient_wallet_id     int                           null,
-    amount                  double                        null,
-    timestamp               datetime                      null,
-    spending_category       int                           null,
-    currency                int                           null,
+    sender_wallet_id        int      null,
+    recipient_wallet_id     int      null,
+    amount                  double   null,
+    timestamp               datetime null,
+    spending_category       int      null,
+    currency                int      null,
     constraint internal_transactions_ibfk_1
         foreign key (sender_wallet_id) references wallets (wallet_id),
     constraint internal_transactions_ibfk_2
