@@ -2,6 +2,7 @@ package org.example.virtual_wallet.services;
 
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
+import org.example.virtual_wallet.exceptions.InvalidOperationException;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.helpers.AuthorizationHelper;
 import org.example.virtual_wallet.models.Card;
@@ -12,6 +13,7 @@ import org.example.virtual_wallet.services.contracts.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -29,6 +31,7 @@ public class CardServiceImpl implements CardService {
     @Override
     public void create(Card card, User user) {
         verifyCardNumber(card);
+        expirationDateIsValid(card.getExpirationDate());
         card.setUser(user);
         cardRepository.create(card);
         user.getCards().add(card);
@@ -38,6 +41,7 @@ public class CardServiceImpl implements CardService {
     public void update(Card card, User user)  {
         authorizationHelper.validateUserIsCardOwner(user, card);
         verifyCardNumber(card);
+        expirationDateIsValid(card.getExpirationDate());
         cardRepository.update(card);
     }
 
@@ -86,4 +90,23 @@ public class CardServiceImpl implements CardService {
 
     }
 
-}
+    private void expirationDateIsValid(String expirationPeriod) {
+        String[] expirationDateData = expirationPeriod.split("/");
+
+        int expMonth = Integer.parseInt(expirationDateData[0]);
+        int expYear = Integer.parseInt("20" + expirationDateData[1]);
+
+        if (expirationDateData.length != 2 || expMonth > 12) {
+            throw new InvalidOperationException("Invalid format!");
+        }
+        LocalDate today = LocalDate.now();
+
+
+        if (today.getYear() > expYear || (today.getYear() == expYear &&
+                today.getMonthValue() > expMonth)) {
+            throw new InvalidOperationException("The card is expired!");
+        }
+    }
+
+
+    }
