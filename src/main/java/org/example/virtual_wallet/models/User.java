@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import org.example.virtual_wallet.enums.AccountStatus;
-import org.example.virtual_wallet.enums.Role;
+import org.example.virtual_wallet.enums.RoleType;
 import org.example.virtual_wallet.exceptions.InvalidOperationException;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -54,15 +55,29 @@ public class User {
     )
     private Set<Card> cards;
 
-//    @Enumerated(EnumType.STRING)
+
+//    @ManyToOne
 //    @JoinTable(
 //            name = "roles",
 //            joinColumns = @JoinColumn(name = "user_id"),
 //            inverseJoinColumns = @JoinColumn(name = "role_id")
 //    )
-//    private Role role = Role.REGULAR;
+//    private Role role;
+//    @OneToMany(mappedBy = "user")
+//    private Set<Role>roles;
+
+    @OneToMany(mappedBy = "member")
+    private List<ContactList> contactLists;
 
     public User() {
+    }
+
+    public List<ContactList> getContactLists() {
+        return contactLists;
+    }
+
+    public void setContactLists(List<ContactList> contactLists) {
+        this.contactLists = contactLists;
     }
 
     public int getId() {
@@ -144,7 +159,8 @@ public class User {
     public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
-    //    public Role getRole() {
+
+//        public Role getRole() {
 //        return role;
 //    }
 //

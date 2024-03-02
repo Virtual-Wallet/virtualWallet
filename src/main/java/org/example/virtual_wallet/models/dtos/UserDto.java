@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.http.ResponseEntity;
 
 public class UserDto {
     @Size(min = 2, max = 20, message = "Username should be between 2 and 20 symbols.")

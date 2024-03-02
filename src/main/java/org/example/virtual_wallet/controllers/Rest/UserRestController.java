@@ -78,6 +78,4 @@ public class UserRestController {
         User user = userService.getById(userId);
         return cardService.getUserCards(user,user);
     }
-
-
 }
