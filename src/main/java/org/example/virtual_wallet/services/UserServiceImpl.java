@@ -17,6 +17,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -77,6 +78,29 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByEmail(String email) {
         return userRepository.getByEmail(email);
+    }
+
+    @Override
+    public void addUserToContactList(User owner, User toAdd) {
+        try {
+            getById(toAdd.getId());
+            owner.getContactLists().add(toAdd);
+            userRepository.update(owner);
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("User", toAdd.getId());
+        }
+
+    }
+
+    public void removeUserFromContactList(User owner, User toRemove) {
+        try {
+            getById(toRemove.getId());
+            owner.getContactLists().remove(toRemove);
+            userRepository.update(owner);
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("User", toRemove.getId());
+        }
+
     }
 
     private void checkIfEmailExist(User user) {

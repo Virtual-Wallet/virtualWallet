@@ -39,7 +39,7 @@ public class User {
     @Column(name = "status")
     private AccountStatus accountStatus = AccountStatus.PENDING_EMAIL;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Wallet wallet;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -61,17 +61,22 @@ public class User {
 //    @OneToMany(mappedBy = "user")
 //    private Set<Role>roles;
 
-    @OneToMany(mappedBy = "member",fetch = FetchType.EAGER)
-    private List<ContactList> contactLists;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "contacts_lists",
+            joinColumns = @JoinColumn(name = "owner"),
+            inverseJoinColumns = @JoinColumn(name = "member")
+    )
+    private Set<User> contactLists;
 
     public User() {
     }
 
-    public List<ContactList> getContactLists() {
+    public Set<User> getContactLists() {
         return contactLists;
     }
 
-    public void setContactLists(List<ContactList> contactLists) {
+    public void setContactLists(Set<User> contactLists) {
         this.contactLists = contactLists;
     }
 

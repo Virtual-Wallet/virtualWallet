@@ -94,6 +94,7 @@ public class UserRepositoryImpl extends AbstractCRUDRepository<User> implements 
         }
     }
 
+
     @Override
     public List<User> getAllFiltered(UserFilterOptions userFilterOptions) {
         try (Session session = sessionFactory.openSession()) {

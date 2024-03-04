@@ -6,7 +6,7 @@ import org.example.virtual_wallet.models.User;
 
 import java.util.List;
 
-public interface UserRepository {
+public interface UserRepository extends BaseCRUDRepository<User> {
     List<User> getAllFiltered(UserFilterOptions userFilterOptions);
 
     List<User> getAll();
