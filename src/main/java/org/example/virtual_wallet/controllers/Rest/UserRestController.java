@@ -76,7 +76,7 @@ public class UserRestController {
     @GetMapping("/{userId}/cards")
     public List<Card> getAllUserCards(@PathVariable int userId){
         User user = userService.getById(userId);
-        return cardService.getUserCards(user,user);
+        return cardService.getUserCards(user);
     }
 
 
