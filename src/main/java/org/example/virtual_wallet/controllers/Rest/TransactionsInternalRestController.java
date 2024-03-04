@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.AuthorizationException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
-import org.example.virtual_wallet.helpers.TransactionsInternalHelper;
+import org.example.virtual_wallet.helpers.mappers.TransactionsInternalMapper;
 import org.example.virtual_wallet.models.TransactionsInternal;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.dtos.TransactionsInternalDto;
@@ -24,16 +24,16 @@ public class TransactionsInternalRestController {
     private final TransactionsInternalService service;
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
-    private final TransactionsInternalHelper transactionsInternalHelper;
+    private final TransactionsInternalMapper transactionsInternalMapper;
 
     public TransactionsInternalRestController(TransactionsInternalService service,
                                               UserService userService,
                                               AuthenticationHelper authenticationHelper,
-                                              TransactionsInternalHelper transactionsInternalHelper) {
+                                              TransactionsInternalMapper transactionsInternalMapper) {
         this.service = service;
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
-        this.transactionsInternalHelper = transactionsInternalHelper;
+        this.transactionsInternalMapper = transactionsInternalMapper;
     }
 
     @PostMapping
@@ -63,7 +63,7 @@ public class TransactionsInternalRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
-        TransactionsInternal transactionsInternal = transactionsInternalHelper.createDto(sender, recipient, dto);
+        TransactionsInternal transactionsInternal = transactionsInternalMapper.createDto(sender, recipient, dto);
         return service.create(transactionsInternal);
     }
 

@@ -1,6 +1,5 @@
-package org.example.virtual_wallet.helpers;
+package org.example.virtual_wallet.helpers.mappers;
 
-import org.example.virtual_wallet.models.Currency;
 import org.example.virtual_wallet.models.TransactionsInternal;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.dtos.TransactionsInternalDto;
@@ -14,7 +13,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Component
-public class TransactionsInternalHelper {
+public class TransactionsInternalMapper {
     private final TransactionsInternalService transactionsInternalService;
     private final UserService userService;
     private final CurrencyService currencyService;
@@ -22,7 +21,7 @@ public class TransactionsInternalHelper {
     LocalDateTime now = LocalDateTime.now();
     Timestamp timestamp = Timestamp.valueOf(now);
 
-    public TransactionsInternalHelper(TransactionsInternalService transactionsInternalService,
+    public TransactionsInternalMapper(TransactionsInternalService transactionsInternalService,
                                       CurrencyService currencyService, UserService userService,
                                       SpendingCategoryService categoryService) {
         this.transactionsInternalService = transactionsInternalService;
