@@ -18,13 +18,6 @@ create table exchange_rates
 create index currency_id
     on exchange_rates (currency_id);
 
-create table spending_categories
-(
-    spending_category_id int auto_increment
-        primary key,
-    name                 varchar(32) null
-);
-
 create table users
 (
     user_id       int auto_increment
@@ -88,6 +81,17 @@ create table roles
 
 create index user_id
     on roles (user_id);
+
+create table spending_categories
+(
+    spending_category_id int auto_increment
+        primary key,
+    name                 varchar(32)          null,
+    isDeleted            tinyint(1) default 0 null,
+    creator_id           int                  null,
+    constraint spending_categories_users_user_id_fk
+        foreign key (creator_id) references users (user_id)
+);
 
 create table users_cards
 (
