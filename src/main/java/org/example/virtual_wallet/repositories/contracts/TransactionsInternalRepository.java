@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TransactionsInternalRepository {
 
-    public void create(TransactionsInternal transactionsInternal);
+    void create(TransactionsInternal transactionsInternal);
 
     List<TransactionsInternal> getAll();
 

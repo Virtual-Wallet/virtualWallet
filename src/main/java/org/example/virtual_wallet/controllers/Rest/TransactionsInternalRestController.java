@@ -1,14 +1,19 @@
 package org.example.virtual_wallet.controllers.Rest;
 
+import jakarta.validation.Valid;
+import org.example.virtual_wallet.exceptions.AuthorizationException;
+import org.example.virtual_wallet.exceptions.EntityNotFoundException;
+import org.example.virtual_wallet.helpers.AuthenticationHelper;
+import org.example.virtual_wallet.helpers.TransactionsInternalHelper;
 import org.example.virtual_wallet.models.TransactionsInternal;
 import org.example.virtual_wallet.models.User;
+import org.example.virtual_wallet.models.dtos.TransactionsInternalDto;
 import org.example.virtual_wallet.services.contracts.TransactionsInternalService;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -18,35 +23,72 @@ public class TransactionsInternalRestController {
 
     private final TransactionsInternalService service;
     private final UserService userService;
+    private final AuthenticationHelper authenticationHelper;
+    private final TransactionsInternalHelper transactionsInternalHelper;
 
-
-    // GV TODO: Add mapper perhaps?
     public TransactionsInternalRestController(TransactionsInternalService service,
-                                              UserService userService) {
+                                              UserService userService,
+                                              AuthenticationHelper authenticationHelper,
+                                              TransactionsInternalHelper transactionsInternalHelper) {
         this.service = service;
         this.userService = userService;
+        this.authenticationHelper = authenticationHelper;
+        this.transactionsInternalHelper = transactionsInternalHelper;
     }
 
-    @GetMapping
-    public List<TransactionsInternal> getAll(/*@RequestHeader HttpHeaders headers*/) {
-        /*User user = authenticationHelper.tryGetUser(headers);*/
-        // GV TODO: To be finished after verification implemented
-        return service.getAll();
+    @PostMapping
+    public TransactionsInternal getAll(@RequestHeader HttpHeaders httpHeaders,
+                                       @Valid @RequestBody TransactionsInternalDto dto) {
+
+        User sender = new User();
+        User recipient = new User();
+
+        try {
+            sender = authenticationHelper.tryGetUser(httpHeaders);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+
+        try {
+            if (!dto.getUsername().isBlank()) {
+                recipient = userService.getByUsername(dto.getUsername());
+            } else if (!dto.getEmail().isBlank()) {
+                recipient = userService.getByEmail(dto.getEmail());
+            } else if (!dto.getPhoneNumber().isBlank()) {
+                recipient = userService.getByPhoneNumber(dto.getPhoneNumber());
+            }
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
+        TransactionsInternal transactionsInternal = transactionsInternalHelper.createDto(sender, recipient, dto);
+        return service.create(transactionsInternal);
     }
+
 
     @GetMapping("/outgoing")
-    public List<TransactionsInternal> getOutgoing() {
-
-        //GV TODO Replace this one with current user;
-        User user = userService.getById(3);
-        return service.getOutgoing(user);
+    public List<TransactionsInternal> getOutgoing(@RequestHeader HttpHeaders httpHeaders) {
+        try {
+            User user = authenticationHelper.tryGetUser(httpHeaders);
+            return service.getOutgoing(user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
     }
 
     @GetMapping("/incoming")
-    public List<TransactionsInternal> getIncoming() {
-
-        //GV TODO Replace this one with current user;
-        User user = userService.getById(3);
-        return service.getIncoming(user);
+    public List<TransactionsInternal> getIncoming(@RequestHeader HttpHeaders httpHeaders) {
+        try {
+            User user = authenticationHelper.tryGetUser(httpHeaders);
+            return service.getIncoming(user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
     }
 }

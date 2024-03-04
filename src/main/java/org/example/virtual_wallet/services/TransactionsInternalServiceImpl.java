@@ -19,8 +19,9 @@ public class TransactionsInternalServiceImpl implements TransactionsInternalServ
     }
 
     @Override
-    public void create(TransactionsInternal transactionsInternal) {
-
+    public TransactionsInternal create(TransactionsInternal transaction) {
+        repository.create(transaction);
+        return transaction;
     }
 
     @Override
@@ -30,7 +31,6 @@ public class TransactionsInternalServiceImpl implements TransactionsInternalServ
 
     @Override
     public List<TransactionsInternal> getIncoming(User user) {
-
         return repository.getIncoming(user);
     }
 

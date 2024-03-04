@@ -35,6 +35,11 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
+    public Currency get(int id) {
+        return currencyRepository.getById(id);
+    }
+
+    @Override
     public List<Currency> getAll() {
         return currencyRepository.getAll();
     }

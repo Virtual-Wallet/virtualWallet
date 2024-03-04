@@ -1,7 +1,11 @@
 package org.example.virtual_wallet.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
+
+import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "internal_transactions")
@@ -22,13 +26,15 @@ public class TransactionsInternal {
     private double amount;
 
     @Column(name = "timestamp")
-    private String timestamp;
+    private Timestamp timestamp;
 
-    @Column(name = "spending_category")
-    private String spendingCategory;
+    @ManyToOne
+    @JoinColumn(name = "spending_category")
+    private SpendingCategory spendingCategory;
 
-    @Column(name = "currency")
-    private String currency;
+    @ManyToOne
+    @JoinColumn(name = "currency")
+    private Currency currency;
 
     public TransactionsInternal() {
     }
@@ -49,15 +55,15 @@ public class TransactionsInternal {
         return amount;
     }
 
-    public String getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public String getSpendingCategory() {
+    public SpendingCategory getSpendingCategory() {
         return spendingCategory;
     }
 
-    public String getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
@@ -77,15 +83,15 @@ public class TransactionsInternal {
         this.amount = amount;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 
-    public void setSpendingCategory(String spendingCategory) {
+    public void setSpendingCategory(SpendingCategory spendingCategory) {
         this.spendingCategory = spendingCategory;
     }
 
-    public void setCurrency(String currency) {
+    public void setCurrency(Currency currency) {
         this.currency = currency;
     }
 }

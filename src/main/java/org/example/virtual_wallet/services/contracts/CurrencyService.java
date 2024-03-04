@@ -10,6 +10,8 @@ public interface CurrencyService {
 
     Currency get(String abbreviation);
 
+    Currency get(int id);
+
     List<Currency> getAll();
 
     void update(CurrencyDto currencyDto, Currency target);
