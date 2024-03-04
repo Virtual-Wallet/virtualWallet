@@ -3,10 +3,13 @@ package org.example.virtual_wallet.repositories;
 import org.example.virtual_wallet.repositories.contracts.BaseCRUDRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public abstract class AbstractCRUDRepository<T> extends AbstractReadRepository<T> implements BaseCRUDRepository<T> {
-
-    protected AbstractCRUDRepository(Class<T> clazz, SessionFactory sessionFactory) {
+    @Autowired
+    public AbstractCRUDRepository(Class<T> clazz, SessionFactory sessionFactory) {
         super(clazz, sessionFactory);
     }
 
