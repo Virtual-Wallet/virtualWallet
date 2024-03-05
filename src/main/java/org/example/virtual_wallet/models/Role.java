@@ -1,7 +1,10 @@
 package org.example.virtual_wallet.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.example.virtual_wallet.enums.RoleType;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "roles")
@@ -12,11 +15,7 @@ public class Role {
     private int id;
     @Enumerated(EnumType.STRING)
     @Column(name = "role_type")
-    private RoleType roleType;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private RoleType roleType = RoleType.REGULAR;
 
     public Role() {
     }
@@ -37,12 +36,16 @@ public class Role {
         this.roleType = roleType;
     }
 
-    public User getUser() {
-        return user;
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Role role = (Role) object;
+        return roleType == role.roleType;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    @Override
+    public int hashCode() {
+        return Objects.hash(roleType);
     }
-
 }

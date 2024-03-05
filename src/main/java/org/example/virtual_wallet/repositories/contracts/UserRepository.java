@@ -27,7 +27,4 @@ public interface UserRepository extends BaseCRUDRepository<User> {
 
     List<Card> getAllUserCards(int userId);
 
-//    User block(User user);
-//
-//    User unblock(User user);
 }

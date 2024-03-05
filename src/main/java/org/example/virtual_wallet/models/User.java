@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import org.example.virtual_wallet.enums.AccountStatus;
-import org.example.virtual_wallet.enums.RoleType;
 import org.example.virtual_wallet.exceptions.InvalidOperationException;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -50,9 +48,14 @@ public class User {
     )
     private Set<Card> cards;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Role>role;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -153,12 +156,12 @@ public class User {
         this.creationDate = creationDate;
     }
 
-    public List<Role> getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(List<Role> role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public void advanceAccountStatus(AccountStatus accountStatus) {
@@ -182,11 +185,11 @@ public class User {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         User user = (User) object;
-        return id == user.id && Objects.equals(username, user.username);
+        return id == user.id && Objects.equals(username, user.username) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username);
+        return Objects.hash(id, username, password);
     }
 }

@@ -27,21 +27,21 @@ public class RoleRepositoryImpl extends AbstractCRUDRepository<Role> implements 
             Query<Role> query = session.createQuery("from Role r where r.roleType = :roleType", Role.class);
             query.setParameter("roleType", roleType);
             if (query.list().isEmpty()) {
-                throw new EntityNotFoundException("Role", "roleType", roleType.toString());
+                throw new EntityNotFoundException("This role doesn't exist!");
             }
             return query.list().get(0);
         }
     }
 
+
     @Override
-    public List<Role> findByUserAndRoleType(User user, RoleType roleType) {
+    public Role getById(int id) {
         try (Session session = sessionFactory.openSession()) {
-            Query<Role> query = session.createQuery("from Role r where r.user = :user and r.roleType = :roleType", Role.class);
-            query.setParameter("user", user);
-            query.setParameter("roleType", roleType);
-            return query.list();
+            Role result = session.get(Role.class, id);
+            if (result == null) {
+                throw new EntityNotFoundException("Role", id);
+            }
+            return result;
         }
     }
-
-
 }

@@ -6,6 +6,4 @@ import org.example.virtual_wallet.models.User;
 
 public interface RoleService {
     Role getByName(RoleType roleType);
-    void assignRoleToUser(User user, RoleType roleType);
-    void removeRoleFromUser(User user, RoleType roleType);
 }

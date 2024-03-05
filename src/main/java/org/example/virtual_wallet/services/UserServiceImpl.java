@@ -3,6 +3,7 @@ package org.example.virtual_wallet.services;
 import org.example.virtual_wallet.enums.RoleType;
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
+import org.example.virtual_wallet.exceptions.InvalidOperationException;
 import org.example.virtual_wallet.filters.UserFilterOptions;
 import org.example.virtual_wallet.models.Card;
 import org.example.virtual_wallet.models.User;
@@ -96,6 +97,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
     public void removeUserFromContactList(User owner, User toRemove) {
         try {
             getById(toRemove.getId());
@@ -109,37 +111,55 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User blockUserByAdmin(User userToBlock, User admin) {
-        try{
-            getById(userToBlock.getId());
-        }catch (EntityNotFoundException e) {
+        try {
+            checkIfUserIsAdmin(admin);
+            userToBlock = getById(userToBlock.getId());
+        } catch (EntityNotFoundException e) {
             throw new EntityNotFoundException("User", userToBlock.getId());
+        } catch (InvalidOperationException e) {
+            throw new InvalidOperationException(e.getMessage());
         }
-        roleService.assignRoleToUser(userToBlock,RoleType.BANNED);
+        userToBlock.getRoles().remove(roleService.getByName(RoleType.REGULAR));
+
+        userToBlock.getRoles().add(roleService.getByName(RoleType.BANNED));
+
         userRepository.update(userToBlock);
+
         return userToBlock;
 
     }
 
     @Override
     public User unblockUserByAdmin(User userToUnblock, User admin) {
-        try{
-            getById(userToUnblock.getId());
-        }catch (EntityNotFoundException e) {
+
+        try {
+            checkIfUserIsAdmin(admin);
+            userToUnblock = getById(userToUnblock.getId());
+        } catch (EntityNotFoundException e) {
             throw new EntityNotFoundException("User", userToUnblock.getId());
+        } catch (InvalidOperationException e) {
+            throw new InvalidOperationException(e.getMessage());
         }
-        roleService.assignRoleToUser(userToUnblock,RoleType.REGULAR);
+        userToUnblock.getRoles().remove(roleService.getByName(RoleType.BANNED));
+
+        userToUnblock.getRoles().add(roleService.getByName(RoleType.REGULAR));
+
         userRepository.update(userToUnblock);
+
         return userToUnblock;
     }
 
     @Override
     public void promoteUserToAdmin(User user) {
-        try{
+        try {
             getById(user.getId());
+
+            user.getRoles().add(roleService.getByName(RoleType.ADMIN));
+            userRepository.update(user);
+
         } catch (EntityNotFoundException e) {
             throw new EntityNotFoundException("User", user.getId());
         }
-        roleService.assignRoleToUser(user, RoleType.ADMIN);
     }
 
     private void checkIfEmailExist(User user) {
@@ -186,6 +206,20 @@ public class UserServiceImpl implements UserService {
         }
         if (duplicateExists) {
             throw new EntityDuplicateException("User", "phone number", user.getPhoneNumber());
+        }
+    }
+
+
+    private void checkIfUserIsBanned(User user) {
+       if (user.getRoles().stream().anyMatch(role -> role.getRoleType().equals(RoleType.BANNED))) {
+           throw new InvalidOperationException("User is banned and cannot perform this operation!");
+       }
+    }
+
+
+    private void checkIfUserIsAdmin(User user) {
+        if (user.getRoles().stream().noneMatch(role -> role.getRoleType().equals(RoleType.ADMIN))) {
+            throw new InvalidOperationException("User is not an admin and cannot perform this operation!");
         }
     }
 }

@@ -8,6 +8,4 @@ import java.util.List;
 
 public interface RoleRepository extends BaseCRUDRepository<Role>{
     Role getByName(RoleType name);
-    List<Role> findByUserAndRoleType(User user, RoleType roleType);
-
 }
