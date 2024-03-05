@@ -7,10 +7,10 @@ import org.example.virtual_wallet.repositories.contracts.CurrencyRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CurrencyHelpers {
+public class CurrencyHelper {
     private final CurrencyRepository currencyRepository;
 
-    public CurrencyHelpers(CurrencyRepository currencyRepository) {
+    public CurrencyHelper(CurrencyRepository currencyRepository) {
         this.currencyRepository = currencyRepository;
     }
 

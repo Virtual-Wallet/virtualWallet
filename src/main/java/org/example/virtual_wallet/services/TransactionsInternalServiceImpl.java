@@ -12,14 +12,19 @@ import java.util.List;
 @Service
 public class TransactionsInternalServiceImpl implements TransactionsInternalService {
 
+    private final WalletServiceImpl walletService;
     private final TransactionsInternalRepository repository;
 
-    public TransactionsInternalServiceImpl(TransactionsInternalRepository repository) {
+    public TransactionsInternalServiceImpl(WalletServiceImpl walletService,
+                                           TransactionsInternalRepository repository) {
+        this.walletService = walletService;
         this.repository = repository;
     }
 
     @Override
     public TransactionsInternal create(TransactionsInternal transaction) {
+        walletService.withdraw(walletService.getById(transaction.getSenderWalletId()), transaction.getAmount());
+        walletService.deposit(walletService.getById(transaction.getRecipientWalletId()), transaction.getAmount());
         repository.create(transaction);
         return transaction;
     }
