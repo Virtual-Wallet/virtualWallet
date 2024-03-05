@@ -20,9 +20,9 @@ public class EmailRestController {
     @PostMapping("/send")
     public void sendMail() throws IOException {
         //todo read for env variable!
-        String key ="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" ;
+        String key ="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";
         Email from = new Email("flexpayggk@gmail.com");
-        String subject = "Sending with SendGrid is Fun";
+        String subject = "Flex Pay confirmation code";
         //imeila predopolagam shte se vzeme ot sesiqta
         Email to = new Email("nikol.moldovanova02@gmail.com");
         Content content = new Content("text/plain", "Поздравления печелиш Iphone3012 ultra mega giga max pro galaxy");

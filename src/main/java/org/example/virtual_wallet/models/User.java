@@ -51,15 +51,8 @@ public class User {
     private Set<Card> cards;
 
 
-//    @ManyToOne
-//    @JoinTable(
-//            name = "roles",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
-//    private Role role;
-//    @OneToMany(mappedBy = "user")
-//    private Set<Role>roles;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Role>role;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -160,13 +153,13 @@ public class User {
         this.creationDate = creationDate;
     }
 
-//        public Role getRole() {
-//        return role;
-//    }
-//
-//    public void setRole(Role role) {
-//        this.role = role;
-//    }
+    public List<Role> getRole() {
+        return role;
+    }
+
+    public void setRole(List<Role> role) {
+        this.role = role;
+    }
 
     public void advanceAccountStatus(AccountStatus accountStatus) {
         if (accountStatus != AccountStatus.ACTIVE) {

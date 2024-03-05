@@ -73,9 +73,61 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
     @GetMapping("/{userId}/cards")
-    public List<Card> getAllUserCards(@PathVariable int userId){
+    public List<Card> getAllUserCards(@PathVariable int userId) {
         User user = userService.getById(userId);
-        return cardService.getUserCards(user,user);
+        return cardService.getUserCards(user, user);
+    }
+
+    @PostMapping("/{userId}/add/{toAddId}")
+    public void addToContactList(@PathVariable int userId, @PathVariable int toAddId) {
+        try {
+            User user = userService.getById(userId);
+            User userToAdd = userService.getById(toAddId);
+            userService.addUserToContactList(user, userToAdd);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+    @PostMapping("/{userId}/remove/{toAddId}")
+    public void removeFromContactList(@PathVariable int userId, @PathVariable int toAddId) {
+        try {
+            User user = userService.getById(userId);
+            User userToAdd = userService.getById(toAddId);
+            userService.removeUserFromContactList(user, userToAdd);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{userId}/block")
+    public void blockUser(@PathVariable int userId){
+        try{
+            User dummyUser = new User();
+            User toBlock = userService.getById(userId);
+            userService.blockUserByAdmin(toBlock,dummyUser);
+        }catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+        }
+    }
+    @PatchMapping("/{userId}/active")
+    public void unblockUser(@PathVariable int userId){
+        try{
+            User dummyUser = new User();
+            User toUnBlock = userService.getById(userId);
+            userService.unblockUserByAdmin(toUnBlock,dummyUser);
+        }catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+        }
+    }
+    @PatchMapping("/{userId}/promote")
+    public void promoteToAdmin(@PathVariable int userId){
+        try{
+            User admin = userService.getById(userId);
+            userService.promoteUserToAdmin(admin);
+        }catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+        }
     }
 }

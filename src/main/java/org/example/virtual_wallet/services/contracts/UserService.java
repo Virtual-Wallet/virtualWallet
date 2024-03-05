@@ -30,4 +30,9 @@ public interface UserService {
     void addUserToContactList(User userId, User contactId);
 
     void removeUserFromContactList(User owner, User toRemove);
+
+    User blockUserByAdmin(User userToBlock, User executor);
+
+    User unblockUserByAdmin(User userToUnblock, User executor);
+    void promoteUserToAdmin(User user);
 }
