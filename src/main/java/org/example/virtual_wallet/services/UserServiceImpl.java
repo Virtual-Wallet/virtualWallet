@@ -200,12 +200,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
-//    private void checkIfUserIsAdmin(User user) {
-//        if (user.getRoles().stream().noneMatch(role -> role.getRoleType().equals(RoleType.ADMIN))) {
-//            throw new UnauthorizedOperationException("User is not an admin and cannot perform this operation!");
-//        }
-//    }
     private void checkIfUserIsAdmin(User user){
         if(user.getRoles().stream().noneMatch(role -> role.getRoleType().equals(RoleType.ADMIN))){
             throw new UnauthorizedOperationException("User is not an admin and cannot perform this operation!");
