@@ -1,6 +1,6 @@
 package org.example.virtual_wallet.enums;
 
-public enum ExternalTransactionsType {
+public enum TransferType {
     DEPOSIT,
     WITHDRAWAL;
 

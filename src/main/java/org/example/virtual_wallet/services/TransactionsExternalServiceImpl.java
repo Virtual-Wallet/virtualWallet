@@ -4,9 +4,11 @@ import org.example.virtual_wallet.models.TransactionsExternal;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.repositories.contracts.TransactionsExternalRepository;
 import org.example.virtual_wallet.services.contracts.TransactionsExternalService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class TransactionsExternalServiceImpl implements TransactionsExternalService {
 
     private final WalletServiceImpl walletService;
