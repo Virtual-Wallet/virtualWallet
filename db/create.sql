@@ -1,14 +1,3 @@
-create table cards
-(
-    card_id         int auto_increment
-        primary key,
-    card_number     varchar(16)          null,
-    card_holder     varchar(50)          null,
-    expiration_date date                 not null,
-    card_csv        int                  not null,
-    isDeleted       tinyint(1) default 0 not null
-);
-
 create table currencies
 (
     currency_id int auto_increment
@@ -36,13 +25,6 @@ create table roles
     role_type enum ('ADMIN', 'REGULAR', 'BANNED') null
 );
 
-create table spending_categories
-(
-    spending_category_id int auto_increment
-        primary key,
-    name                 varchar(32) null
-);
-
 create table users
 (
     user_id       int auto_increment
@@ -54,6 +36,20 @@ create table users
     picture       blob                                                                         null,
     status        enum ('PENDING_EMAIL', 'EMAIL_CONFIRMED', 'PENDING_ID', 'ACTIVE', 'BLOCKED') null,
     creation_date datetime                                                                     null
+);
+
+create table cards
+(
+    card_id         int auto_increment
+        primary key,
+    card_number     varchar(16)          null,
+    card_holder     varchar(50)          null,
+    expiration_date varchar(5)           not null,
+    card_csv        varchar(3)           not null,
+    isDeleted       tinyint(1) default 0 not null,
+    user_id         int                  null,
+    constraint cards_users_user_id_fk
+        foreign key (user_id) references users (user_id)
 );
 
 create table contacts_lists
@@ -91,6 +87,17 @@ create index card_id
 
 create index user_id
     on external_transactions (user_id);
+
+create table spending_categories
+(
+    spending_category_id int auto_increment
+        primary key,
+    name                 varchar(32)          null,
+    isDeleted            tinyint(1) default 0 not null,
+    creator_id           int                  null,
+    constraint spending_categories_users_user_id_fk
+        foreign key (creator_id) references users (user_id)
+);
 
 create table tokens
 (
@@ -150,10 +157,11 @@ create table wallets
 (
     wallet_id   int auto_increment
         primary key,
-    balance     double               null,
+    balance     double     default 0 null,
     currency_id int                  null,
     user_id     int                  null,
     isActive    tinyint(1) default 1 null,
+    isDeleted   tinyint(1) default 0 not null,
     constraint wallets_ibfk_1
         foreign key (currency_id) references currencies (currency_id),
     constraint wallets_ibfk_2
