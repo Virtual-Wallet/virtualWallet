@@ -1,14 +1,3 @@
-create table cards
-(
-    card_id         int auto_increment
-        primary key,
-    card_number     varchar(16)          null,
-    card_holder     varchar(50)          null,
-    expiration_date varchar(5)           not null,
-    card_csv        varchar(3)           not null,
-    isDeleted       tinyint(1) default 0 not null
-);
-
 create table currencies
 (
     currency_id int auto_increment
@@ -29,23 +18,31 @@ create table exchange_rates
 create index currency_id
     on exchange_rates (currency_id);
 
-create table spending_categories
-(
-    spending_category_id int auto_increment
-        primary key,
-    name                 varchar(32) null
-);
-
 create table users
 (
-    user_id  int auto_increment
+    user_id       int auto_increment
         primary key,
-    username varchar(20)                                                                  null,
-    password varchar(20)                                                                  null,
-    email    varchar(32)                                                                  null,
-    phone    varchar(20)                                                                  null,
-    picture  blob                                                                         null,
-    status   enum ('PENDING_EMAIL', 'EMAIL_CONFIRMED', 'PENDING_ID', 'ACTIVE', 'BLOCKED') null
+    username      varchar(20)                                                                  null,
+    password      varchar(20)                                                                  null,
+    email         varchar(32)                                                                  null,
+    phone         varchar(20)                                                                  null,
+    picture       blob                                                                         null,
+    status        enum ('PENDING_EMAIL', 'EMAIL_CONFIRMED', 'PENDING_ID', 'ACTIVE', 'BLOCKED') null,
+    creation_date timestamp                                                                    not null
+);
+
+create table cards
+(
+    card_id         int auto_increment
+        primary key,
+    card_number     varchar(16)          null,
+    card_holder     varchar(50)          null,
+    expiration_date varchar(5)           not null,
+    card_csv        varchar(3)           not null,
+    isDeleted       tinyint(1) default 0 not null,
+    user_id         int                  not null,
+    constraint cards_users_user_id_fk
+        foreign key (user_id) references users (user_id)
 );
 
 create table external_transactions
@@ -85,6 +82,17 @@ create table roles
 create index user_id
     on roles (user_id);
 
+create table spending_categories
+(
+    spending_category_id int auto_increment
+        primary key,
+    name                 varchar(32)          null,
+    isDeleted            tinyint(1) default 0 null,
+    creator_id           int                  null,
+    constraint spending_categories_users_user_id_fk
+        foreign key (creator_id) references users (user_id)
+);
+
 create table users_cards
 (
     users_cards_id int auto_increment
@@ -121,10 +129,11 @@ create table wallets
 (
     wallet_id   int auto_increment
         primary key,
-    balance     double               null,
+    balance     double     default 0 null,
     currency_id int                  null,
     user_id     int                  null,
     isActive    tinyint(1) default 1 null,
+    isDeleted   tinyint(1) default 0 not null,
     constraint wallets_ibfk_1
         foreign key (currency_id) references currencies (currency_id),
     constraint wallets_ibfk_2

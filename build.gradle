@@ -30,6 +30,10 @@ dependencies {
 
     //Email sender Api
     implementation 'com.sendgrid:sendgrid-java:4.10.1'
+
+    implementation "com.stripe:stripe-java:24.0.0"
+    implementation 'com.google.code.gson:gson:2.10.1'
+
 }
 
 tasks.named('test') {

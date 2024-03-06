@@ -1,8 +1,12 @@
 package org.example.virtual_wallet.exceptions;
 
-public class EntityNotFoundException extends RuntimeException{
+public class EntityNotFoundException extends RuntimeException {
     public EntityNotFoundException(String type, int id) {
         this(type, "id", String.valueOf(id));
+    }
+
+    public EntityNotFoundException(String type, String perimeter) {
+        this(type, "perimeter", perimeter);
     }
 
     public EntityNotFoundException(String type, String attribute, String value) {

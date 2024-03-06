@@ -53,7 +53,7 @@ public class WalletRepositoryImpl extends AbstractCRUDRepository<Wallet> impleme
 
             Wallet wallet = session.createQuery(
                             "SELECT w FROM Wallet w WHERE w.user.id = :userId AND w.isActive = false", Wallet.class)
-                    .setParameter("id", userId)
+                    .setParameter("userId", userId)
                     .uniqueResult();
 
             if (wallet == null) {
