@@ -7,7 +7,7 @@ import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.helpers.mappers.TransactionsInternalMapper;
 import org.example.virtual_wallet.models.TransactionsInternal;
 import org.example.virtual_wallet.models.User;
-import org.example.virtual_wallet.models.dtos.TransactionsInternalDto;
+import org.example.virtual_wallet.models.dtos.TransactionDto;
 import org.example.virtual_wallet.services.contracts.TransactionsInternalService;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class TransactionslRestController {
 
     @PostMapping
     public TransactionsInternal getAll(@RequestHeader HttpHeaders httpHeaders,
-                                       @Valid @RequestBody TransactionsInternalDto dto) {
+                                       @Valid @RequestBody TransactionDto dto) {
 
         User sender = new User();
         User recipient = new User();
@@ -54,15 +54,19 @@ public class TransactionslRestController {
         }
 
         try {
-            if (!dto.getUsername().isBlank()) {
+            if (!dto.getUsername().isEmpty()) {
                 recipient = userService.getByUsername(dto.getUsername());
-            } else if (!dto.getEmail().isBlank()) {
+            } else if (!dto.getEmail().isEmpty()) {
                 recipient = userService.getByEmail(dto.getEmail());
-            } else if (!dto.getPhoneNumber().isBlank()) {
+            } else if (!dto.getPhoneNumber().isEmpty()) {
                 recipient = userService.getByPhoneNumber(dto.getPhoneNumber());
+            } else {
+                throw new IllegalArgumentException("At least one of Username, Email, or Phone Number must be provided.");
             }
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
 
         TransactionsInternal transactionsInternal = transactionsInternalMapper.createDto(sender, recipient, dto);

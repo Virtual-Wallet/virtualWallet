@@ -2,7 +2,7 @@ package org.example.virtual_wallet.helpers.mappers;
 
 import org.example.virtual_wallet.models.TransactionsInternal;
 import org.example.virtual_wallet.models.User;
-import org.example.virtual_wallet.models.dtos.TransactionsInternalDto;
+import org.example.virtual_wallet.models.dtos.TransactionDto;
 import org.example.virtual_wallet.services.contracts.CurrencyService;
 import org.example.virtual_wallet.services.contracts.SpendingCategoryService;
 import org.example.virtual_wallet.services.contracts.TransactionsInternalService;
@@ -30,7 +30,7 @@ public class TransactionsInternalMapper {
         this.categoryService = categoryService;
     }
 
-    public TransactionsInternal createDto(User sender, User recipient, TransactionsInternalDto dto) {
+    public TransactionsInternal createDto(User sender, User recipient, TransactionDto dto) {
         TransactionsInternal transaction = new TransactionsInternal();
         transaction.setSenderWalletId(sender.getWallet().getId());
         transaction.setRecipientWalletId(recipient.getWallet().getId());

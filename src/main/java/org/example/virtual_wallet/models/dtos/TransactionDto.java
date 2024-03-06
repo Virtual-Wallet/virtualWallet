@@ -1,10 +1,6 @@
 package org.example.virtual_wallet.models.dtos;
 
-import jakarta.validation.constraints.NotEmpty;
-
-import java.util.Optional;
-
-public class TransactionsInternalDto {
+public class TransactionDto {
     private String username;
     private String email;
     private String phoneNumber;
@@ -12,12 +8,12 @@ public class TransactionsInternalDto {
     private String currency;
     private String category;
 
-    public TransactionsInternalDto(String username,
-                                   String email,
-                                   String phoneNumber,
-                                   double amount,
-                                   String currency,
-                                   String category) {
+    public TransactionDto(String username,
+                          String email,
+                          String phoneNumber,
+                          double amount,
+                          String currency,
+                          String category) {
         this.username = username;
         this.email = email;
         this.phoneNumber = phoneNumber;
