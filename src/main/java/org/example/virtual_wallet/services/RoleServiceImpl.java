@@ -23,4 +23,9 @@ public class RoleServiceImpl implements RoleService {
     public Role getByName(RoleType roleType) {
         return roleRepository.getByName(roleType);
     }
+
+    @Override
+    public void crete(Role role) {
+        roleRepository.create(role);
+    }
 }
