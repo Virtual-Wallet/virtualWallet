@@ -1,3 +1,14 @@
+create table cards
+(
+    card_id         int auto_increment
+        primary key,
+    card_number     varchar(16)          null,
+    card_holder     varchar(50)          null,
+    expiration_date date                 not null,
+    card_csv        int                  not null,
+    isDeleted       tinyint(1) default 0 not null
+);
+
 create table currencies
 (
     currency_id int auto_increment
@@ -18,6 +29,20 @@ create table exchange_rates
 create index currency_id
     on exchange_rates (currency_id);
 
+create table roles
+(
+    role_id   int auto_increment
+        primary key,
+    role_type enum ('ADMIN', 'REGULAR', 'BANNED') null
+);
+
+create table spending_categories
+(
+    spending_category_id int auto_increment
+        primary key,
+    name                 varchar(32) null
+);
+
 create table users
 (
     user_id       int auto_increment
@@ -28,21 +53,19 @@ create table users
     phone         varchar(20)                                                                  null,
     picture       blob                                                                         null,
     status        enum ('PENDING_EMAIL', 'EMAIL_CONFIRMED', 'PENDING_ID', 'ACTIVE', 'BLOCKED') null,
-    creation_date timestamp                                                                    not null
+    creation_date datetime                                                                     null
 );
 
-create table cards
+create table contacts_lists
 (
-    card_id         int auto_increment
+    contact_list_id int auto_increment
         primary key,
-    card_number     varchar(16)          null,
-    card_holder     varchar(50)          null,
-    expiration_date varchar(5)           not null,
-    card_csv        varchar(3)           not null,
-    isDeleted       tinyint(1) default 0 not null,
-    user_id         int                  not null,
-    constraint cards_users_user_id_fk
-        foreign key (user_id) references users (user_id)
+    member          int null,
+    owner           int null,
+    constraint contacts_lists_users_user_id_fk
+        foreign key (owner) references users (user_id),
+    constraint contacts_lists_users_user_id_fk2
+        foreign key (member) references users (user_id)
 );
 
 create table external_transactions
@@ -69,28 +92,16 @@ create index card_id
 create index user_id
     on external_transactions (user_id);
 
-create table roles
+create table tokens
 (
-    role_id   int auto_increment
+    token_id        int auto_increment
         primary key,
-    role_type enum ('ADMIN', 'REGULAR') null,
-    user_id   int                       null,
-    constraint roles_ibfk_1
+    code            varchar(20)          not null,
+    user_id         int                  null,
+    expiration_time datetime             null,
+    is_active       tinyint(1) default 1 null,
+    constraint tokens_users_user_id_fk
         foreign key (user_id) references users (user_id)
-);
-
-create index user_id
-    on roles (user_id);
-
-create table spending_categories
-(
-    spending_category_id int auto_increment
-        primary key,
-    name                 varchar(32)          null,
-    isDeleted            tinyint(1) default 0 null,
-    creator_id           int                  null,
-    constraint spending_categories_users_user_id_fk
-        foreign key (creator_id) references users (user_id)
 );
 
 create table users_cards
@@ -111,6 +122,16 @@ create index card_id
 create index user_id
     on users_cards (user_id);
 
+create table users_roles
+(
+    user_id int null,
+    role_id int null,
+    constraint users_roles_roles_role_id_fk
+        foreign key (role_id) references roles (role_id),
+    constraint users_roles_users_user_id_fk
+        foreign key (user_id) references users (user_id)
+);
+
 create table verifications
 (
     verification_id int auto_increment
@@ -129,11 +150,10 @@ create table wallets
 (
     wallet_id   int auto_increment
         primary key,
-    balance     double     default 0 null,
+    balance     double               null,
     currency_id int                  null,
     user_id     int                  null,
     isActive    tinyint(1) default 1 null,
-    isDeleted   tinyint(1) default 0 not null,
     constraint wallets_ibfk_1
         foreign key (currency_id) references currencies (currency_id),
     constraint wallets_ibfk_2
