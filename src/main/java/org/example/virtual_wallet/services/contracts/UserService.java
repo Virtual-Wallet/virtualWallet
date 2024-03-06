@@ -7,11 +7,11 @@ import org.example.virtual_wallet.models.User;
 import java.util.List;
 
 public interface UserService {
-    List<User> getAll();
+    List<User> getAll(User user);
 
-    List<User> getAllFiltered(UserFilterOptions userFilterOptions);
+    List<User> getAllFiltered(UserFilterOptions userFilterOptions,User user);
 
-    List<Card> getAllUserCards(int userId);
+    List<Card> getAllUserCards(int userId,User executor);
 
     void create(User user);
 
@@ -34,5 +34,5 @@ public interface UserService {
     User blockUserByAdmin(User userToBlock, User executor);
 
     User unblockUserByAdmin(User userToUnblock, User executor);
-    void promoteUserToAdmin(User user);
+    void promoteUserToAdmin(User toPromote,User admin);
 }

@@ -4,6 +4,7 @@ import org.example.virtual_wallet.enums.RoleType;
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.exceptions.InvalidOperationException;
+import org.example.virtual_wallet.exceptions.UnauthorizedOperationException;
 import org.example.virtual_wallet.filters.UserFilterOptions;
 import org.example.virtual_wallet.models.Card;
 import org.example.virtual_wallet.models.User;
@@ -29,17 +30,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<User> getAll(User user) {
+        checkIfUserIsAdmin(user);
         return userRepository.getAll();
     }
 
     @Override
-    public List<User> getAllFiltered(UserFilterOptions userFilterOptions) {
+    public List<User> getAllFiltered(UserFilterOptions userFilterOptions, User user) {
+        checkIfUserIsAdmin(user);
         return userRepository.getAllFiltered(userFilterOptions);
     }
 
     @Override
-    public List<Card> getAllUserCards(int userId) {
+    public List<Card> getAllUserCards(int userId,User executor) {
+        checkIfUserIsAdmin(executor);
+
         return userRepository.getAllUserCards(userId);
     }
 
@@ -87,40 +92,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUserToContactList(User owner, User toAdd) {
-        try {
-            getById(toAdd.getId());
-            owner.getContactLists().add(toAdd);
-            userRepository.update(owner);
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("User", toAdd.getId());
-        }
+        userRepository.getById(toAdd.getId());
+
+        owner.getContactLists().add(toAdd);
+
+        userRepository.update(owner);
+
 
     }
 
     @Override
     public void removeUserFromContactList(User owner, User toRemove) {
-        try {
-            getById(toRemove.getId());
-            owner.getContactLists().remove(toRemove);
-            userRepository.update(owner);
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("User", toRemove.getId());
-        }
-
+        userRepository.getById(toRemove.getId());
+        owner.getContactLists().remove(toRemove);
+        userRepository.update(owner);
     }
 
     @Override
     public User blockUserByAdmin(User userToBlock, User admin) {
-        try {
-            checkIfUserIsAdmin(admin);
-            userToBlock = getById(userToBlock.getId());
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("User", userToBlock.getId());
-        } catch (InvalidOperationException e) {
-            throw new InvalidOperationException(e.getMessage());
-        }
-        userToBlock.getRoles().remove(roleService.getByName(RoleType.REGULAR));
+        checkIfUserIsAdmin(admin);
+        userRepository.getById(userToBlock.getId());
 
+        userToBlock.getRoles().remove(roleService.getByName(RoleType.REGULAR));
         userToBlock.getRoles().add(roleService.getByName(RoleType.BANNED));
 
         userRepository.update(userToBlock);
@@ -131,17 +124,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User unblockUserByAdmin(User userToUnblock, User admin) {
+        checkIfUserIsAdmin(admin);
+        userRepository.getById(userToUnblock.getId());
 
-        try {
-            checkIfUserIsAdmin(admin);
-            userToUnblock = getById(userToUnblock.getId());
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("User", userToUnblock.getId());
-        } catch (InvalidOperationException e) {
-            throw new InvalidOperationException(e.getMessage());
-        }
         userToUnblock.getRoles().remove(roleService.getByName(RoleType.BANNED));
-
         userToUnblock.getRoles().add(roleService.getByName(RoleType.REGULAR));
 
         userRepository.update(userToUnblock);
@@ -150,16 +136,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void promoteUserToAdmin(User user) {
-        try {
-            getById(user.getId());
+    public void promoteUserToAdmin(User toPromote, User admin) {
+        checkIfUserIsAdmin(admin);
 
-            user.getRoles().add(roleService.getByName(RoleType.ADMIN));
-            userRepository.update(user);
+        userRepository.getById(toPromote.getId());
 
-        } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("User", user.getId());
-        }
+        toPromote.getRoles().add(roleService.getByName(RoleType.ADMIN));
+
+        userRepository.update(toPromote);
     }
 
     private void checkIfEmailExist(User user) {
@@ -211,15 +195,20 @@ public class UserServiceImpl implements UserService {
 
 
     private void checkIfUserIsBanned(User user) {
-       if (user.getRoles().stream().anyMatch(role -> role.getRoleType().equals(RoleType.BANNED))) {
-           throw new InvalidOperationException("User is banned and cannot perform this operation!");
-       }
+        if (user.getRoles().stream().anyMatch(role -> role.getRoleType().equals(RoleType.BANNED))) {
+            throw new UnauthorizedOperationException("User is banned and cannot perform this operation!");
+        }
     }
 
 
-    private void checkIfUserIsAdmin(User user) {
-        if (user.getRoles().stream().noneMatch(role -> role.getRoleType().equals(RoleType.ADMIN))) {
-            throw new InvalidOperationException("User is not an admin and cannot perform this operation!");
+//    private void checkIfUserIsAdmin(User user) {
+//        if (user.getRoles().stream().noneMatch(role -> role.getRoleType().equals(RoleType.ADMIN))) {
+//            throw new UnauthorizedOperationException("User is not an admin and cannot perform this operation!");
+//        }
+//    }
+    private void checkIfUserIsAdmin(User user){
+        if(user.getRoles().stream().noneMatch(role -> role.getRoleType().equals(RoleType.ADMIN))){
+            throw new UnauthorizedOperationException("User is not an admin and cannot perform this operation!");
         }
     }
 }

@@ -1,14 +1,11 @@
 package org.example.virtual_wallet.controllers.Rest;
 
 import jakarta.validation.Valid;
-import org.example.virtual_wallet.enums.RoleType;
-import org.example.virtual_wallet.exceptions.EntityDuplicateException;
-import org.example.virtual_wallet.exceptions.EntityNotFoundException;
-import org.example.virtual_wallet.exceptions.InvalidOperationException;
+import org.example.virtual_wallet.exceptions.*;
 import org.example.virtual_wallet.filters.UserFilterOptions;
+import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.helpers.mappers.UserMapper;
 import org.example.virtual_wallet.models.Card;
-import org.example.virtual_wallet.models.Role;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.dtos.UserDto;
 import org.example.virtual_wallet.repositories.contracts.RoleRepository;
@@ -16,6 +13,7 @@ import org.example.virtual_wallet.services.contracts.CardService;
 import org.example.virtual_wallet.services.contracts.RoleService;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,37 +26,59 @@ public class UserRestController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final CardService cardService;
+    private final AuthenticationHelper authenticationHelper;
     private final RoleRepository roleRepository;
     private final RoleService roleService;
 
     @Autowired
-    public UserRestController(UserService userService, UserMapper userMapper, CardService cardService, RoleRepository roleRepository, RoleService roleService) {
+    public UserRestController(UserService userService, UserMapper userMapper, CardService cardService, AuthenticationHelper authenticationHelper, RoleRepository roleRepository, RoleService roleService) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.cardService = cardService;
+        this.authenticationHelper = authenticationHelper;
         this.roleRepository = roleRepository;
         this.roleService = roleService;
     }
 
     @GetMapping
-    public List<User> getAll() {
-        return userService.getAll();
+    public List<User> getAll(@RequestHeader HttpHeaders headers) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            return userService.getAll(user);
+        } catch (InvalidOperationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
     }
 
     @GetMapping("/search")
-    public List<User> getFiltered(
-            @RequestParam(required = false) String username,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String phoneNumber,
-            @RequestParam(required = false) String sortBy,
-            @RequestParam(required = false) String sortOrder) {
+    public List<User> getFiltered(@RequestHeader HttpHeaders headers,
+                                  @RequestParam(required = false) String username,
+                                  @RequestParam(required = false) String email,
+                                  @RequestParam(required = false) String phoneNumber,
+                                  @RequestParam(required = false) String sortBy,
+                                  @RequestParam(required = false) String sortOrder) {
         UserFilterOptions userFilterOptions = new UserFilterOptions(username, phoneNumber, email, sortBy, sortOrder);
-        return userService.getAllFiltered(userFilterOptions);
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            return userService.getAllFiltered(userFilterOptions, user);
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable int id) {
-        return userService.getById(id);
+    public User getById(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            return userService.getById(id);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @PostMapping
@@ -72,77 +92,102 @@ public class UserRestController {
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @Valid @RequestBody UserDto userDto) {
+    public void update(@RequestHeader HttpHeaders headers, @PathVariable int id, @Valid @RequestBody UserDto userDto) {
         try {
+            authenticationHelper.tryGetUser(headers);
             User user = userMapper.updateUser(id, userDto);
             userService.update(user);
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
     @GetMapping("/{userId}/cards")
-    public List<Card> getAllUserCards(@PathVariable int userId){
-        User user = userService.getById(userId);
-        return cardService.getUserCards(user);
+    public List<Card> getAllUserCards(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
+        try {
+            User executor = authenticationHelper.tryGetUser(headers);
+            User user = userService.getById(userId);
+
+            return userService.getAllUserCards(user.getId(), executor);
+
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
     }
 
-    @PostMapping("/{userId}/add/{toAddId}")
-    public void addToContactList(@PathVariable int userId, @PathVariable int toAddId) {
+    @PostMapping("/add/{toAddId}")
+    public void addToContactList(@RequestHeader HttpHeaders headers, @PathVariable int toAddId) {
         try {
-            User user = userService.getById(userId);
+
+            User user = authenticationHelper.tryGetUser(headers);
+
             User userToAdd = userService.getById(toAddId);
+
             userService.addUserToContactList(user, userToAdd);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
-    @PostMapping("/{userId}/remove/{toAddId}")
-    public void removeFromContactList(@PathVariable int userId, @PathVariable int toAddId) {
+    @PostMapping("/remove/{toAddId}")
+    public void removeFromContactList(@RequestHeader HttpHeaders headers, @PathVariable int toAddId) {
         try {
-            User user = userService.getById(userId);
-            User userToAdd = userService.getById(toAddId);
-            userService.removeUserFromContactList(user, userToAdd);
+            User user = authenticationHelper.tryGetUser(headers);
+
+            User toRemove = userService.getById(toAddId);
+            userService.removeUserFromContactList(user, toRemove);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
     @PutMapping("/{userId}/block")
-    public void blockUser(@PathVariable int userId) {
+    public void blockUser(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
         try {
-            User dummyUser = userService.getById(1);
+            User executor = authenticationHelper.tryGetUser(headers);
+
             User toBlock = userService.getById(userId);
-            userService.blockUserByAdmin(toBlock, dummyUser);
+            userService.blockUserByAdmin(toBlock, executor);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch (InvalidOperationException e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage());
+        } catch (InvalidOperationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
     @PutMapping("/{userId}/active")
-    public void unblockUser(@PathVariable int userId) {
+    public void unblockUser(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
         try {
-            User dummyUser = userService.getById(1);
+            User executor = authenticationHelper.tryGetUser(headers);
+
             User toUnBlock = userService.getById(userId);
-            userService.unblockUserByAdmin(toUnBlock, dummyUser);
+            userService.unblockUserByAdmin(toUnBlock, executor);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch (InvalidOperationException e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage());
+        } catch (InvalidOperationException | AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
     @PutMapping("/{userId}/promote")
-    public void promoteToAdmin(@PathVariable int userId) {
+    public void promoteToAdmin(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
         try {
-            User admin = userService.getById(userId);
-            userService.promoteUserToAdmin(admin);
+            User admin = authenticationHelper.tryGetUser(headers);
+            User toPromote = userService.getById(userId);
+
+            userService.promoteUserToAdmin(toPromote, admin);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (InvalidOperationException | AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 }
