@@ -29,6 +29,7 @@ public class EmailRestController {
         Mail mail = new Mail(from, subject, to, content);
         SendGrid sg = new SendGrid(key);
         Request request = new Request();
+
         try {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
