@@ -44,8 +44,8 @@ create table cards
         primary key,
     card_number     varchar(16)          null,
     card_holder     varchar(50)          null,
-    expiration_date date                 not null,
-    card_csv        int                  not null,
+    expiration_date varchar(5)           not null,
+    card_csv        varchar(3)           not null,
     isDeleted       tinyint(1) default 0 not null,
     user_id         int                  null,
     constraint cards_users_user_id_fk
@@ -157,7 +157,7 @@ create table wallets
 (
     wallet_id   int auto_increment
         primary key,
-    balance     double               null,
+    balance     double     default 0 null,
     currency_id int                  null,
     user_id     int                  null,
     isActive    tinyint(1) default 1 null,
