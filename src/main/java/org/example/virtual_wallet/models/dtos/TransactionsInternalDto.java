@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.Optional;
 
 public class TransactionsInternalDto {
-
     private String username;
     private String email;
     private String phoneNumber;

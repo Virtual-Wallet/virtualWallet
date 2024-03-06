@@ -7,7 +7,7 @@ import org.example.virtual_wallet.models.User;
 import java.util.List;
 
 public interface TransactionsInternalService {
-    public TransactionsInternal create(TransactionsInternal transactionsInternal);
+    TransactionsInternal create(TransactionsInternal transactionsInternal);
 
     List<TransactionsInternal> getAll();
 

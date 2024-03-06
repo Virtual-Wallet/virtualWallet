@@ -22,7 +22,7 @@ public class WalletRepositoryImpl extends AbstractCRUDRepository<Wallet> impleme
     @Override
     public List<Wallet> getAll() {
         try (Session session = sessionFactory.openSession()) {
-            Query<Wallet> query = session.createQuery("SELECT w FROM Wallet w WHERE w.isActive = false", Wallet.class);
+            Query<Wallet> query = session.createQuery("SELECT w FROM Wallet w WHERE w.isActive = true", Wallet.class);
             return query.list();
         }
     }
@@ -52,7 +52,7 @@ public class WalletRepositoryImpl extends AbstractCRUDRepository<Wallet> impleme
             Transaction transaction = session.beginTransaction();
 
             Wallet wallet = session.createQuery(
-                            "SELECT w FROM Wallet w WHERE w.user.id = :userId AND w.isActive = false", Wallet.class)
+                            "SELECT w FROM Wallet w WHERE w.user.id = :userId AND w.isActive = true", Wallet.class)
                     .setParameter("userId", userId)
                     .uniqueResult();
 
