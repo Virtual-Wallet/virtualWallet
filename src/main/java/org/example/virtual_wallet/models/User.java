@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.example.virtual_wallet.enums.AccountStatus;
-import org.example.virtual_wallet.enums.Role;
 import org.example.virtual_wallet.exceptions.InvalidOperationException;
 
 import java.sql.Timestamp;
@@ -39,12 +38,7 @@ public class User {
     @Column(name = "status")
     private AccountStatus accountStatus = AccountStatus.PENDING_EMAIL;
 
-    @OneToOne
-    @JoinTable(
-            name = "wallets",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "wallet_id")
-    )
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Wallet wallet;
 
 //    @OneToMany(fetch = FetchType.EAGER)
@@ -57,15 +51,32 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Card> cards;
 
-//    @Enumerated(EnumType.STRING)
-//    @JoinTable(
-//            name = "roles",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
-//    private Role role = Role.REGULAR;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "contacts_lists",
+            joinColumns = @JoinColumn(name = "owner"),
+            inverseJoinColumns = @JoinColumn(name = "member")
+    )
+    private Set<User> contactLists;
 
     public User() {
+    }
+
+    public Set<User> getContactLists() {
+        return contactLists;
+    }
+
+    public void setContactLists(Set<User> contactLists) {
+        this.contactLists = contactLists;
     }
 
     public int getId() {
@@ -147,13 +158,14 @@ public class User {
     public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
-    //    public Role getRole() {
-//        return role;
-//    }
-//
-//    public void setRole(Role role) {
-//        this.role = role;
-//    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public void advanceAccountStatus(AccountStatus accountStatus) {
         if (accountStatus != AccountStatus.ACTIVE) {
@@ -176,11 +188,11 @@ public class User {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         User user = (User) object;
-        return id == user.id && Objects.equals(username, user.username);
+        return id == user.id && Objects.equals(username, user.username) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username);
+        return Objects.hash(id, username, password);
     }
 }

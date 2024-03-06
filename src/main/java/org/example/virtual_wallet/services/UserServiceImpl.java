@@ -1,11 +1,14 @@
 package org.example.virtual_wallet.services;
 
+import org.example.virtual_wallet.enums.RoleType;
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
+import org.example.virtual_wallet.exceptions.InvalidOperationException;
 import org.example.virtual_wallet.filters.UserFilterOptions;
 import org.example.virtual_wallet.models.Card;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.repositories.contracts.UserRepository;
+import org.example.virtual_wallet.services.contracts.RoleService;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +19,13 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RoleService roleService;
+
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
+        this.roleService = roleService;
     }
 
     @Override
@@ -79,17 +85,93 @@ public class UserServiceImpl implements UserService {
         return userRepository.getByEmail(email);
     }
 
+    @Override
+    public void addUserToContactList(User owner, User toAdd) {
+        try {
+            getById(toAdd.getId());
+            owner.getContactLists().add(toAdd);
+            userRepository.update(owner);
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("User", toAdd.getId());
+        }
+
+    }
+
+    @Override
+    public void removeUserFromContactList(User owner, User toRemove) {
+        try {
+            getById(toRemove.getId());
+            owner.getContactLists().remove(toRemove);
+            userRepository.update(owner);
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("User", toRemove.getId());
+        }
+
+    }
+
+    @Override
+    public User blockUserByAdmin(User userToBlock, User admin) {
+        try {
+            checkIfUserIsAdmin(admin);
+            userToBlock = getById(userToBlock.getId());
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("User", userToBlock.getId());
+        } catch (InvalidOperationException e) {
+            throw new InvalidOperationException(e.getMessage());
+        }
+        userToBlock.getRoles().remove(roleService.getByName(RoleType.REGULAR));
+
+        userToBlock.getRoles().add(roleService.getByName(RoleType.BANNED));
+
+        userRepository.update(userToBlock);
+
+        return userToBlock;
+
+    }
+
+    @Override
+    public User unblockUserByAdmin(User userToUnblock, User admin) {
+
+        try {
+            checkIfUserIsAdmin(admin);
+            userToUnblock = getById(userToUnblock.getId());
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("User", userToUnblock.getId());
+        } catch (InvalidOperationException e) {
+            throw new InvalidOperationException(e.getMessage());
+        }
+        userToUnblock.getRoles().remove(roleService.getByName(RoleType.BANNED));
+
+        userToUnblock.getRoles().add(roleService.getByName(RoleType.REGULAR));
+
+        userRepository.update(userToUnblock);
+
+        return userToUnblock;
+    }
+
+    @Override
+    public void promoteUserToAdmin(User user) {
+        try {
+            getById(user.getId());
+
+            user.getRoles().add(roleService.getByName(RoleType.ADMIN));
+            userRepository.update(user);
+
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("User", user.getId());
+        }
+    }
+
     private void checkIfEmailExist(User user) {
         boolean duplicateExists = true;
         try {
-            userRepository.getByEmail(user.getEmail());
+            User existingMail = userRepository.getByEmail(user.getEmail());
+            if (existingMail.getId() == user.getId()) {
+                duplicateExists = false;
+            }
         } catch (EntityNotFoundException e) {
             duplicateExists = false;
         }
-        if (user.getEmail().equals(user.getEmail())) {
-            duplicateExists = false;
-        }
-
         if (duplicateExists) {
             throw new EntityDuplicateException("User", "e-mail", user.getEmail());
         }
@@ -99,7 +181,10 @@ public class UserServiceImpl implements UserService {
     private void checkIfUsernameExist(User user) {
         boolean duplicateExists = true;
         try {
-            userRepository.getByUsername(user.getUsername());
+            User existingUsername = userRepository.getByUsername(user.getUsername());
+            if (existingUsername.getId() == user.getId()) {
+                duplicateExists = false;
+            }
         } catch (EntityNotFoundException e) {
             duplicateExists = false;
         }
@@ -112,16 +197,29 @@ public class UserServiceImpl implements UserService {
     private void checkIfPhoneNumberExist(User user) {
         boolean duplicateExists = true;
         try {
-            userRepository.getByPhoneNumber(user.getPhoneNumber());
+            User existingNumber = userRepository.getByPhoneNumber(user.getPhoneNumber());
+            if (existingNumber.getId() == user.getId()) {
+                duplicateExists = false;
+            }
         } catch (EntityNotFoundException e) {
             duplicateExists = false;
         }
-        if (user.getPhoneNumber().equals(user.getPhoneNumber())) {
-            duplicateExists = false;
-        }
-
         if (duplicateExists) {
             throw new EntityDuplicateException("User", "phone number", user.getPhoneNumber());
+        }
+    }
+
+
+    private void checkIfUserIsBanned(User user) {
+       if (user.getRoles().stream().anyMatch(role -> role.getRoleType().equals(RoleType.BANNED))) {
+           throw new InvalidOperationException("User is banned and cannot perform this operation!");
+       }
+    }
+
+
+    private void checkIfUserIsAdmin(User user) {
+        if (user.getRoles().stream().noneMatch(role -> role.getRoleType().equals(RoleType.ADMIN))) {
+            throw new InvalidOperationException("User is not an admin and cannot perform this operation!");
         }
     }
 }

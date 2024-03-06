@@ -1,6 +1,6 @@
 package org.example.virtual_wallet.enums;
 
-public enum Role {
+public enum RoleType {
     ADMIN,
     REGULAR,
     BANNED;
