@@ -1,6 +1,8 @@
 package org.example.virtual_wallet.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.example.virtual_wallet.enums.TransferType;
 
 import java.util.Date;
 
@@ -12,13 +14,14 @@ public class TransactionsExternal {
     @Column(name = "external_transaction_id")
     private int externalTransactionId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private String type;
-
+    private TransferType type;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "card_id")
     private Card card;
@@ -33,27 +36,14 @@ public class TransactionsExternal {
     @Column(name = "amount")
     private double amount;
 
-    public TransactionsExternal(int externalTransactionId,
-                                String type,
-                                User user,
-                                Card card,
-                                Date timestamp,
-                                Currency currency,
-                                double amount) {
-        this.externalTransactionId = externalTransactionId;
-        this.type = type;
-        this.user = user;
-        this.card = card;
-        this.timestamp = timestamp;
-        this.currency = currency;
-        this.amount = amount;
+    public TransactionsExternal() {
     }
 
     public int getExternalTransactionId() {
         return externalTransactionId;
     }
 
-    public String getType() {
+    public TransferType getType() {
         return type;
     }
 
@@ -81,7 +71,7 @@ public class TransactionsExternal {
         this.externalTransactionId = externalTransactionId;
     }
 
-    public void setType(String type) {
+    public void setType(TransferType type) {
         this.type = type;
     }
 

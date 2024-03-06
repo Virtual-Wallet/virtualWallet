@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.repositories;
 
+import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.models.TransactionsExternal;
 import org.example.virtual_wallet.models.TransactionsInternal;
 import org.example.virtual_wallet.models.User;
@@ -24,22 +25,26 @@ public class TransactionsExternalRepositoryImpl extends AbstractCRUDRepository<T
 
     @Override
     public List<TransactionsExternal> getDeposits(User user) {
-        int userId = user.getId();
         try (Session session = sessionFactory.openSession()) {
             Query<TransactionsExternal> query = session.createQuery(
-                    "FROM TransactionsInternal WHERE id =:userId", TransactionsExternal.class);
-            query.setParameter("userId", userId);
+                    "FROM TransactionsExternal e WHERE e.user.id =:userId AND e.type ='DEPOSIT'", TransactionsExternal.class);
+            query.setParameter("userId", user.getId());
+            if (query.list().isEmpty()) {
+                throw new EntityNotFoundException("There are no withdrawals to show!");
+            }
             return query.list();
         }
     }
 
     @Override
     public List<TransactionsExternal> getWithdrawals(User user) {
-        int userId = user.getId();
         try (Session session = sessionFactory.openSession()) {
             Query<TransactionsExternal> query = session.createQuery(
-                    "FROM TransactionsInternal WHERE id =:userId", TransactionsExternal.class);
-            query.setParameter("userId", userId);
+                    "FROM TransactionsExternal e WHERE e.user.id =:userId AND e.type ='WITHDRAWAL'", TransactionsExternal.class);
+            query.setParameter("userId", user.getId());
+            if (query.list().isEmpty()) {
+                throw new EntityNotFoundException("There are no deposits to show!");
+            }
             return query.list();
         }
     }
