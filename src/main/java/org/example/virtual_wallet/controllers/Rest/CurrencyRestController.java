@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/currencies")
@@ -70,6 +72,16 @@ public class CurrencyRestController {
             currencyService.delete(abbreviation);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @GetMapping("/get-rate/{source}/{target}")
+    public Map<String, Object> getRate(@PathVariable String source,
+                                       @PathVariable String target) {
+        try {
+            return currencyService.consumeExchangeRate(source, target);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
