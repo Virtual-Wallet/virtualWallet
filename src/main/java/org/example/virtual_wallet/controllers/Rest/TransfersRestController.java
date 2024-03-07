@@ -10,7 +10,6 @@ import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.dtos.TransferDto;
 import org.example.virtual_wallet.services.contracts.TransactionsExternalService;
 import org.example.virtual_wallet.services.contracts.UserService;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,20 +45,19 @@ public class TransfersRestController {
 
         try {
             user = authenticationHelper.tryGetUser(httpHeaders);
+            TransactionsExternal transfer = new TransactionsExternal();
+            switch (action) {
+                case "deposit":
+                    transfer = transactionsExternalMapper.depositDto(user, transferDto);
+                    return service.createDeposit(transfer);
+                case "withdraw":
+                    transfer = transactionsExternalMapper.withdrawalDto(user, transferDto);
+                    return service.createWithdrawal(transfer);
+            }
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-
-        TransactionsExternal transactionsExternal = transactionsExternalMapper.createDto(user, transferDto);
-        switch (action) {
-            case "deposit":
-                return service.createDeposit(transactionsExternal);
-            break;
-            case "withdraw":
-                return service.createWithdrawal(transactionsExternal);
-            break;
         }
         return null;
     }

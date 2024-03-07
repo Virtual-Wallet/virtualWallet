@@ -21,8 +21,17 @@ public class TransactionsExternalServiceImpl implements TransactionsExternalServ
     }
 
     @Override
-    public TransactionsExternal create(TransactionsExternal transactionsExternal) {
-        return null;
+    public TransactionsExternal createDeposit(TransactionsExternal transfer) {
+        walletService.deposit(transfer.getUser().getWallet(), transfer.getAmount());
+        repository.create(transfer);
+        return transfer;
+    }
+
+    @Override
+    public TransactionsExternal createWithdrawal(TransactionsExternal transfer) {
+        walletService.withdraw(transfer.getUser().getWallet(), transfer.getAmount());
+        repository.create(transfer);
+        return transfer;
     }
 
     @Override
