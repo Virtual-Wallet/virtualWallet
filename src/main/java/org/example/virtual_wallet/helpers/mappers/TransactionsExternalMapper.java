@@ -1,8 +1,10 @@
 package org.example.virtual_wallet.helpers.mappers;
 
+import com.stripe.model.Transfer;
 import org.example.virtual_wallet.enums.TransferType;
 import org.example.virtual_wallet.models.TransactionsExternal;
 import org.example.virtual_wallet.models.User;
+import org.example.virtual_wallet.models.dtos.DummyDto;
 import org.example.virtual_wallet.models.dtos.TransferDto;
 import org.example.virtual_wallet.services.contracts.*;
 import org.springframework.stereotype.Component;
@@ -54,4 +56,14 @@ public class TransactionsExternalMapper {
         transfer.setCurrency(currencyService.get(dto.getCurrency()));
         return transfer;
     }
+
+    public DummyDto transferToDummyDto(TransactionsExternal transfer) {
+        DummyDto dummyDto = new DummyDto();
+        dummyDto.setAmount(transfer.getAmount());
+        dummyDto.setCardCheck(transfer.getCard().getCsv());
+        dummyDto.setExpirationDate(String.valueOf(transfer.getCard().getExpirationDate()));
+        dummyDto.setCardNumber(transfer.getCard().getCardNumber());
+        return dummyDto;
+    }
+
 }
