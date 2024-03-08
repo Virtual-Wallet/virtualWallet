@@ -20,6 +20,5 @@ public interface CurrencyService {
 
     void delete(String abbreviation);
 
-    Map<String, Object> consumeExchangeRate(String sourceCurrency, String targetCurrency) throws IOException;
-
+    Map<String, Double> getRates(Currency source) throws IOException;
 }

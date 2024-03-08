@@ -76,8 +76,8 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
-    public Map<String, Object> consumeExchangeRate(String sourceCurrency, String targetCurrency) throws IOException {
-        String url_str = "https://v6.exchangerate-api.com/v6/8779bb0271058064063db1d5/latest/" + sourceCurrency;
+    public Map<String, Double> getRates(Currency source) throws IOException {
+        String url_str = "https://v6.exchangerate-api.com/v6/8779bb0271058064063db1d5/latest/" + source.getCurrency();
 
         // Making Request
         URL url = new URL(url_str);
@@ -95,7 +95,9 @@ public class CurrencyServiceImpl implements CurrencyService {
         }.getType();
         Map<String, Object> responseMap = gson.fromJson(jsonobj, type);
 
-        return responseMap;
-    }
+        // Create CurrencyApiResponse and set exchangeRate
+        Map<String, Double> conversionRates = (Map<String, Double>) responseMap.get("conversion_rates");
 
+        return conversionRates;
+    }
 }

@@ -4,10 +4,11 @@ package org.example.virtual_wallet.services.contracts;
 import org.example.virtual_wallet.models.TransactionsInternal;
 import org.example.virtual_wallet.models.User;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface TransactionsInternalService {
-    TransactionsInternal create(TransactionsInternal transactionsInternal);
+    TransactionsInternal create(TransactionsInternal transactionsInternal) throws IOException;
 
     List<TransactionsInternal> getAll();
 

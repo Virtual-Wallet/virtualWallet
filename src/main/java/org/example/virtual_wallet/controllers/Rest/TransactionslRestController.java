@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -39,7 +40,7 @@ public class TransactionslRestController {
     }
 
     @PostMapping
-    public TransactionsInternal getAll(@RequestHeader HttpHeaders httpHeaders,
+    public TransactionsInternal create(@RequestHeader HttpHeaders httpHeaders,
                                        @Valid @RequestBody TransactionDto dto) {
 
         User sender = new User();
@@ -63,14 +64,17 @@ public class TransactionslRestController {
             } else {
                 throw new IllegalArgumentException("At least one of Username, Email, or Phone Number must be provided.");
             }
+            TransactionsInternal transactionsInternal = transactionsInternalMapper.createDto(sender, recipient, dto);
+            return service.create(transactionsInternal);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
-        TransactionsInternal transactionsInternal = transactionsInternalMapper.createDto(sender, recipient, dto);
-        return service.create(transactionsInternal);
+
     }
 
 
