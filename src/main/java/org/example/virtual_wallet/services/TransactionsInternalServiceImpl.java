@@ -1,6 +1,5 @@
 package org.example.virtual_wallet.services;
 
-import org.example.virtual_wallet.models.Currency;
 import org.example.virtual_wallet.models.TransactionsInternal;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.Wallet;
