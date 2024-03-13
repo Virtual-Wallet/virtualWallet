@@ -1,16 +1,10 @@
 package org.example.virtual_wallet.controllers.Rest;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.helpers.mappers.CurrencyMapper;
 import org.example.virtual_wallet.models.Currency;
-import org.example.virtual_wallet.models.dtos.CurrencyApiResponse;
 import org.example.virtual_wallet.models.dtos.CurrencyDto;
 import org.example.virtual_wallet.services.contracts.CurrencyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/currencies")
