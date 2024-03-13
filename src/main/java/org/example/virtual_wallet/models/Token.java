@@ -3,6 +3,7 @@ package org.example.virtual_wallet.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tokens")
@@ -62,5 +63,18 @@ public class Token {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Token token = (Token) object;
+        return Objects.equals(code, token.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code);
     }
 }

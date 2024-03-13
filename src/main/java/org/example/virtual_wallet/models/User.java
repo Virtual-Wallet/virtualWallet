@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.example.virtual_wallet.enums.AccountStatus;
+import org.example.virtual_wallet.enums.RoleType;
 import org.example.virtual_wallet.exceptions.InvalidOperationException;
 
 import java.sql.Timestamp;
@@ -41,23 +42,15 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Wallet wallet;
 
-//    @OneToMany(fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "users_cards",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "card_id")
-//    )
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Card> cards;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role_type")
+    private RoleType roleType;
 
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -69,6 +62,14 @@ public class User {
     private Set<User> contactLists;
 
     public User() {
+    }
+
+    public RoleType getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(RoleType roleType) {
+        this.roleType = roleType;
     }
 
     public Set<User> getContactLists() {
@@ -157,14 +158,6 @@ public class User {
 
     public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 
     public void advanceAccountStatus(AccountStatus accountStatus) {
