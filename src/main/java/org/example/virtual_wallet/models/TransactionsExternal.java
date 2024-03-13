@@ -39,9 +39,6 @@ public class TransactionsExternal {
     public TransactionsExternal() {
     }
 
-    public TransactionsExternal() {
-
-    }
 
     public int getExternalTransactionId() {
         return externalTransactionId;

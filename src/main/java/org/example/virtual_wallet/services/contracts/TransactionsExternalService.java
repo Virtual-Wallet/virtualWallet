@@ -16,4 +16,6 @@ public interface TransactionsExternalService {
     List<TransactionsExternal> getDeposits(User user);
 
     List<TransactionsExternal> getWithdrawals(User user);
+    void checkForLargeTransaction(TransactionsExternal transaction);
+
 }
