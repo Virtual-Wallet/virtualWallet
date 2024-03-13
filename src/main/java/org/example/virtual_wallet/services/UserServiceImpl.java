@@ -10,9 +10,15 @@ import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.repositories.contracts.UserRepository;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -193,5 +199,23 @@ public class UserServiceImpl implements UserService {
         if (!user.getRoleType().equals(RoleType.ADMIN)) {
             throw new UnauthorizedOperationException("User is not an admin and cannot perform this operation!");
         }
+    }
+    @Override
+    public Page<User> findPage(List<User> filteredList, Pageable pageable) {
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+
+        List<User> result;
+
+        if (filteredList.size() < startItem) {
+            result = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, filteredList.size());
+            result = new ArrayList<>(filteredList.
+                    subList(startItem, toIndex));
+        }
+
+        return new PageImpl<>(result, PageRequest.of(currentPage, pageSize), filteredList.size());
     }
 }

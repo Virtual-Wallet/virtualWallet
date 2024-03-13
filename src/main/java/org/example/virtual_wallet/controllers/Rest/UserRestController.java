@@ -1,6 +1,7 @@
 package org.example.virtual_wallet.controllers.Rest;
 
 import jakarta.validation.Valid;
+import org.example.virtual_wallet.enums.RoleType;
 import org.example.virtual_wallet.exceptions.*;
 import org.example.virtual_wallet.filters.UserFilterOptions;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
@@ -11,12 +12,17 @@ import org.example.virtual_wallet.models.dtos.UserDto;
 import org.example.virtual_wallet.services.contracts.CardService;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RestController
 @RequestMapping("/api/users")
@@ -51,11 +57,27 @@ public class UserRestController {
                                   @RequestParam(required = false) String email,
                                   @RequestParam(required = false) String phoneNumber,
                                   @RequestParam(required = false) String sortBy,
-                                  @RequestParam(required = false) String sortOrder) {
+                                  @RequestParam(required = false) String sortOrder,
+                                  @RequestParam("page") Optional<Integer> page,
+                                  @RequestParam("size") Optional<Integer> size) {
+
         UserFilterOptions userFilterOptions = new UserFilterOptions(username, phoneNumber, email, sortBy, sortOrder);
+
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(2);
+
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            return userService.getAllFiltered(userFilterOptions, user);
+            List<User> filteredList = userService.getAllFiltered(userFilterOptions, user);
+            Page<User> usersPage = userService.findPage(filteredList, PageRequest.of(currentPage - 1, pageSize));
+            int totalPages = usersPage.getTotalPages();
+            if (totalPages > 0) {
+                List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                        .boxed()
+                        .collect(Collectors.toList());
+            }
+            return usersPage.stream().toList();
+//            return userService.getAllFiltered(userFilterOptions, user);
         } catch (UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
