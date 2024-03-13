@@ -49,6 +49,10 @@ public class TransactionsExternal {
         this.amount = amount;
     }
 
+    public TransactionsExternal() {
+
+    }
+
     public int getExternalTransactionId() {
         return externalTransactionId;
     }

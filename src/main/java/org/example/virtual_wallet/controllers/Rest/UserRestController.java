@@ -27,17 +27,14 @@ public class UserRestController {
     private final UserMapper userMapper;
     private final CardService cardService;
     private final AuthenticationHelper authenticationHelper;
-    private final RoleRepository roleRepository;
-    private final RoleService roleService;
+
 
     @Autowired
-    public UserRestController(UserService userService, UserMapper userMapper, CardService cardService, AuthenticationHelper authenticationHelper, RoleRepository roleRepository, RoleService roleService) {
+    public UserRestController(UserService userService, UserMapper userMapper, CardService cardService, AuthenticationHelper authenticationHelper) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.cardService = cardService;
         this.authenticationHelper = authenticationHelper;
-        this.roleRepository = roleRepository;
-        this.roleService = roleService;
     }
 
     @GetMapping

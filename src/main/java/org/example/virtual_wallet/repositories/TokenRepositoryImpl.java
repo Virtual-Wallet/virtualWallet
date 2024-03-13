@@ -23,7 +23,7 @@ public class TokenRepositoryImpl extends AbstractCRUDRepository<Token> implement
     public Token getById(int id) {
         try (Session session = sessionFactory.openSession()) {
 
-            Query<Token> query = session.createQuery("from  Token where  id =:id and isActive = false ", Token.class);
+            Query<Token> query = session.createQuery("from  Token where  id =:id and isActive = true ", Token.class);
             query.setParameter("id", id);
             if (query.list().isEmpty()) {
                 throw new EntityNotFoundException("Token", id);
@@ -49,14 +49,14 @@ public class TokenRepositoryImpl extends AbstractCRUDRepository<Token> implement
             return query.list().get(0);
         }
     }
-    public List<Token> getUserTokens(int id) {
+    public Token getUserToken(int id) {
         try(Session session = sessionFactory.openSession()){
             Query<Token> query = session.createQuery("from Token where user =:user and isActive = true ", Token.class);
             query.setParameter("user",id);
             if (query.list().isEmpty()){
-                throw new EntityNotFoundException("Tokens for User",id);
+                throw new EntityNotFoundException("Token for User",id);
             }
-            return query.list();
+            return query.list().get(0);
         }
     }
 
