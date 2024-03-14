@@ -1,0 +1,136 @@
+package org.example.virtual_wallet.controllers.Mvc;
+
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import org.example.virtual_wallet.exceptions.AuthorizationException;
+import org.example.virtual_wallet.exceptions.EntityDuplicateException;
+import org.example.virtual_wallet.exceptions.InvalidTokenException;
+import org.example.virtual_wallet.helpers.AuthenticationHelper;
+import org.example.virtual_wallet.helpers.mappers.UserMapper;
+import org.example.virtual_wallet.models.Token;
+import org.example.virtual_wallet.models.User;
+import org.example.virtual_wallet.models.dtos.LogInDto;
+import org.example.virtual_wallet.models.dtos.UserDto;
+import org.example.virtual_wallet.services.contracts.EmailService;
+import org.example.virtual_wallet.services.contracts.TokenService;
+import org.example.virtual_wallet.services.contracts.UserService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/authentication")
+public class AuthenticationMvcController {
+    private static final String EMAIL_SUBJECT = "Verification code from Flex Pay";
+    private static final String CURRENT_USER = "currentUser";
+
+    private final EmailService emailService;
+    private final UserService userService;
+    private final TokenService tokenService;
+    private final UserMapper userMapper;
+    private final AuthenticationHelper authenticationHelper;
+
+    public AuthenticationMvcController(EmailService emailService,
+                                       UserService userService,
+                                       TokenService tokenService,
+                                       UserMapper userMapper,
+                                       AuthenticationHelper authenticationHelper) {
+        this.emailService = emailService;
+        this.userService = userService;
+        this.tokenService = tokenService;
+        this.userMapper = userMapper;
+        this.authenticationHelper = authenticationHelper;
+    }
+
+    @ModelAttribute("isAuthenticated")
+    public boolean populateIsAuthenticated(HttpSession session) {
+        return session.getAttribute(CURRENT_USER) != null;
+    }
+
+    @GetMapping("/login")
+    public String showLoginPage(Model model) {
+        model.addAttribute("login", new LogInDto());
+        return "LoginView";
+    }
+
+    //todo Double check this!
+    @PostMapping("/login")
+    public String handleLogin(@Valid @ModelAttribute("login") LogInDto login,
+                              BindingResult bindingResult,
+                              HttpSession session) {
+        if (bindingResult.hasErrors()) {
+            return "LoginView";
+        }
+
+        try {
+            User user = authenticationHelper.verifyAuthentication(login.getUsername(), login.getPassword());
+            session.setAttribute("currentUser", login.getUsername());
+            session.setAttribute("ADMIN", user.getRoleType());
+            return "redirect:/";
+        } catch (AuthorizationException e) {
+            bindingResult.rejectValue("username", "auth_error", e.getMessage());
+            return "LoginView";
+        }
+    }
+
+    @GetMapping("/register")
+    public String showRegisterPage(Model model) {
+        model.addAttribute("register", new UserDto());
+        return "RegisterView";
+    }
+
+    @PostMapping("/register")
+    public String handleRegister(@Valid @ModelAttribute("register") UserDto register,
+                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "RegisterView";
+        }
+        if (!register.getPassword().equals(register.getPasswordConfirm())) {
+            bindingResult.rejectValue("passwordConfirm", "password_error", "Passwords doesn't match");
+        }
+        try {
+            User user = userMapper.dtoUserCreate(register);
+            Token token = tokenService.create(user);
+            emailService.sendEmail(user.getEmail(), EMAIL_SUBJECT, token.getCode());
+            userService.create(user);
+            return "redirect:/authentication/login";
+        } catch (EntityDuplicateException e) {
+            bindingResult.rejectValue("username", "username_error", e.getMessage());
+            bindingResult.rejectValue("email", "email_error", e.getMessage());
+            bindingResult.rejectValue("phone", "phone_error", e.getMessage());
+            return "registerView";
+        }
+    }
+
+    @GetMapping("/verify")
+    public String showTokenVerificationPage(Model model) {
+        model.addAttribute("token", new Token());
+        return "TokenVerificationView";
+    }
+
+    @PostMapping("/verify")
+    public String handleTokenVerification(@Valid @ModelAttribute("token") Token token,
+                                          BindingResult bindingResult,
+                                          HttpSession session) {
+        if (bindingResult.hasErrors()) {
+            return "TokenVerificationView";
+        }
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            tokenService.validateCorrectToken(token, user);
+            session.setAttribute(CURRENT_USER, user);
+            userService.advanceAccountStatus(user);
+
+            //todo redirect to id-authentication
+            //return "redirect:/id-authentication ";
+            return "redirect:/";
+        } catch (InvalidTokenException e) {
+            bindingResult.rejectValue("code", "code_error", e.getMessage());
+            return "TokenVerificationView";
+        }
+    }
+}

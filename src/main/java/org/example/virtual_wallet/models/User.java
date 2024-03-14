@@ -17,8 +17,8 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
 
-    public static final String ADVANCE_STATUS_ERROR = "Can't advance account status, already at ";
-    public static final String REVERT_STATUS_ERROR = "Can't revert account status, already at ";
+    private static final String ADVANCE_STATUS_ERROR = "Can't advance account status, already at ";
+    private static final String REVERT_STATUS_ERROR = "Can't revert account status, already at ";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

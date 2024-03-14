@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class TokenServiceImpl implements TokenService {
     private static final String TOKEN_EXPIRATION_MSG = "This verification code is expired!";
     private static final String WRONG_TOKEN_CODE_MSG = "This verification code is invalid!";
-    public static final int TOKEN_EXPIRATION_TIME = 5;
+    private static final int TOKEN_EXPIRATION_TIME = 5;
     private final TokenRepository tokenRepository;
     private final SecureRandom secureRandom = new SecureRandom();
     private final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
