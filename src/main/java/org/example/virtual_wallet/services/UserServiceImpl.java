@@ -121,6 +121,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void advanceAccountStatus(User user) {
+        userRepository.getById(user.getId());
+        user.advanceAccountStatus(user);
+        userRepository.update(user);
+    }
+
+    @Override
+    public void revertAccountStatus(User user) {
+        userRepository.getById(user.getId());
+        user.revertAccountStatus(user);
+        userRepository.update(user);
+    }
+
+    @Override
     public User unblockUserByAdmin(User userToUnblock, User admin) {
         checkIfUserIsAdmin(admin);
         userRepository.getById(userToUnblock.getId());
@@ -200,6 +214,7 @@ public class UserServiceImpl implements UserService {
             throw new UnauthorizedOperationException("User is not an admin and cannot perform this operation!");
         }
     }
+
     @Override
     public Page<User> findPage(List<User> filteredList, Pageable pageable) {
         int pageSize = pageable.getPageSize();

@@ -17,6 +17,8 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
 
+    public static final String ADVANCE_STATUS_ERROR = "Can't advance account status, already at ";
+    public static final String REVERT_STATUS_ERROR = "Can't revert account status, already at ";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -160,19 +162,19 @@ public class User {
         this.creationDate = creationDate;
     }
 
-    public void advanceAccountStatus(AccountStatus accountStatus) {
-        if (accountStatus != AccountStatus.ACTIVE) {
+    public void advanceAccountStatus(User user) {
+        if (user.getAccountStatus() != AccountStatus.ACTIVE) {
             setAccountStatus(AccountStatus.values()[accountStatus.ordinal() + 1]);
         } else {
-            throw new InvalidOperationException("Can't advance account status, already at " + getAccountStatus());
+            throw new InvalidOperationException(ADVANCE_STATUS_ERROR + getAccountStatus());
         }
     }
 
-    public void revertAccountStatus(AccountStatus accountStatus) {
-        if (accountStatus != AccountStatus.PENDING_EMAIL) {
+    public void revertAccountStatus(User user) {
+        if (user.getAccountStatus() != AccountStatus.PENDING_EMAIL) {
             setAccountStatus(AccountStatus.values()[accountStatus.ordinal() - 1]);
         } else {
-            throw new InvalidOperationException("Can't revert account status, already at " + getAccountStatus());
+            throw new InvalidOperationException(REVERT_STATUS_ERROR + getAccountStatus());
         }
     }
 

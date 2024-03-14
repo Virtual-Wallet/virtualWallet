@@ -1,7 +1,6 @@
 package org.example.virtual_wallet.controllers.Rest;
 
 import jakarta.validation.Valid;
-import org.example.virtual_wallet.enums.RoleType;
 import org.example.virtual_wallet.exceptions.*;
 import org.example.virtual_wallet.filters.UserFilterOptions;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
@@ -205,6 +204,29 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (InvalidOperationException | AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
+    @PutMapping("{userId}/advance")
+    public void advanceAccStatus(@PathVariable int userId){
+        try{
+            User user = userService.getById(userId);
+            userService.advanceAccountStatus(user);
+        }catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+        }catch (InvalidOperationException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+        }
+    }
+    @PutMapping("{userId}/revert")
+    public void revertAccStatus(@PathVariable int userId){
+        try{
+            User user = userService.getById(userId);
+            userService.revertAccountStatus(user);
+        }catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+        }catch (InvalidOperationException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
 }

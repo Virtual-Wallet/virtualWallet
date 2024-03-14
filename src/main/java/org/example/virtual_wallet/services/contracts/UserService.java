@@ -16,12 +16,6 @@ public interface UserService {
 
     List<Card> getAllUserCards(int userId,User executor);
 
-    void create(User user);
-
-    void update(User user);
-
-    void delete(int userId);
-
     User getById(int id);
 
     User getByUsername(String username);
@@ -30,12 +24,20 @@ public interface UserService {
 
     User getByEmail(String email);
 
+    User unblockUserByAdmin(User userToUnblock, User executor);
+
+    User blockUserByAdmin(User userToBlock, User executor);
+    void advanceAccountStatus(User user);
+    void revertAccountStatus(User user);
+
+    void create(User user);
+
+    void update(User user);
+
+    void delete(int userId);
+
     void addUserToContactList(User userId, User contactId);
 
     void removeUserFromContactList(User owner, User toRemove);
-
-    User blockUserByAdmin(User userToBlock, User executor);
-
-    User unblockUserByAdmin(User userToUnblock, User executor);
     void promoteUserToAdmin(User toPromote,User admin);
 }
