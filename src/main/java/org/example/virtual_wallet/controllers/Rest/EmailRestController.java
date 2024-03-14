@@ -38,4 +38,13 @@ public class EmailRestController {
         emailService.sendEmail(user.getEmail(), EMAIL_SUBJECT, token.getCode());
         return ResponseEntity.ok("EMAIL SEND!");
     }
+
+    @PostMapping("/sendTransaction")
+    public ResponseEntity sendTransactionEmail(@RequestHeader HttpHeaders headers) {
+        User user = authenticationHelper.tryGetUser(headers);
+        Token token = tokenService.create(user);
+        emailService.sendTransactionEmail(user.getEmail(), LARGE_TRANSACTION_SUBJECT, token.getCode());
+        return ResponseEntity.ok("EMAIL SEND!");
+    }
+
 }
