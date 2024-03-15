@@ -64,6 +64,11 @@ public class TokenServiceImpl implements TokenService {
         return token;
     }
 
+    @Override
+    public Token getUserToken(int id) {
+        return tokenRepository.getUserToken(id);
+    }
+
     private void checkIfTokenIsValid(Token token) {
         if (token.getExpirationTime().isBefore(LocalDateTime.now())) {
             token.setActive(false);

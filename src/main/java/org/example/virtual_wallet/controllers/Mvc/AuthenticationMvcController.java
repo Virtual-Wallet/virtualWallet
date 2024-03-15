@@ -2,6 +2,7 @@ package org.example.virtual_wallet.controllers.Mvc;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.example.virtual_wallet.enums.AccountStatus;
 import org.example.virtual_wallet.exceptions.AuthorizationException;
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
 import org.example.virtual_wallet.exceptions.InvalidTokenException;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/authentication")
@@ -51,24 +53,28 @@ public class AuthenticationMvcController {
         return session.getAttribute(CURRENT_USER) != null;
     }
 
+
     @GetMapping("/login")
     public String showLoginPage(Model model) {
         model.addAttribute("login", new LogInDto());
         return "LogInView";
     }
 
-    //todo Double check this!
     @PostMapping("/login")
     public String handleLogin(@Valid @ModelAttribute("login") LogInDto login,
                               BindingResult bindingResult,
                               HttpSession session) {
         if (bindingResult.hasErrors()) {
-            return "LoginView";
+            return "LogInView";
         }
 
         try {
             User user = authenticationHelper.verifyAuthentication(login.getUsername(), login.getPassword());
             session.setAttribute("currentUser", login.getUsername());
+
+            if (user.getAccountStatus() == AccountStatus.PENDING_EMAIL) {
+                return "redirect:/authentication/verify";
+            }
             return "redirect:/";
         } catch (AuthorizationException e) {
             bindingResult.rejectValue("username", "auth_error", e.getMessage());
@@ -93,21 +99,20 @@ public class AuthenticationMvcController {
         }
         try {
             User user = userMapper.dtoUserCreate(register);
+            userService.create(user);
             Token token = tokenService.create(user);
             emailService.sendEmail(user.getEmail(), EMAIL_SUBJECT, token.getCode());
-            userService.create(user);
             return "redirect:/authentication/login";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("username", "username_error", e.getMessage());
             bindingResult.rejectValue("email", "email_error", e.getMessage());
             bindingResult.rejectValue("phone", "phone_error", e.getMessage());
-            return "registerView";
+            return "RegisterView";
         }
     }
 
     @GetMapping("/verify")
-    public String showTokenVerificationPage(Model model) {
-        model.addAttribute("token", new Token());
+    public String showTokenVerificationPage() {
         return "TokenVerificationView";
     }
 
@@ -120,11 +125,11 @@ public class AuthenticationMvcController {
         }
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
+            token = tokenService.getUserToken(user.getId());
             tokenService.validateCorrectToken(token, user);
             session.setAttribute(CURRENT_USER, user);
             userService.advanceAccountStatus(user);
 
-            //todo redirect to id-authentication
             //return "redirect:/id-authentication ";
             return "redirect:/";
         } catch (InvalidTokenException e) {
@@ -132,4 +137,6 @@ public class AuthenticationMvcController {
             return "TokenVerificationView";
         }
     }
+
+
 }

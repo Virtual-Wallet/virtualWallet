@@ -17,9 +17,10 @@ public class UserMapper {
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
+        user.setPassword(userDto.getPasswordConfirm());
+        user.setEmail(userDto.getEmail());
         user.setPhoneNumber(userDto.getPhoneNumber());
         user.setPicture(userDto.getPhotoUrl());
-        user.setEmail(userDto.getEmail());
         return user;
     }
     public User dtoUserUpdate(UserDto userDto) {
