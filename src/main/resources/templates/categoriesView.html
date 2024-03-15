@@ -90,7 +90,14 @@
 
                             <i class="bx bx-help-circle icon-help">
 
-
+                                    <div class="buttons">
+                                        <a id="edit-icon" th:href="@{/categories/{name}/update(name=${category.getName().toLowerCase()})}">
+                                            <button class="edit-btn" value='Edit category' title="Edit category"><i class="fa fa-edit"></i></button>
+                                        </a>
+                                        <a th:href="@{/categories/{name}/delete(name=${category.getName().toLowerCase()})}">
+                                            <button class="edit-btn" value='Delete category' title="Delete category"><i class="fa fa-trash"></i></button>
+                                        </a>
+                                    </div>
 
                             </i>
 
