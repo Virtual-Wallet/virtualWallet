@@ -1,0 +1,39 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Log in</title>
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{/PageFrame :: navbar}"></div>
+<div>
+    <form action="#" th:action="@{/authentication/login}" th:object="${login}" method="post">
+        <label >Username</label>
+        <br/>
+        <input type="text" th:field="*{username}"/>
+        <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{username}">Username error placeholder</label>
+        <br/>
+
+        <label>Password</label>
+        <br/>
+        <input type="password" th:field="*{password}"/>
+        <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{password}">Password error placeholder</label>
+        <br/>
+
+        <input type="submit" value="Sign in"/>
+    </form>
+</div>
+
+<div th:replace="~{/PageFrame :: footer}"></div>
+</body>
+</html>

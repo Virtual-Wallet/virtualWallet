@@ -10,13 +10,6 @@ public class LogInDto {
     private String username;
     @Size(min = 8, message = "Password should be at least 8 symbols.")
     @NotEmpty(message = "Password can't be empty!")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)(?!.* ).{8,}$",
-            message = "Password must contain one digit from 1 to 9, " +
-                    "one lowercase letter, " +
-                    "one uppercase letter, " +
-                    "one special character, " +
-                    "no space, and " +
-                    "it must be at least 8 symbols.")
     private String password;
 
     public LogInDto() {

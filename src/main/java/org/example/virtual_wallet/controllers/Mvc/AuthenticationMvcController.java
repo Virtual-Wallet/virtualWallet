@@ -54,7 +54,7 @@ public class AuthenticationMvcController {
     @GetMapping("/login")
     public String showLoginPage(Model model) {
         model.addAttribute("login", new LogInDto());
-        return "LoginView";
+        return "LogInView";
     }
 
     //todo Double check this!
@@ -69,11 +69,10 @@ public class AuthenticationMvcController {
         try {
             User user = authenticationHelper.verifyAuthentication(login.getUsername(), login.getPassword());
             session.setAttribute("currentUser", login.getUsername());
-            session.setAttribute("ADMIN", user.getRoleType());
             return "redirect:/";
         } catch (AuthorizationException e) {
             bindingResult.rejectValue("username", "auth_error", e.getMessage());
-            return "LoginView";
+            return "LogInView";
         }
     }
 
