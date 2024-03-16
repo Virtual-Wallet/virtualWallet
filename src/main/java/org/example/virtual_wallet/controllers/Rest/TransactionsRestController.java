@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping({"api/transactions"})
-public class TransactionslRestController {
+public class TransactionsRestController {
 
     private final TransactionsInternalService service;
     private final UserService userService;
@@ -29,10 +29,10 @@ public class TransactionslRestController {
     private final TransactionsInternalMapper transactionsInternalMapper;
 
     @Autowired
-    public TransactionslRestController(TransactionsInternalService service,
-                                       UserService userService,
-                                       AuthenticationHelper authenticationHelper,
-                                       TransactionsInternalMapper transactionsInternalMapper) {
+    public TransactionsRestController(TransactionsInternalService service,
+                                      UserService userService,
+                                      AuthenticationHelper authenticationHelper,
+                                      TransactionsInternalMapper transactionsInternalMapper) {
         this.service = service;
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
