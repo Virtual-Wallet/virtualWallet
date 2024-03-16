@@ -4,10 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jdk.jfr.Category;
-import org.example.virtual_wallet.exceptions.AuthorizationException;
-import org.example.virtual_wallet.exceptions.EntityNotFoundException;
-import org.example.virtual_wallet.exceptions.InvalidOperationException;
-import org.example.virtual_wallet.exceptions.UnauthorizedOperationException;
+import org.example.virtual_wallet.exceptions.*;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.helpers.mappers.SpendingCategoryMapper;
 import org.example.virtual_wallet.models.SpendingCategory;
@@ -51,14 +48,13 @@ public class CategoryMvcController {
 
     @GetMapping
     public String showCategoriesPage(Model model, HttpSession session) {
-//        try{
-//            authenticationHelper.tryGetCurrentUser(session);
-//        }catch (AuthorizationException e){
-//            return "redirect:/auth/login";
-//        }
+        try{
+            authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e){
+            return "redirect:/auth/login";
+        }
 
-//        User user = authenticationHelper.tryGetCurrentUser(session);
-        User user = userService.getById(1);
+        User user = authenticationHelper.tryGetCurrentUser(session);
 
         try {
             List<SpendingCategory> categories = service.getAllUserCategories(user);
@@ -72,35 +68,54 @@ public class CategoryMvcController {
     }
 
     @PostMapping("/new")
-    public String createCategory(@ModelAttribute("categoryDto") CategoryDto categoryDto, HttpSession session) {
-        User user = userService.getById(1);
+    public String createCategory(@ModelAttribute("categoryDto") CategoryDto categoryDto,
+                                 BindingResult bindingResult,
+                                 Model model,
+                                 HttpSession session) {
+        User user;
+        try{
+            user = authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e){
+            return "redirect:/auth/login";
+        }
+        if (bindingResult.hasErrors()){
+            return "categoriesView";
+        }
 
-        SpendingCategory category = mapper.fromDTO(categoryDto, user);
-        service.create(category, user);
-        return "redirect:/categories";
+        try {
+            SpendingCategory category = mapper.fromDTO(categoryDto, user);
+            service.create(category, user);
+            return "redirect:/categories";
+        } catch (EntityNotFoundException e){
+            model.addAttribute("error", e.getMessage());
+            return "NotFoundView";
+        }catch (EntityDuplicateException e){
+            model.addAttribute("error", e.getMessage());
+            return "UnsuccessfulBankOperationView";
+        }
+
     }
 
     @GetMapping("/{name}/update")
     public String showEditCategoryPage(@PathVariable String name, Model model, HttpSession session){
-//        User user;
-//        try{
-//            user = authenticationHelper.tryGetCurrentUser(session);
-//        }catch (AuthorizationException e){
-//            return "redirect:/auth/login";
-//        }
-        User user = userService.getById(1);
+        User user;
+        try{
+            user = authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e){
+            return "redirect:/auth/login";
+        }
 
-//        try {
+        try {
             SpendingCategory category = service.getByCategoryAndUser(name, user);
             CategoryUpdateDto categoryUpdateDto = new CategoryUpdateDto();
             categoryUpdateDto.setName(category.getName());
             categoryUpdateDto.setId(category.getSpendingCategoryId());
             model.addAttribute("category", categoryUpdateDto);
             return "CategoryUpdateView";
-//        }catch (EntityNotFoundException e){
-//            model.addAttribute("error", e.getMessage());
-//            return "NotFoundView";
-//        }
+        }catch (EntityNotFoundException e){
+            model.addAttribute("error", e.getMessage());
+            return "NotFoundView";
+        }
     }
 
     @PostMapping("/{name}/update")
@@ -109,50 +124,47 @@ public class CategoryMvcController {
                                  BindingResult bindingResult,
                                  Model model,
                                  HttpSession session){
-//        User user;
-//        try{
-//            user = authenticationHelper.tryGetCurrentUser(session);
-//        }catch (AuthorizationException e) {
-//            return "redirect:/auth/login";
-//        }
-        User user = userService.getById(1);
+        User user;
+        try{
+            user = authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
 
-//        if (bindingResult.hasErrors()) {
-//            return "CategoryUpdateView";
-//        }
-//        try {
+        if (bindingResult.hasErrors()) {
+            return "CategoryUpdateView";
+        }
+        try {
             SpendingCategory category = service.getByCategoryAndUser(name, user);
             category.setName(categoryUpdateDto.getName().toUpperCase());
             service.update(category, user);
         return "redirect:/categories";
-//        } catch (EntityNotFoundException | UnauthorizedOperationException e) {
-//            model.addAttribute("error", e.getMessage());
-//            return "NotFoundView";
-//        }
+        } catch (EntityNotFoundException | UnauthorizedOperationException e) {
+            model.addAttribute("error", e.getMessage());
+            return "NotFoundView";
+        }
     }
 
 
     @GetMapping("/{name}/delete")
     public String deleteCategory(@PathVariable String name, Model model, HttpSession session){
-//        User user;
-//        try{
-//            user = authenticationHelper.tryGetCurrentUser(session);
-//        }catch (AuthorizationException e){
-//            return "redirect:/categories";
-//        }
-        User user = userService.getById(1);
+        User user;
+        try{
+            user = authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e){
+            return "redirect:/categories";
+        }
 
-//        try {
+        try {
             service.delete(service.getByCategoryAndUser(name, user).getSpendingCategoryId(), user);
         return "redirect:/categories";
-//        } catch (EntityNotFoundException | UnauthorizedOperationException e) {
-//            model.addAttribute("error", e.getMessage());
-//            return "NotFoundView";
-//        }catch (InvalidOperationException e){
-//            model.addAttribute("error", e.getMessage());
-//            return "UnsuccessfulWithMessageView";
-//        }
+        } catch (EntityNotFoundException | UnauthorizedOperationException e) {
+            model.addAttribute("error", e.getMessage());
+            return "NotFoundView";
+        }catch (InvalidOperationException e){
+            model.addAttribute("error", e.getMessage());
+            return "UnsuccessfulWithMessageView";
+        }
     }
-
 
 }
