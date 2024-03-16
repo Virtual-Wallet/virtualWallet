@@ -1,7 +1,11 @@
 package org.example.virtual_wallet.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "spending_categories")
@@ -20,7 +24,18 @@ public class SpendingCategory {
     @ManyToOne
     @JoinColumn(name = "creator_id")
     private User creator;
+    @OneToMany(mappedBy = "spendingCategory", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Set<TransactionsInternal> transactions = new HashSet<>();
     public SpendingCategory() {
+    }
+
+    public Set<TransactionsInternal> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Set<TransactionsInternal> transactions) {
+        this.transactions = transactions;
     }
 
     public User getCreator() {
