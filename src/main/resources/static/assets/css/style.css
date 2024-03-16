@@ -46,6 +46,26 @@ h6 {
   overflow: hidden;
   background: #37517e;
 }
+.edit-btn {
+  float: right;
+  margin-left: 30px;
+  margin-right: 10px;
+  background-color: transparent; /* Make the button background transparent */
+  border: none; /* Remove the button border */
+  padding: 0; /* Remove padding */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  display: flex;
+  align-items: flex-start;
+}
+.edit-btn i {
+   font-size: 22px; /* Adjust the font size of the edit icon */
+   color: #333; /* Change the color of the edit icon */
+
+ }
+
+.edit-btn:hover i {
+  color: #007bff; /* Change icon color on hover */
+}
 
 #preloader:before {
   content: "";
@@ -108,8 +128,9 @@ h6 {
 # Header
 --------------------------------------------------------------*/
 #header {
-  transition: all 0.5s;
+  transition: all 0s;
   z-index: 997;
+  background: rgba(40, 58, 90, 0.9);
   padding: 15px 0;
 }
 
