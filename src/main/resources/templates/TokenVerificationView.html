@@ -166,6 +166,18 @@
             padding: 24px;
         }
     }
+    .request-again-button {
+        background-color: #0d6efd;
+        border: none;
+        color: white;
+        padding: 2px 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
 </style>
 <body>
 <div>
@@ -202,10 +214,13 @@
                                     placeholder</label>
                             </form>
 
-                            <p class="resendTOKEN text-muted mb-0">
-                                Didn't receive code?
-                                <a href="">Request again</a>
-                            </p>
+
+                            <form th:action="@{/authentication/resend}" method="get">
+                                <p class="resendTOKEN text-muted mb-0">
+                                    Didn't receive code?
+                                    <button class="request-again-button" type="submit" value="Request again">Request again</button>
+                                </p>
+                            </form>
                         </div>
                     </div>
                 </div>
