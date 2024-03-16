@@ -2,9 +2,11 @@ package org.example.virtual_wallet.controllers.Mvc;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.bouncycastle.math.raw.Mod;
 import org.example.virtual_wallet.enums.AccountStatus;
 import org.example.virtual_wallet.exceptions.AuthorizationException;
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
+import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.exceptions.InvalidTokenException;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.helpers.mappers.UserMapper;
@@ -22,7 +24,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/authentication")
@@ -118,7 +119,8 @@ public class AuthenticationMvcController {
     }
 
     @GetMapping("/verify")
-    public String showTokenVerificationPage() {
+    public String showTokenVerificationPage(Model model) {
+        model.addAttribute("token",new Token());
         return "TokenVerificationView";
     }
 
@@ -138,7 +140,7 @@ public class AuthenticationMvcController {
 
             //return "redirect:/id-authentication ";
             return "redirect:/";
-        } catch (InvalidTokenException e) {
+        } catch (InvalidTokenException | EntityNotFoundException e) {
             bindingResult.rejectValue("code", "code_error", e.getMessage());
             return "TokenVerificationView";
         }

@@ -56,11 +56,12 @@
             align-items: center;
             flex-direction: column;
         }
+
         .containerReg {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 75vh;  /* Optional: Set minimum height for viewport */
+            min-height: 75vh; /* Optional: Set minimum height for viewport */
         }
 
     </style>
@@ -68,34 +69,40 @@
 <body>
 <div th:replace="~{/PageFrame :: navbar}"></div>
 <div class="centered-input">
-<form action="#" th:action="@{/authentication/register}" th:object="${register}" method="post">
-    <div class="containerReg">  <div class="centered-input">
-        <form action="#" th:action="@{/authentication/register}" th:object="${register}" method="post">
-            <label class="form-label">Username</label>  <input class="input-group-text" type="text" th:field="*{username}"/>
-            <label style="color: red; font-weight: normal;" th:errors="*{username}">Username error
-                placeholder</label>
-
-            <label class="form-label">Password</label>  <input class="input-group-text" type="password" th:field="*{password}"/>
-            <label style="color: red; font-weight: normal;" th:errors="*{password}">Password error
-                placeholder</label>
-            <label class="form-label">Password confirm</label>  <input class="input-group-text" type="password" th:field="*{passwordConfirm}"/>
-            <label style="color: red; font-weight: normal;" th:errors="*{passwordConfirm}">Password error
-                placeholder</label>
-
-            <label class="form-label">E-mail</label>  <input class="input-group-text"  th:field="*{email}"/>
-            <label style="color: red; font-weight: normal;" th:errors="*{email}">Password error
-                placeholder</label>
-
-            <label class="form-label">Phone number</label>  <input class="input-group-text" type="number"  th:field="*{phoneNumber}"/>
-            <label style="color: red; font-weight: normal;" th:errors="*{phoneNumber}">Password error
-                placeholder</label>
+    <form action="#" th:action="@{/authentication/register}" th:object="${register}" method="post">
+        <div class="containerReg">
             <div class="centered-input">
-                <input class="buttonLogIn" type="submit" value="Register"/>
+                <form action="#" th:action="@{/authentication/register}" th:object="${register}" method="post">
+                    <label class="form-label">Username</label> <input class="input-group-text" type="text"
+                                                                      th:field="*{username}" required/>
+                    <label style="color: red; font-weight: normal;" th:errors="*{username}">Username error
+                        placeholder</label>
+
+                    <label class="form-label">Password</label> <input class="input-group-text" type="password"
+                                                                      th:field="*{password}" required/>
+                    <label style="color: red; font-weight: normal;" th:errors="*{password}">Password error
+                        placeholder</label>
+                    <label class="form-label">Password confirm</label> <input class="input-group-text" type="password"
+                                                                              th:field="*{passwordConfirm}" required/>
+                    <label style="color: red; font-weight: normal;" th:errors="*{passwordConfirm}">Password error
+                        placeholder</label>
+
+                    <label class="form-label">E-mail</label> <input class="input-group-text" th:field="*{email}"
+                                                                    required/>
+                    <label style="color: red; font-weight: normal;" th:errors="*{email}">Password error
+                        placeholder</label>
+
+                    <label class="form-label">Phone number</label> <input class="input-group-text" type="number"
+                                                                          th:field="*{phoneNumber}" required/>
+                    <label style="color: red; font-weight: normal;" th:errors="*{phoneNumber}">Password error
+                        placeholder</label>
+                    <div class="centered-input">
+                        <input class="buttonLogIn" type="submit" value="Register"/>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-    </div>
-</form>
+        </div>
+    </form>
 </div>
 
 </body>

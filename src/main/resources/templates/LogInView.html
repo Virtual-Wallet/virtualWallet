@@ -43,13 +43,13 @@
 <div class="centered-input">
     <form action="#" th:action="@{/authentication/login}" th:object="${login}" method="post">
         <label class="centered-input">Username</label>
-        <input class="input-group-text" type="text" th:field="*{username}"/>
+        <input class="input-group-text" type="text" th:field="*{username}" required/>
         <label style="color: red; font-weight: normal;" th:errors="*{username}">Username error
             placeholder</label>
 
         <br>
         <label class="centered-input">Password</label>
-        <input class="input-group-text" type="password" th:field="*{password}"/>
+        <input class="input-group-text" type="password" th:field="*{password}" required/>
         <label class="flex-fill" style=" color: red; font-weight: normal;" th:errors="*{password}">Password error
             placeholder</label>
         <br>

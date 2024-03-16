@@ -26,8 +26,8 @@ public class UserMapper {
     public User dtoUserUpdate(UserDto userDto) {
         User user = new User();
         user.setPassword(userDto.getPassword());
-        user.setEmail(userDto.getEmail());
         user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setEmail(userDto.getEmail());
         user.setPicture(userDto.getPhotoUrl());
         return user;
     }

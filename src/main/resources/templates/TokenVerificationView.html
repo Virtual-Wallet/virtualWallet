@@ -175,35 +175,41 @@
         <!-- Start DEMO HTML (Use the following code into your project)-->
         <boddy class="container-fluid bg-body-tertiary d-block">
 
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-6 col-lg-4" style="min-width: 500px;">
-                <div class="card bg-white mb-5 mt-5 border-0" style="box-shadow: 0 12px 15px rgba(0, 0, 0, 0.02);">
-                    <div class="card-body p-5 text-center">
-                        <h4>Verify</h4>
-                        <p>Your code was sent to you via email</p>
-                        <div class="otp-fieldTOKEN mb-4">
-                            <input type="text" maxlength=1/>
-                            <input type="text" maxlength=1/>
-                            <input type="text" maxlength=1/>
-                            <input type="text" maxlength=1/>
-                            <input type="text" maxlength=1/>
-                            <input type="text" maxlength=1/>
-                            <input type="text" maxlength=1/>
-                            <input type="text" maxlength=1/>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-6 col-lg-4" style="min-width: 500px;">
+                    <div class="card bg-white mb-5 mt-5 border-0" style="box-shadow: 0 12px 15px rgba(0, 0, 0, 0.02);">
+                        <div class="card-body p-5 text-center">
+                            <h4>Verify</h4>
+                            <p>Your code was sent to you via email</p>
+                            <div class="otp-fieldTOKEN mb-4">
+                                <input type="text" maxlength=1/>
+                                <input type="text" maxlength=1/>
+                                <input type="text" maxlength=1/>
+                                <input type="text" maxlength=1/>
+                                <input type="text" maxlength=1/>
+                                <input type="text" maxlength=1/>
+                                <input type="text" maxlength=1/>
+                                <input type="text" maxlength=1/>
+                            </div>
+
+                            <form th:action="@{/authentication/verify}" th:object="${token}" method="post">
+                                <button class="btn btn-primary mb-3" type="submit" value="submit">
+                                    Verify
+                                </button>
+                                <br>
+                                <label class="flex-fill" style=" color: red; font-weight: normal;"
+                                       th:errors="*{code}">Token error
+                                    placeholder</label>
+                            </form>
+
+                            <p class="resendTOKEN text-muted mb-0">
+                                Didn't receive code?
+                                <a href="">Request again</a>
+                            </p>
                         </div>
-                        <form th:action="@{/authentication/verify}" method="post">
-                            <button class="btn btn-primary mb-3" type="submit" value="submit">
-                                Verify
-                            </button>
-                        </form>
-                        <p class="resendTOKEN text-muted mb-0">
-                            Didn't receive code?
-                            <a href="">Request again</a>
-                        </p>
                     </div>
                 </div>
             </div>
-        </div>
         </boddy>
     </main>
 </div>
