@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/authentication")
@@ -120,7 +121,7 @@ public class AuthenticationMvcController {
 
     @GetMapping("/verify")
     public String showTokenVerificationPage(Model model) {
-        model.addAttribute("token",new Token());
+        model.addAttribute("token", new Token());
         return "TokenVerificationView";
     }
 
@@ -144,6 +145,20 @@ public class AuthenticationMvcController {
             bindingResult.rejectValue("code", "code_error", e.getMessage());
             return "TokenVerificationView";
         }
+    }
+
+    @GetMapping("/resend")
+    public String handleResendToken(HttpSession session, RedirectAttributes redirectAttributes) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            Token token = tokenService.create(user);
+            emailService.sendEmail(user.getEmail(), EMAIL_SUBJECT, token.getCode());
+            redirectAttributes.addFlashAttribute("message", "Token has been resent.");
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "An error occurred while trying to resend the token.");
+        }
+        return "redirect:/authentication/verify";
     }
 
 
