@@ -51,7 +51,7 @@ public class TokenRepositoryImpl extends AbstractCRUDRepository<Token> implement
     }
     public Token getUserToken(int id) {
         try(Session session = sessionFactory.openSession()){
-            Query<Token> query = session.createQuery("from Token t  where t.user.id =:userId and isActive = false ", Token.class);
+            Query<Token> query = session.createQuery("from Token t  where t.user.id =:userId and isActive = true ", Token.class);
             query.setParameter("userId",id);
             if (query.list().isEmpty()){
                 throw new EntityNotFoundException("Token for User",id);

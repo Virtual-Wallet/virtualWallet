@@ -58,6 +58,7 @@ public class TokenServiceImpl implements TokenService {
     public Token create(User user) {
         Token token = new Token();
         token.setCode(generateNewToken());
+        token.setActive(true);
         token.setUser(user);
         token.setExpirationTime(LocalDateTime.now().plusMinutes(TOKEN_EXPIRATION_TIME));
         tokenRepository.create(token);
