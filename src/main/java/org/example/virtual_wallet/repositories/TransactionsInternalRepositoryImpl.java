@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.repositories;
 
+import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.models.TransactionsInternal;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.repositories.contracts.TransactionsInternalRepository;
@@ -26,7 +27,7 @@ public class TransactionsInternalRepositoryImpl extends AbstractCRUDRepository<T
         int walletId = user.getWallet().getId();
         try (Session session = sessionFactory.openSession()) {
             Query<TransactionsInternal> query = session.createQuery(
-                    "FROM TransactionsInternal WHERE recipientWalletId =:walletId", TransactionsInternal.class);
+                    "FROM TransactionsInternal WHERE recipientWallet.id =:walletId", TransactionsInternal.class);
             query.setParameter("walletId", walletId);
             return query.list();
         }
@@ -42,4 +43,37 @@ public class TransactionsInternalRepositoryImpl extends AbstractCRUDRepository<T
             return query.list();
         }
     }
+
+    @Override
+    public List<TransactionsInternal> getIncomingPerCategory(int categoryId, User user) {
+        int walletId = user.getWallet().getId();
+
+        try (Session session = sessionFactory.openSession()) {
+            Query<TransactionsInternal> query = session.createQuery(
+                    "FROM TransactionsInternal WHERE spendingCategory.id =:categoryId and senderWalletId =:walletId", TransactionsInternal.class);
+            query.setParameter("categoryId", categoryId);
+            query.setParameter("walletId", walletId);
+            return query.list();
+        }
+    }
+
+    @Override
+    public List<TransactionsInternal> getOutgoingPerCategory(int categoryId, User user) {
+        int walletId = user.getWallet().getId();
+
+        try (Session session = sessionFactory.openSession()) {
+            Query<TransactionsInternal> query = session.createQuery(
+                    "FROM TransactionsInternal WHERE spendingCategory.id =:categoryId and recipientWallet.id =:walletId", TransactionsInternal.class);
+            query.setParameter("categoryId", categoryId);
+            query.setParameter("walletId", walletId);
+
+            if (query.list().isEmpty()) {
+                throw new EntityNotFoundException("No transactions under that category!");
+            }
+
+            return query.list();
+        }
+    }
+
+
 }

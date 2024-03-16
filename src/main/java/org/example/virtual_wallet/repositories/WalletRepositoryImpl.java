@@ -30,19 +30,14 @@ public class WalletRepositoryImpl extends AbstractCRUDRepository<Wallet> impleme
     @Override
     public Wallet getById(int id) {
         try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
+            Query <Wallet> query = session.createQuery(
+                            "from Wallet where id = :id and isActive = true", Wallet.class)
+                    .setParameter("id", id);
 
-            Wallet wallet = session.createQuery(
-                            "SELECT w FROM Wallet w WHERE w.id = :id AND w.isActive = true", Wallet.class)
-                    .setParameter("id", id)
-                    .uniqueResult();
-
-            if (wallet == null) {
+            if (query.list().isEmpty()) {
                 throw new EntityNotFoundException("Wallet", id);
             }
-
-            transaction.commit();
-            return wallet;
+            return query.list().get(0);
         }
     }
 

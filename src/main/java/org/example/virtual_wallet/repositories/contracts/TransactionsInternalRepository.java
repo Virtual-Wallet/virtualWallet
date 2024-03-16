@@ -14,4 +14,6 @@ public interface TransactionsInternalRepository {
     List<TransactionsInternal> getIncoming(User user);
 
     List<TransactionsInternal> getOutgoing(User user);
+    List<TransactionsInternal> getOutgoingPerCategory(int categoryId, User user);
+    List<TransactionsInternal> getIncomingPerCategory(int categoryId, User user);
 }
