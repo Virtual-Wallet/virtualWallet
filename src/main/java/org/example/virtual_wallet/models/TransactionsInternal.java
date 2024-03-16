@@ -1,6 +1,7 @@
 package org.example.virtual_wallet.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 
@@ -19,8 +20,9 @@ public class TransactionsInternal {
     @Column(name = "sender_wallet_id")
     private int senderWalletId;
 
-    @Column(name = "recipient_wallet_id")
-    private int recipientWalletId;
+    @ManyToOne
+    @JoinColumn(name = "recipient_wallet_id")
+    private Wallet recipientWallet;
 
     @Column(name = "amount")
     private double amount;
@@ -30,6 +32,7 @@ public class TransactionsInternal {
 
     @ManyToOne
     @JoinColumn(name = "spending_category")
+    @JsonIgnore
     private SpendingCategory spendingCategory;
 
     @ManyToOne
@@ -47,8 +50,8 @@ public class TransactionsInternal {
         return senderWalletId;
     }
 
-    public int getRecipientWalletId() {
-        return recipientWalletId;
+    public Wallet getRecipientWallet() {
+        return recipientWallet;
     }
 
     public double getAmount() {
@@ -75,8 +78,8 @@ public class TransactionsInternal {
         this.senderWalletId = senderWalletId;
     }
 
-    public void setRecipientWalletId(int recipient_wallet_id) {
-        this.recipientWalletId = recipient_wallet_id;
+    public void setRecipientWallet(Wallet recipient_wallet_id) {
+        this.recipientWallet = recipient_wallet_id;
     }
 
     public void setAmount(double amount) {

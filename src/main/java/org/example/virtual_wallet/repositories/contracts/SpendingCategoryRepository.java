@@ -8,6 +8,7 @@ import java.util.List;
 public interface SpendingCategoryRepository {
     void create(SpendingCategory category);
     void update(SpendingCategory category);
+    SpendingCategory getByCategoryAndUser(String name, User user);
 
     void delete(int id);
     SpendingCategory getById(int id);

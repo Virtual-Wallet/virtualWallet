@@ -3,12 +3,13 @@ package org.example.virtual_wallet.controllers.Rest;
 import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.AuthorizationException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
+import org.example.virtual_wallet.exceptions.InvalidOperationException;
+import org.example.virtual_wallet.exceptions.UnauthorizedOperationException;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
-import org.example.virtual_wallet.helpers.mappers.CategoryMapper;
-import org.example.virtual_wallet.models.Card;
+import org.example.virtual_wallet.helpers.mappers.SpendingCategoryMapper;
 import org.example.virtual_wallet.models.SpendingCategory;
+import org.example.virtual_wallet.models.TransactionsInternal;
 import org.example.virtual_wallet.models.User;
-import org.example.virtual_wallet.models.dtos.CardDto;
 import org.example.virtual_wallet.models.dtos.CategoryDto;
 import org.example.virtual_wallet.services.contracts.SpendingCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +19,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/categories")
 public class SpendingCategoryRestController {
 
     private final SpendingCategoryService service;
-    private final CategoryMapper mapper;
+    private final SpendingCategoryMapper mapper;
     private final AuthenticationHelper authenticationHelper;
 
     @Autowired
-    public SpendingCategoryRestController(SpendingCategoryService service, CategoryMapper mapper, AuthenticationHelper authenticationHelper) {
+    public SpendingCategoryRestController(SpendingCategoryService service, SpendingCategoryMapper mapper, AuthenticationHelper authenticationHelper) {
         this.service = service;
         this.mapper = mapper;
         this.authenticationHelper = authenticationHelper;
@@ -44,6 +44,17 @@ public class SpendingCategoryRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+    @GetMapping("/{id}/transactions")
+    public List<TransactionsInternal> getAllTransactions(@PathVariable int id, @RequestHeader HttpHeaders httpHeaders){
+        try {
+            User user = authenticationHelper.tryGetUser(httpHeaders);
+            return service.getAllTransactionsPerCategories(id, user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
 
     @GetMapping("/{id}")
     public SpendingCategory getById(@PathVariable int id, @RequestHeader HttpHeaders httpHeaders) {
@@ -78,21 +89,19 @@ public class SpendingCategoryRestController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
-// todo think do we need to update category
-//    @PutMapping("/{id}")
-//    public SpendingCategory update(@PathVariable int id, @RequestHeader HttpHeaders headers,
-//                                   @Valid @RequestBody CategoryDto dto) {
-//        try {
-//            User user = authenticationHelper.tryGetUser(headers);
-//            Card card = cardModelMapper.dtoCardUpdate(dto, id);
-//            cardService.update(card, user);
-//            return cardModelMapper.toCardDto(card);
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        } catch (AuthorizationException e) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-//        }
-//    }
+    @PutMapping("/{id}")
+    public SpendingCategory update(@PathVariable int id, @RequestHeader HttpHeaders headers,
+                                   @Valid @RequestBody CategoryDto dto) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            SpendingCategory category = mapper.dtoCategoryUpdate(dto, id);
+            return service.update(category, user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException | UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id, @RequestHeader HttpHeaders headers) {
@@ -103,6 +112,8 @@ public class SpendingCategoryRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (InvalidOperationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 }
