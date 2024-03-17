@@ -2,12 +2,8 @@ package org.example.virtual_wallet.controllers.Mvc;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.bouncycastle.math.raw.Mod;
 import org.example.virtual_wallet.enums.AccountStatus;
-import org.example.virtual_wallet.exceptions.AuthorizationException;
-import org.example.virtual_wallet.exceptions.EntityDuplicateException;
-import org.example.virtual_wallet.exceptions.EntityNotFoundException;
-import org.example.virtual_wallet.exceptions.InvalidTokenException;
+import org.example.virtual_wallet.exceptions.*;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.helpers.mappers.UserMapper;
 import org.example.virtual_wallet.models.Token;
@@ -112,9 +108,13 @@ public class AuthenticationMvcController {
             emailService.sendEmail(user.getEmail(), EMAIL_SUBJECT, token.getCode());
             return "redirect:/authentication/login";
         } catch (EntityDuplicateException e) {
+            bindingResult.rejectValue("phoneNumber", "phone_error", e.getMessage());
+            return "RegisterView";
+        } catch (UsernameDuplicateException e) {
             bindingResult.rejectValue("username", "username_error", e.getMessage());
+            return "RegisterView";
+        } catch (EmailDuplicateException e) {
             bindingResult.rejectValue("email", "email_error", e.getMessage());
-            bindingResult.rejectValue("phone", "phone_error", e.getMessage());
             return "RegisterView";
         }
     }
