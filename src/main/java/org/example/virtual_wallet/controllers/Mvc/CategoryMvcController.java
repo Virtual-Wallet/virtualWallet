@@ -48,15 +48,14 @@ public class CategoryMvcController {
 
     @GetMapping
     public String showCategoriesPage(Model model, HttpSession session) {
-//        try{
-//            authenticationHelper.tryGetCurrentUser(session);
-//        }catch (AuthorizationException e){
-//            return "redirect:/auth/login";
-//        }
-//
-//        User user = authenticationHelper.tryGetCurrentUser(session);
+        try{
+            authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e){
+            return "redirect:/auth/login";
+        }
 
-        User user = userService.getById(1);
+        User user = authenticationHelper.tryGetCurrentUser(session);
+
 
         try {
             List<SpendingCategory> categories = service.getAllUserCategories(user);
@@ -74,12 +73,14 @@ public class CategoryMvcController {
                                  BindingResult bindingResult,
                                  Model model,
                                  HttpSession session) {
-        User user;
         try{
-            user = authenticationHelper.tryGetCurrentUser(session);
+            authenticationHelper.tryGetCurrentUser(session);
         }catch (AuthorizationException e){
             return "redirect:/auth/login";
         }
+
+        User user = authenticationHelper.tryGetCurrentUser(session);
+
         if (bindingResult.hasErrors()){
             return "categoriesView";
         }
@@ -100,12 +101,14 @@ public class CategoryMvcController {
 
     @GetMapping("/{name}/update")
     public String showEditCategoryPage(@PathVariable String name, Model model, HttpSession session){
-        User user;
         try{
-            user = authenticationHelper.tryGetCurrentUser(session);
+            authenticationHelper.tryGetCurrentUser(session);
         }catch (AuthorizationException e){
             return "redirect:/auth/login";
         }
+
+        User user = authenticationHelper.tryGetCurrentUser(session);
+
 
         try {
             SpendingCategory category = service.getByCategoryAndUser(name, user);
@@ -126,12 +129,14 @@ public class CategoryMvcController {
                                  BindingResult bindingResult,
                                  Model model,
                                  HttpSession session){
-        User user;
-        try{
-            user = authenticationHelper.tryGetCurrentUser(session);
-        }catch (AuthorizationException e) {
+                try{
+            authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e){
             return "redirect:/auth/login";
         }
+
+        User user = authenticationHelper.tryGetCurrentUser(session);
+
 
         if (bindingResult.hasErrors()) {
             return "CategoryUpdateView";
@@ -150,12 +155,14 @@ public class CategoryMvcController {
 
     @GetMapping("/{name}/delete")
     public String deleteCategory(@PathVariable String name, Model model, HttpSession session){
-        User user;
-        try{
-            user = authenticationHelper.tryGetCurrentUser(session);
+                try{
+            authenticationHelper.tryGetCurrentUser(session);
         }catch (AuthorizationException e){
-            return "redirect:/categories";
+            return "redirect:/auth/login";
         }
+
+        User user = authenticationHelper.tryGetCurrentUser(session);
+
 
         try {
             service.delete(service.getByCategoryAndUser(name, user).getSpendingCategoryId(), user);
@@ -165,7 +172,7 @@ public class CategoryMvcController {
             return "NotFoundView";
         }catch (InvalidOperationException e){
             model.addAttribute("error", e.getMessage());
-            return "UnsuccessfulWithMessageView";
+            return "UnsuccessfulBankOperationView";
         }
     }
 

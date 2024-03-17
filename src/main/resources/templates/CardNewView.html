@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Create a saving wallet</title>
+    <link href="../static/category.css" th:href="@{/category.css}" rel="stylesheet">
+    <link href="../static/plusModal.css" th:href="@{/plusModal.css}" rel="stylesheet">
     <link href="../static/card.css" th:href="@{/card.css}" rel="stylesheet">
     <link href="../static/navbar.css" th:href="@{/navbar.css}" rel="stylesheet">
-<!--    <link href="../static/footer.css" th:href="@{/footer.css}" rel="stylesheet">-->
-
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
-
+    <!--    <link href="../static/footer.css" th:href="@{/footer.css}" rel="stylesheet">-->
 
     <!--    <link href="../static/assets/vendor/scss/helpers/_position.scss" th:href="@{/_position.scss}" rel="stylesheet">-->
     <!--    <meta charset="utf-8">-->
@@ -35,7 +34,7 @@
     <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
     <link href="../../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-<!--    Template Main CSS File-->
+    Template Main CSS File
     <link href="../../assets/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,59 +55,64 @@
 <body>
 <!--<header th:replace="NavBar.html :: navbar"></header>-->
 <div th:replace="~{/NavBar.html :: navbar}"></div>
+
 <br><br>
 <section id="faq" class="faq section-bg">
     <div class="section-title">
-        <h2>Update Card</h2>
+        <h2>New Card</h2>
         <p>This is your category page. Here you can view and manage your spending categories. Click on a
             category name to expand and view its transactions.</p>
     </div>
+        <form class="credit-card" action="#" th:object="${card}" method="post">
 
-    <form class="credit-card" action="#" th:object="${cardDto}" method="post">
 
-        <div class="form-body">
-            <div class="form-group input-group-lg">
-                <!-- Card Number -->
-                <label><span class="hidden-xs">Card </span><span class="visible-xs-inline"></span>Number</label>
-                <input type="text" class="form-control" placeholder="Card Number" th:field="*{cardNumber}">
-                <label class="error" th:errors="*{cardNumber}">Number error placeholder</label>
-                <br>
-                <label><span class="hidden-xs">Card </span><span class="visible-xs-inline"></span>Holder</label>
-                <input type="text" class="form-control" placeholder="Card Holder" th:field="*{cardHolder}">
-                <label class="error" th:errors="*{cardHolder}">Holder error placeholder</label>
+            <div class="form-body">
+                <div class="form-group input-group-lg">
+                    <!-- Card Number -->
+                    <label><span class="hidden-xs">Card </span><span class="visible-xs-inline"></span>Number</label>
+                    <input type="text" class="form-control" placeholder="Card Number" th:field="*{cardNumber}">
+                    <label style="color: red; font-weight: normal;display: inline-block;margin-left: 10px;" th:errors="*{cardNumber}">Password error
+                        placeholder</label>
+                    <br>
+                    <label><span class="hidden-xs">Card </span><span class="visible-xs-inline"></span>Holder</label>
+                    <input type="text" class="form-control" placeholder="Card Holder" th:field="*{cardHolder}">
+                    <label style="color: red; font-weight: normal;" th:errors="*{cardHolder}">Password error
+                        placeholder</label>
+                    <br>
 
-                <br>
+                    <label><span class="hidden-xs">Expiration</span><span class="visible-xs-inline"></span> Date</label>
+                    <input th:attr="min=${#dates.format(#dates.createNow(), 'MM-dd')}" type="text" class="form-control"
+                           placeholder="MM / YY" th:field="*{expirationDate}" title="Please enter date in MM / YY format"
+                           oninput="addSlash(this)"/>
+                    <label style="color: red; font-weight: normal;" th:errors="*{expirationDate}">Password error
+                        placeholder</label>
 
-                <label><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline"></span> DATE</label>
-                <input th:attr="min=${#dates.format(#dates.createNow(), 'MM-dd')}" type="text" class="form-control"
-                       placeholder="MM / YY" th:field="*{expirationDate}" title="Please enter date in MM / YY format"
-                       oninput="addSlash(this)"/>
-                <label class="text-danger" th:errors="*{expirationDate}">Email error placeholder</label>
-                <br>
+                    <br>
 
-                <label><span class="hidden-xs">CCV</span><span class="visible-xs-inline"></span> </label>
-                <input type="text" class="form-control" placeholder="CSV" th:field="*{cardCsv}"/>
-                <label class="text-danger" th:errors="*{cardCsv}">Email error placeholder</label>
-                <p>3 or 4 digits usually found on the signature strip</p>
+                    <label><span class="hidden-xs">CVV</span><span class="visible-xs-inline"></span> </label>
+                    <input type="text" class="form-control" placeholder="CVV" th:field="*{cardCsv}" maxlength="3"/>
+                    <label style="color: red; font-weight: normal;" th:errors="*{cardCsv}">Password error
+                        placeholder</label>
+                    <p>3 or 4 digits usually found on the signature strip</p>
 
-                <br>
-            </div>
+                    <br>
 
-            <div class="buttons">
-                <div>
-                    <a th:href="@{/cards}">
-                        <button type="submit" class="proceed-btn" th:text="#{card.label.update}">Update</button>
-                    </a>
-                    <a th:href="@{/cards}">
-                        <button type="button" class="cancel-btn" th:text="#{navigation.cancel}">Cancel</button>
-                    </a>
+
+                <div class="buttons">
+                    <div>
+                        <a th:href="@{/cards}">
+                            <button type="submit" class="proceed-btn" th:text="#{card.label.create}">Create</button>
+                        </a>
+                        <a th:href="@{/cards}">
+                            <button type="button" class="cancel-btn" th:text="#{navigation.cancel}">Cancel</button>
+                        </a>
+                    </div>
                 </div>
+                </div>
+
             </div>
 
-
-        </div>
-
-    </form>
+        </form>
 
 </section>
 
