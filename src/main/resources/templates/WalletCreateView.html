@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create a saving wallet</title>
+    <link href="../static/card.css" th:href="@{/card.css}" rel="stylesheet">
+    <link href="../static/category.css" th:href="@{/category.css}" rel="stylesheet">
+    <link href="../static/navbar.css" th:href="@{/navbar.css}" rel="stylesheet">
+    <!--    <link href="../static/footer.css" th:href="@{/footer.css}" rel="stylesheet">-->
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
+
+
+    <!--    <link href="../static/assets/vendor/scss/helpers/_position.scss" th:href="@{/_position.scss}" rel="stylesheet">-->
+    <!--    <meta charset="utf-8">-->
+    <!--    <meta content="width=device-width, initial-scale=1.0" name="viewport">-->
+
+    <!--    <title>Arsha Bootstrap Template - Index</title>-->
+    <!--    <meta content="" name="description">-->
+    <!--    <meta content="" name="keywords">-->
+
+    <!--    &lt;!&ndash; Favicons &ndash;&gt;-->
+    <!--    <link href="../../assets/img/favicon.png" rel="icon">-->
+    <!--    <link href="../../assets/img/apple-touch-icon.png" rel="apple-touch-icon">-->
+
+
+    <!--    &lt;!&ndash; Google Fonts &ndash;&gt;-->
+    <!--    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"-->
+    <!--          rel="stylesheet">-->
+
+    <!-- Vendor CSS Files -->
+    <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!--    Template Main CSS File-->
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--    <title>Transactions</title>-->
+    <!--    &lt;!&ndash; Include DataTables CSS &ndash;&gt;-->
+    <!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">-->
+
+    <!-- =======================================================
+    * Template Name: Arsha
+    * Updated: Mar 12 2024 with Bootstrap v5.3.3
+    * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+
+<body>
+<!--<header th:replace="NavBar.html :: navbar"></header>-->
+<div th:replace="~{/NavBar.html :: navbar}"></div>
+<br><br>
+<section id="faq" class="faq section-bg">
+    <div class="section-title">
+        <h2>Create Wallet</h2>
+        <p>This is your one-time wallet creation page. Here, you can create a wallet in a currency of your choice.
+            During transactions, you'll have the flexibility to send and receive funds in any available currency,
+            with automatic currency exchange.</p>
+
+    </div>
+    <section id="category-update-container">
+        <form id="category-update-form" action="#" th:action="@{/wallets/new}"
+              th:object="${wallet}" method="post">
+
+            <div class="month" th:object="${wallet}">
+                <label><span class="hidden-xs">Currency </span><span class="visible-xs-inline"></span></label>
+                <select class="currency" th:field="*{currency}" name="Currency">
+                    <option value="">Select Currency</option>
+                    <option th:each="currency : ${currencies}" th:value="${currency.currency}"
+                            th:text="${currency.currency}"></option>
+                </select>
+                <label class="error" th:errors="*{currency}">Currency error placeholder</label>
+            </div>
+
+            <div class="buttons">
+                <div>
+                    <a th:href="@{/}">
+                        <button type="submit" class="proceed-btn" th:text="#{wallet.label.create}">Create</button>
+                    </a>
+                    <a th:href="@{/}">
+                        <button type="button" class="cancel-btn" th:text="#{navigation.cancel}">Cancel</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+
+    </section>
+</section>
+<br><br>
+<div th:replace="~{/PageFrame :: footer}"></div>
+
+
+<!-- Vendor JS Files -->
+<script src="../assets/vendor/aos/aos.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="../assets/vendor/php-email-form/validate.js"></script>
+<script src="../assets/js/main.js"></script>
+
+<!-- Template Main JS File -->
+<script src="../assets/js/main.js"></script>
+<style>
+    @font-face {
+        font-family: "Muli-Regular";
+        src: url("fonts/muli/Muli-Regular.ttf");
+    }
+
+    @font-face {
+        font-family: "Muli-SemiBold";
+        src: url("fonts/muli/Muli-SemiBold.ttf");
+    }
+
+    * {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .sign-body {
+        font-family: "Muli-Regular";
+        font-size: 14px;
+        margin: 0;
+        color: #999;
+    }
+
+    input, textarea, select, button {
+        font-family: "Muli-Regular";
+    }
+
+    p, h1, h2, h3, h4, h5, h6, ul {
+        margin: 0;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    ul {
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    :focus {
+        outline: none;
+    }
+
+    .wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+    }
+
+    .inner {
+        position: fixed;
+        width: 435px;
+    }
+
+    .image-1 {
+        position: absolute;
+        bottom: -12px;
+        left: -191px;
+        z-index: 99;
+    }
+
+    .image-2 {
+        position: absolute;
+        bottom: 0;
+        right: -129px;
+    }
+
+    form {
+        width: 100%;
+        position: relative;
+        z-index: 9;
+        padding: 77px 61px 66px;
+        background: #fff;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+        -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+        -ms-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+        -o-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    h3 {
+        text-transform: uppercase;
+        font-size: 25px;
+        font-family: "Muli-SemiBold";
+        color: #333;
+        letter-spacing: 3px;
+        text-align: center;
+        margin-bottom: 33px;
+    }
+
+    .form-holder {
+        position: relative;
+        margin-bottom: 21px;
+    }
+
+    .form-holder span {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 15px;
+        color: #333;
+    }
+
+    .form-holder span.lnr-lock {
+        left: 3px;
+    }
+
+
+    .text--center {
+        text-align: center;
+        color: #7AA6C4;
+    }
+
+    .form-control-message {
+        border: none;
+        border-bottom: 1px solid #e6e6e6;
+        display: block;
+        width: 100%;
+        height: 100px;
+        background: none;
+        padding: 50px 42px 0px;
+        color: #666;
+        font-family: "Muli-SemiBold";
+        font-size: 16px;
+    }
+
+    .form-control {
+        border: none;
+        border-bottom: 1px solid #e6e6e6;
+        display: block;
+        width: 100%;
+        height: 38px;
+        background: none;
+        padding: 3px 42px 0px;
+        color: #666;
+        font-family: "Muli-SemiBold";
+        font-size: 16px;
+    }
+
+    .form-control, .form-control-message::-webkit-input-placeholder {
+        font-size: 14px;
+        font-family: "Muli-Regular";
+        color: #999;
+        transform: translateY(1px);
+    }
+
+    .form-control, .form-control-message::-moz-placeholder {
+        font-size: 14px;
+        font-family: "Muli-Regular";
+        color: #999;
+        transform: translateY(1px);
+    }
+
+    .form-control, .form-control-message:-ms-input-placeholder {
+        font-size: 14px;
+        font-family: "Muli-Regular";
+        color: #999;
+        transform: translateY(1px);
+    }
+
+    .form-control, .form-control-message:-moz-placeholder {
+        font-size: 14px;
+        font-family: "Muli-Regular";
+        color: #999;
+        transform: translateY(1px);
+    }
+
+    .form-control, .form-control-message:focus {
+        border-bottom: 1px solid #accffe;
+    }
+
+    #button-cancel {
+        border: none;
+        width: 100%;
+        height: 49px;
+        margin-top: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        background: #fff;
+        color: #7AA6C4;
+        text-transform: uppercase;
+        font-family: "Muli-SemiBold", serif;
+        font-size: 15px;
+        letter-spacing: 2px;
+        transition: all 0.5s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    button {
+        border: none;
+        width: 100%;
+        height: 49px;
+        margin-top: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        background: #7AA6C4;
+        color: #fff;
+        text-transform: uppercase;
+        font-family: "Muli-SemiBold", serif;
+        font-size: 15px;
+        letter-spacing: 2px;
+        transition: all 0.5s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    button span {
+        position: relative;
+        z-index: 2;
+    }
+
+    button:before, button:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        background-color: rgba(52, 152, 253, 0.25);
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        -o-transition: all 0.3s;
+        transition: all 0.3s;
+        -webkit-transform: translate(-100%, 0);
+        transform: translate(-100%, 0);
+        -webkit-transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
+        transition-timing-function: cubic-bezier(0.75, 0, 0.125, 1);
+    }
+
+    button:after {
+        -webkit-transition-delay: 0.2s;
+        transition-delay: 0.2s;
+    }
+
+    button:hover:before, button:hover:after {
+        -webkit-transform: translate(0, 0);
+        transform: translate(0, 0);
+    }
+
+    @media (max-width: 991px) {
+        .inner {
+            width: 400px;
+            left: 4%;
+        }
+    }
+
+    .inner-contact {
+        width: 800px;
+        left: 4%;
+    }
+
+    @media (max-width: 767px) {
+        .inner {
+            width: 100%;
+            left: 0;
+        }
+
+        .image-1, .image-2 {
+            display: none;
+        }
+
+        form {
+            padding: 35px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            -ms-box-shadow: none;
+            -o-box-shadow: none;
+        }
+
+        .wrapper {
+            background: none;
+        }
+    }
+
+    /*sourceMappingURL=style.css.map */
+
+
+</style>
+</body>
+
+</html>
