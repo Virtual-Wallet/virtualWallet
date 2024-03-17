@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create a saving wallet</title>
+    <link href="../static/card.css" th:href="@{/card.css}" rel="stylesheet">
+    <link href="../static/navbar.css" th:href="@{/navbar.css}" rel="stylesheet">
+<!--    <link href="../static/footer.css" th:href="@{/footer.css}" rel="stylesheet">-->
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
+
+    <title>Arsha Bootstrap Template - Index</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="../../assets/img/favicon.png" rel="icon">
+    <link href="../../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<!--    <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">-->
+<!--    <link href="../../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">-->
+<!--    <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">-->
+<!--    <link href="../../assets/vendor/remixicon/remixicon.css" rel="stylesheet">-->
+<!--    <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">-->
+<!--    Template Main CSS File-->
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- =======================================================
+    * Template Name: Arsha
+    * Updated: Mar 12 2024 with Bootstrap v5.3.3
+    * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+
+<body>
+<div th:replace="~{/NavBar.html :: navbar}"></div>
+<br><br>
+<div th:if="${cards.isEmpty()}">
+    <h3 id="no-categories" th:text="#{'YOU STILL HAVE NO CARDS'}">YOU STILL HAVE NO CARDS</h3>
+</div>
+
+<div id="cards" th:unless="${cards.isEmpty()}">
+    <!-- ======= Frequently Asked Questions Section ======= -->
+    <section id="faq" class="faq section-bg">
+        <div class="container" data-aos="fade-up">
+
+            <div class="section-title">
+                <h2>My cards</h2>
+                <p>This is your category page. Here you can view and manage your spending categories. Click on a
+                    category name to expand and view its transactions.</p>
+
+            </div>
+
+            <br><br>
+
+            <div class="faq-list">
+                <ul>
+                    <!-- Loop through user categories -->
+                    <div th:each="card, iterationStatus : ${cards}">
+                        <li data-aos="fade-up" data-aos-delay="100">
+                            <i class="bx bx-help-circle icon-help"></i>
+                            <a data-bs-toggle="collapse" class="collapse"
+                               th:data-bs-target="'#faq-list-' + ${card.id}"
+                               th:text="'(' + ${iterationStatus.count} + ') CardNumber: ' + ${card.cardNumber}">
+                                <i class="bx bx-chevron-down icon-show"></i>
+                                <i class="bx bx-chevron-up icon-close"></i>
+                            </a>
+
+                            <div th:id="'faq-list-' + ${card.id}" class="collapse"
+                                 data-bs-parent=".faq-list">
+                                <br><br>
+                                <div id="card-view-table" style="display: flex; justify-content: space-between;">
+                                    <div class="card-cell">
+                                        <a class="card" th:text="#{card.label.number}">Card number</a>
+                                        <a class="card" th:text="${card.cardNumber}">Card number</a>
+                                    </div>
+                                    <div class="card-cell">
+                                        <a class="card" th:text="#{card.label.holder}">Card holder</a>
+                                        <a class="card" th:text="${card.cardholderName}">Card number</a>
+                                    </div>
+                                    <div class="card-cell">
+                                        <a class="card" th:text="#{card.label.date}">Card expiration date</a>
+                                        <a class="card" th:text="${card.expirationDate}">Card number</a>
+                                    </div>
+                                    <div class="cell">
+                                        <!--                                            <a th:href="@{{id}/update/{cardId}(id=${user.getId()}, cardId=${card.getId()})}">-->
+                                        <button class="btn" value='Update card' title="Update card"><i
+                                                class="fa fa-pencil"></i></button>
+                                        <!--                                            </a>-->
+                                        <!--                                            <a th:href="@{{id}/delete/{cardId}(id=${user.getId()}, cardId=${card.getId()})}">-->
+                                        <!--                                                <button class="btn" value='Delete card' title="Delete card"><i class="fa fa-trash"></i></button>-->
+                                        <!--                                            </a>-->
+                                        <!--                                        </div>-->
+                                    </div>
+                                    <!--                                    <a th:href="@{/cards/user/{id}/new(id=${user.getId()})}">-->
+                                    <!--                                        <button class="btn" value='Add new card' title="Add new card">Add Card</button>-->
+                                    <!--                                    </a>-->
+                                    <!--        <a th:href="@{/cards}">-->
+                                    <!--            <button class="btn" value='Back to card dashboard' title="Back to card dashboard">-->
+                                    <!--                <i class="fa fa-arrow-left"></i></button>-->
+                                    <!--        </a>-->
+                                </div>
+
+                            </div>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>
+<br>
+<div th:replace="~{/PageFrame :: footer}"></div>
+
+
+<!-- Vendor JS Files -->
+<script src="../assets/vendor/aos/aos.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="../assets/vendor/php-email-form/validate.js"></script>
+<script src="../assets/js/main.js"></script>
+
+<!-- Template Main JS File -->
+<script src="../assets/js/main.js"></script>
+
+</body>
+</html>

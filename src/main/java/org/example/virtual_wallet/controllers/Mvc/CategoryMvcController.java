@@ -48,13 +48,15 @@ public class CategoryMvcController {
 
     @GetMapping
     public String showCategoriesPage(Model model, HttpSession session) {
-        try{
-            authenticationHelper.tryGetCurrentUser(session);
-        }catch (AuthorizationException e){
-            return "redirect:/auth/login";
-        }
+//        try{
+//            authenticationHelper.tryGetCurrentUser(session);
+//        }catch (AuthorizationException e){
+//            return "redirect:/auth/login";
+//        }
+//
+//        User user = authenticationHelper.tryGetCurrentUser(session);
 
-        User user = authenticationHelper.tryGetCurrentUser(session);
+        User user = userService.getById(1);
 
         try {
             List<SpendingCategory> categories = service.getAllUserCategories(user);
