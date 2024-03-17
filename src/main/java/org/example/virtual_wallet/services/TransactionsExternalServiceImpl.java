@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.services;
 
+import org.example.virtual_wallet.exceptions.LargeTransactionDetectedException;
 import org.example.virtual_wallet.models.TransactionsExternal;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.repositories.contracts.TransactionsExternalRepository;
@@ -13,6 +14,8 @@ public class TransactionsExternalServiceImpl implements TransactionsExternalServ
 
     private final WalletServiceImpl walletService;
     private final TransactionsExternalRepository repository;
+    private static final double LARGE_TRANSACTION_AMOUNT = 1000;
+    private static final String LARGE_TRANSACTION_MESSAGE = "A verification code has been sent to your email to verify large transaction.";
 
     public TransactionsExternalServiceImpl(WalletServiceImpl walletService,
                                            TransactionsExternalRepository repository) {
@@ -47,5 +50,12 @@ public class TransactionsExternalServiceImpl implements TransactionsExternalServ
     @Override
     public List<TransactionsExternal> getWithdrawals(User user) {
         return repository.getWithdrawals(user);
+    }
+
+    @Override
+    public void checkForLargeTransaction(TransactionsExternal transaction) {
+        if (transaction.getAmount() > LARGE_TRANSACTION_AMOUNT) {
+            throw new LargeTransactionDetectedException(LARGE_TRANSACTION_MESSAGE);
+        }
     }
 }

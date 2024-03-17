@@ -29,6 +29,7 @@ public class WalletServiceImpl implements WalletService {
     public void create(Wallet wallet, User user) {
         verifyUniqueUserWallet(user);
         wallet.setUser(user);
+        wallet.setActive(true);
         walletRepository.create(wallet);
     }
 

@@ -33,7 +33,7 @@ public class TransactionsInternalMapper {
     public TransactionsInternal createDto(User sender, User recipient, TransactionDto dto) {
         TransactionsInternal transaction = new TransactionsInternal();
         transaction.setSenderWalletId(sender.getWallet().getId());
-        transaction.setRecipientWalletId(recipient.getWallet().getId());
+        transaction.setRecipientWallet(recipient.getWallet());
         transaction.setAmount(dto.getAmount());
         transaction.setTimestamp(timestamp);
         transaction.setCurrency(currencyService.get(dto.getCurrency()));

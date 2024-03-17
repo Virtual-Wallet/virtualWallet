@@ -11,5 +11,6 @@ public interface TokenService {
     void delete(int id);
     void validateCorrectToken(Token token, User user);
     Token create(User user);
+    Token getUserToken(int id);
 
 }

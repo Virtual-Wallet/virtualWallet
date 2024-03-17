@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create a saving wallet</title>
+    <link href="../static/card.css" th:href="@{/card.css}" rel="stylesheet">
+    <link href="../static/navbar.css" th:href="@{/navbar.css}" rel="stylesheet">
+<!--    <link href="../static/footer.css" th:href="@{/footer.css}" rel="stylesheet">-->
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
+
+
+    <!--    <link href="../static/assets/vendor/scss/helpers/_position.scss" th:href="@{/_position.scss}" rel="stylesheet">-->
+    <!--    <meta charset="utf-8">-->
+    <!--    <meta content="width=device-width, initial-scale=1.0" name="viewport">-->
+
+    <!--    <title>Arsha Bootstrap Template - Index</title>-->
+    <!--    <meta content="" name="description">-->
+    <!--    <meta content="" name="keywords">-->
+
+    <!--    &lt;!&ndash; Favicons &ndash;&gt;-->
+    <!--    <link href="../../assets/img/favicon.png" rel="icon">-->
+    <!--    <link href="../../assets/img/apple-touch-icon.png" rel="apple-touch-icon">-->
+
+
+    <!--    &lt;!&ndash; Google Fonts &ndash;&gt;-->
+    <!--    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"-->
+    <!--          rel="stylesheet">-->
+
+    <!-- Vendor CSS Files -->
+    <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+<!--    Template Main CSS File-->
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--    <title>Transactions</title>-->
+    <!--    &lt;!&ndash; Include DataTables CSS &ndash;&gt;-->
+    <!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">-->
+
+    <!-- =======================================================
+    * Template Name: Arsha
+    * Updated: Mar 12 2024 with Bootstrap v5.3.3
+    * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+
+<body>
+<!--<header th:replace="NavBar.html :: navbar"></header>-->
+<div th:replace="~{/NavBar.html :: navbar}"></div>
+<br><br>
+<section id="faq" class="faq section-bg">
+    <div class="section-title">
+        <h2>Update Card</h2>
+        <p>This is your category page. Here you can view and manage your spending categories. Click on a
+            category name to expand and view its transactions.</p>
+    </div>
+
+    <form class="credit-card" action="#" th:object="${cardDto}" method="post">
+
+        <div class="form-body">
+            <div class="form-group input-group-lg">
+                <!-- Card Number -->
+                <label><span class="hidden-xs">Card </span><span class="visible-xs-inline"></span>Number</label>
+                <input type="text" class="form-control" placeholder="Card Number" th:field="*{cardNumber}">
+                <label class="error" th:errors="*{cardNumber}">Number error placeholder</label>
+                <br>
+                <label><span class="hidden-xs">Card </span><span class="visible-xs-inline"></span>Holder</label>
+                <input type="text" class="form-control" placeholder="Card Holder" th:field="*{cardHolder}">
+                <label class="error" th:errors="*{cardHolder}">Holder error placeholder</label>
+
+                <br>
+
+                <label><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline"></span> DATE</label>
+                <input th:attr="min=${#dates.format(#dates.createNow(), 'MM-dd')}" type="text" class="form-control"
+                       placeholder="MM / YY" th:field="*{expirationDate}" title="Please enter date in MM / YY format"
+                       oninput="addSlash(this)"/>
+                <label class="text-danger" th:errors="*{expirationDate}">Email error placeholder</label>
+                <br>
+
+                <label><span class="hidden-xs">CCV</span><span class="visible-xs-inline"></span> </label>
+                <input type="text" class="form-control" placeholder="CSV" th:field="*{cardCsv}"/>
+                <label class="text-danger" th:errors="*{cardCsv}">Email error placeholder</label>
+                <p>3 or 4 digits usually found on the signature strip</p>
+
+                <br>
+            </div>
+
+            <div class="buttons">
+                <div>
+                    <a th:href="@{/cards}">
+                        <button type="submit" class="proceed-btn" th:text="#{card.label.update}">Update</button>
+                    </a>
+                    <a th:href="@{/cards}">
+                        <button type="button" class="cancel-btn" th:text="#{navigation.cancel}">Cancel</button>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+
+    </form>
+
+</section>
+
+<div th:replace="~{/PageFrame :: footer}"></div>
+
+
+<!-- Vendor JS Files -->
+<script src="../assets/vendor/aos/aos.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="../assets/vendor/php-email-form/validate.js"></script>
+<script src="../assets/js/main.js"></script>
+
+<!-- Template Main JS File -->
+<script src="../assets/js/main.js"></script>
+<script>
+    function addSlash(input) {
+        let value = input.value.replace(/\D/g, ''); // Remove non-digit characters
+
+        // Validate month (optional):
+        if (value.length > 2 && (parseInt(value.substring(0, 2)) > 12 || parseInt(value.substring(0, 2)) < 1)) {
+            value = value.substring(0, 2); // Limit to two digits for month
+        }
+
+        // Insert slash after every 2 digits
+        value = value.replace(/(\d{2})/g, '$1/');
+
+        // Limit to 5 characters (MM/YY format)
+        value = value.substring(0, 5);
+
+        input.value = value;
+    }
+
+</script>
+</body>
+</html>

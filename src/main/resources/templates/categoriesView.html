@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<div th:insert="~{/PageFrame :: head('Categories')}"></div>-->
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Arsha Bootstrap Template - Index</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="../../assets/img/favicon.png" rel="icon">
+    <link href="../../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions</title>
+    <!-- Include DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+
+    <!-- =======================================================
+    * Template Name: Arsha
+    * Updated: Mar 12 2024 with Bootstrap v5.3.3
+    * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+<body>
+<div th:replace="~{/NavBar.html :: navbar}"></div>
+<br><br>
+<div th:if="${categories.isEmpty()}">
+    <h3 id="no-categories" th:text="#{'YOU STILL HAVE NO CATEGORIES'}">YOU STILL HAVE NO CATEGORIES</h3>
+</div>
+
+<div id="categories" th:unless="${categories.isEmpty()}">
+    <!-- ======= Frequently Asked Questions Section ======= -->
+    <section id="faq" class="faq section-bg">
+        <div class="container" data-aos="fade-up">
+
+            <div class="section-title">
+                <h2>My categories</h2>
+                <p>This is your category page. Here you can view and manage your spending categories. Click on a
+                    category name to expand and view its transactions.</p>
+
+
+                <div class="form-popup" id="myForm">
+                    <form th:method="post" class="form-container" th:action="@{/categories/new}"
+                          th:object="${categoryDto}">
+                        <input type="text" placeholder="Enter New Category" th:field="*{name}" required>
+                        <button class="submit">Submit</button>
+                        <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+                    </form>
+                </div>
+
+                <div style="margin-top: 50px;">
+                    <div class="centered">
+                        <div class="plus" id="plus" onclick="openForm()">
+                            <div class="plus__line plus__line--v"></div>
+                            <div class="plus__line plus__line--h"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br><br>
+
+
+            <div class="faq-list">
+                <ul>
+                    <!-- Loop through user categories -->
+                    <div th:each="category : ${categories}">
+                        <li data-aos="fade-up" data-aos-delay="100">
+
+
+                            <i class="bx bx-help-circle icon-help"></i>
+
+
+                            <a data-bs-toggle="collapse" class="collapse"
+                               th:data-bs-target="'#faq-list-' + ${category.spendingCategoryId}"
+                               th:text="${category.name}">
+                                <i class="bx bx-chevron-down icon-show"></i>
+                                <i class="bx bx-chevron-up icon-close"></i>
+                            </a>
+                            <div class="buttons">
+                                <a id="edit-icon" data-toggle="modal" data-target="#editCategoryModal" th:href="@{/categories/{name}/update(name=${category.name})}">
+
+<!--                                                                   th:href="@{/categories/{name}/update(name=${category.getName().toLowerCase()})}">-->
+                                    <button class="edit-btn" value='Edit category' title="Edit category"><i
+                                            class="fa fa-edit"></i></button>
+                                </a>
+                                <a th:href="@{/categories/{name}/delete(name=${category.getName().toLowerCase()})}">
+                                    <button class="edit-btn" value='Delete category' title="Delete category"><i
+                                            class="fa fa-trash"></i></button>
+                                </a>
+                            </div>
+
+                            <br><br>
+
+                            <!--                            <i class="bx bx-chevron-down icon-show"></i>-->
+                            <!--                            <i class="bx bx-chevron-up icon-close"></i>-->
+                            <!--                            </a>-->
+                            <div th:id="'faq-list-' + ${category.spendingCategoryId}" class="collapse"
+                                 data-bs-parent=".faq-list">
+                                <br><br>
+                                <div class="table-responsive-sm">
+                                    <table class="table table-hover table-sm transactionsTable">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Amount</th>
+                                            <th scope="col">Currency</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Recipient</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="transaction : ${category.transactions}">
+                                            <td th:text="${transaction.id}"></td>
+                                            <td th:text="${transaction.amount}"></td>
+                                            <td th:text="${transaction.currency.currency}"></td>
+                                            <td th:text="${transaction.timestamp}"></td>
+                                            <td th:text="${transaction.recipientWallet.getUser().username}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>
+<div th:replace="~{/PageFrame :: footer}"></div>
+<!-- Vendor JS Files -->
+<script src="../assets/vendor/aos/aos.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="../assets/vendor/php-email-form/validate.js"></script>
+
+<script>
+    function openForm() {
+        document.getElementById("myForm").style.display = "block";
+    }
+
+    function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+    }
+</script>
+
+<!-- Template Main JS File -->
+<script src="../assets/js/main.js"></script>
+
+<!-- Template and Script for Tables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.transactionsTable').DataTable();
+    });
+</script>
+
+
+<style>
+
+    .submit {
+        background-color: #04AA6D;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        width: 33%;
+        margin-bottom: 10px;
+        opacity: 0.8;
+        margin-right: 35px;
+    }
+
+    .submit:hover {
+        opacity: 1;
+    }
+
+
+    /* The popup form - hidden by default */
+    .form-popup {
+        display: none;
+        top: 50%;
+        left: 50%;
+        margin-top: -100px; /* Negative half of height. */
+        margin-left: -150px; /* Negative half of width. */
+
+        border: 3px solid #f1f1f1;
+        z-index: 9;
+        width: 300px;
+        position: fixed;
+    }
+
+    /* Add styles to the form container */
+    .form-container {
+        max-width: 300px;
+        padding: 10px;
+        background-color: rgba(40, 58, 90, 0.9);
+        border-radius: 10px; /* Rounded corners for a nicer look */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Box shadow for depth */
+        margin: 0 auto; /* Centering the container horizontally */
+    }
+
+    /* Full-width input fields */
+    .form-container input[type=text], .form-container input[type=password] {
+        width: 75%;
+        padding: 15px;
+        margin: 5px 0 22px 0;
+        border: none;
+        background: #f1f1f1;
+    }
+
+    /* When the inputs get focus, do something */
+    .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+        background-color: #ddd;
+        outline: none;
+    }
+
+    /* Set a style for the submit/login button */
+    .form-container .btn {
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        width: 33%;
+        margin-bottom: 10px;
+        opacity: 0.8;
+        border-radius: 10px; /* Rounded corners for a nicer look */
+        transition: opacity 0.3s, background-color 0.3s, color 0.3s; /* Smooth transitions */
+    }
+
+    /* Add a red background color to the cancel button */
+    .form-container .cancel {
+        background-color: red;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        width: 33%;
+        margin-bottom: 10px;
+        opacity: 0.8;
+        margin-right: 35px;
+    }
+
+    /* Add some hover effects to buttons */
+    .form-container .btn:hover {
+        opacity: 1; /* Change opacity to fully visible on hover */
+        color: #f0f0f0; /* Lighter text color on hover */
+    }
+
+
+    /* Add animation (fade in the popup) */
+    @-webkit-keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .plus {
+        width: 100px;
+        cursor: pointer;
+        transition: all 0.3s ease 0s;
+        height: 100px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        position: relative;
+    }
+
+    .plus:hover {
+        background-color: rebeccapurple;
+    }
+
+    .plus__line {
+        width: 6px;
+        height: 50px;
+        background: rgba(40, 58, 90, 0.9);
+        border-radius: 10px;
+        position: absolute;
+        left: calc(50% - 3px);
+        top: calc(50% - 25px);
+    }
+
+    .plus__line--h {
+        transform: rotate(90deg);
+    }
+
+    .plus__line--v {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        overflow: hidden;
+        transition: all 0.4s ease 0s;
+    }
+
+    .plus__link {
+        color: #fff;
+        font-size: 30px;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s ease 0s;
+        transform: scale(0.5);
+    }
+
+    .plus--active {
+        height: 32px;
+        border-radius: 30px;
+    }
+
+    .plus--active .plus__line--v {
+        height: 68px;
+        top: calc(-100% - 60px);
+        padding: 0 5px;
+        box-sizing: border-box;
+        width: 220px;
+        border-radius: 60px;
+        left: calc(50% - 110px);
+    }
+
+    .plus--active .plus__link {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1);
+        transition-delay: 0.05s;
+    }
+
+    .centered {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /*#3498db  edit   */
+    /*#8e44ad  save   */
+    /*#2ecc71    new  */
+    /*#555555  cancel   */
+    /*#c0392b  delete   */
+    /* 1st alternate hover colors if hover inset shadow not working properly
+     $gw-blue-dark: rgb(27, 79, 114); /*#1b4f72
+     $gw-purple-dark: rgb(74, 35, 90);  /*#4a235a
+     $gw-green-dark: rgb(29, 131, 72); /*#1d8348
+     $black: rgb(0, 0, 0); /*#000000
+     $gw-red-dark: rgb(123, 36, 28); /*#7b241c */
+    .button {
+        font-family: 'Open Sans';
+        font-size: 16px;
+        font-weight: 400;
+        display: inline-block;
+        color: #FFF;
+        border-radius: 0.25em;
+        text-shadow: -1px -1px 0px rgba(0, 0, 0, 0.4);
+    }
+
+    .primary {
+        line-height: 40px;
+        transition: ease-in-out 0.2s;
+        padding: 0 16px;
+    }
+
+    .primary:hover, .condensed:hover, .touch:hover {
+        transform: scale(1.02);
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2), inset 0 0 0 99999px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 2nd alternate hover colors if hover inset shadow not working properly
+     .edit:hover {
+     background: darken($gw-blue, 10%);
+     }
+     .save:hover {
+     background: darken($gw-purple, 10%);
+     }
+     .new:hover {
+     background: darken($gw-green, 10%);
+     }
+     .cancel:hover {
+     background: darken($gw-gray-5, 10%);
+     }
+     .delete:hover {
+     background: darken($gw-red, 10%);
+     }
+     */
+    .condensed {
+        transition: ease-in-out 0.2s;
+        line-height: 24px;
+        padding: 0 8px;
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+    }
+
+    .touch {
+        transition: ease-in-out 0.2s;
+        line-height: 30px;
+        width: 30px;
+        padding: 0px;
+        text-align: center;
+    }
+
+    .edit:before, .save:before, .new:before, .cancel:before, .delete:before {
+        font-family: FontAwesome;
+        display: inline-block;
+        font-size: 1rem;
+        padding-right: 12px;
+        background: none;
+        color: #FFF;
+    }
+
+    .condensed.edit:before, .condensed.save:before, .condensed.new:before, .condensed.cancel:before, .condensed.delete:before {
+        content: none;
+    }
+
+    .touch.edit:before, .touch.save:before, .touch.new:before, .touch.cancel:before, .touch.delete:before {
+        width: 100%;
+        text-align: center;
+        font-size: 1.25rem;
+    }
+
+    .inlineIcon.edit, .inlineIcon.save, .inlineIcon.new, .inlineIcon.cancel, .inlineIcon.delete {
+        background: transparent;
+    }
+
+    .inlineIcon.edit:before, .inlineIcon.save:before, .inlineIcon.new:before, .inlineIcon.cancel:before, .inlineIcon.delete:before {
+        line-height: 32px;
+        font-size: 32px;
+        padding: 4px 0px;
+    }
+
+    .edit {
+        background: rebeccapurple;
+    }
+
+    .edit:before {
+        content: "\f040";
+    }
+
+    .inlineIcon.new:before {
+        color: #2ecc71;
+    }
+
+    .delete {
+        background: #c0392b;
+    }
+
+    .delete:before {
+        content: "\f1f8";
+    }
+
+    .inlineIcon.delete:before {
+        color: #c0392b;
+    }
+
+
+</style>
+</body>
+</html>

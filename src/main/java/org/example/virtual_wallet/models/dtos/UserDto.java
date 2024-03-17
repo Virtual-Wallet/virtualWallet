@@ -14,16 +14,14 @@ public class UserDto {
             message = "Password must contain one digit from 1 to 9, " +
                     "one lowercase letter, " +
                     "one uppercase letter, " +
-                    "one special character, " +
-                    "no space, and " +
-                    "it must be at least 8 symbols.")
+                    "one special character, ")
     private String password;
-    @NotEmpty(message = "You must confirm your password!")
+
     private String passwordConfirm;
-    @NotEmpty(message = "E-mail name can't be empty!")
-    @Email(message = "E-mail should be valid!")
+
+    @Email(message = "Invalid E-mail format!")
     private String email;
-    @Size(min = 10,max = 10, message = "Invalid phone format!")
+    @Size(min = 10, max = 10, message = "Invalid phone format!")
     private String phoneNumber;
     private String photoUrl;
 
@@ -38,6 +36,7 @@ public class UserDto {
     public void setUsername(String username) {
         this.username = username;
     }
+
 
     public String getPassword() {
         return password;

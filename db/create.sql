@@ -35,7 +35,8 @@ create table users
     phone         varchar(20)                                                                  null,
     picture       blob                                                                         null,
     status        enum ('PENDING_EMAIL', 'EMAIL_CONFIRMED', 'PENDING_ID', 'ACTIVE', 'BLOCKED') null,
-    creation_date datetime                                                                     null
+    creation_date datetime                                                                     null,
+    role_type     enum ('ADMIN', 'REGULAR', 'BANNED')                                          null
 );
 
 create table cards
@@ -129,16 +130,6 @@ create index card_id
 create index user_id
     on users_cards (user_id);
 
-create table users_roles
-(
-    user_id int null,
-    role_id int null,
-    constraint users_roles_roles_role_id_fk
-        foreign key (role_id) references roles (role_id),
-    constraint users_roles_users_user_id_fk
-        foreign key (user_id) references users (user_id)
-);
-
 create table verifications
 (
     verification_id int auto_increment
@@ -172,12 +163,13 @@ create table internal_transactions
 (
     internal_transaction_id int auto_increment
         primary key,
-    sender_wallet_id        int      null,
-    recipient_wallet_id     int      null,
-    amount                  double   null,
-    timestamp               datetime null,
-    spending_category       int      null,
-    currency                int      null,
+    type                    enum ('INCOMING', 'OUTGOING') null,
+    sender_wallet_id        int                           null,
+    recipient_wallet_id     int                           null,
+    amount                  double                        null,
+    timestamp               datetime                      null,
+    spending_category       int                           null,
+    currency                int                           null,
     constraint internal_transactions_ibfk_1
         foreign key (sender_wallet_id) references wallets (wallet_id),
     constraint internal_transactions_ibfk_2

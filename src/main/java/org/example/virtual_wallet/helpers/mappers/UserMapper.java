@@ -17,26 +17,46 @@ public class UserMapper {
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
-        user.setPhoneNumber(userDto.getPhoneNumber());
-        user.setPicture(userDto.getPhotoUrl());
-        user.setEmail(userDto.getEmail());
-        return user;
-    }
-    public User dtoUserUpdate(UserDto userDto) {
-        User user = new User();
-        user.setPassword(userDto.getPassword());
+//        user.setPassword(userDto.getPasswordConfirm());
         user.setEmail(userDto.getEmail());
         user.setPhoneNumber(userDto.getPhoneNumber());
         user.setPicture(userDto.getPhotoUrl());
         return user;
     }
 
-    public User updateUser(int id, UserDto userDto){
-        User user = userService.getById(id);
+    public User dtoUserUpdate(UserDto userDto) {
+        User user = new User();
         user.setPassword(userDto.getPassword());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setEmail(userDto.getEmail());
+        user.setPicture(userDto.getPhotoUrl());
+        return user;
+    }
+
+    public User updateUser(int id, UserDto userDto) {
+        User user = userService.getById(id);
         user.setEmail(userDto.getEmail());
         user.setPhoneNumber(userDto.getPhoneNumber());
         user.setPicture(userDto.getPhotoUrl());
+        return user;
+    }
+
+    public UserDto userToDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setEmail(user.getEmail());
+        userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setPhotoUrl(user.getPicture());
+        return userDto;
+    }
+    public User updatePassword(int id, UserDto userDto) {
+        User user = userService.getById(id);
+        user.setPassword(userDto.getPassword());
+        return user;
+    }
+    public User userPasswordToDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setPassword(user.getPassword());
+        userDto.setPasswordConfirm(user.getPassword());
         return user;
     }
 }

@@ -41,10 +41,30 @@ public class SpendingCategoryRepositoryImpl extends AbstractCRUDRepository<Spend
     public List<SpendingCategory> getAllUserCategories(User user) {
         try (Session session = sessionFactory.openSession()) {
             Query<SpendingCategory> query = session
-                    .createQuery("SELECT s FROM SpendingCategory s WHERE s.creator = :id AND s.isDeleted = false",
+                    .createQuery("from SpendingCategory WHERE creator.id = :id AND isDeleted = false",
                             SpendingCategory.class)
                     .setParameter("id", user.getId());
+            if (query.list().isEmpty()) {
+                throw new EntityNotFoundException("Category", user.getId());
+            }
             return query.list();
         }
     }
+    @Override
+    public SpendingCategory getByCategoryAndUser(String name, User user) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<SpendingCategory> query = session
+                    .createQuery("SELECT s FROM SpendingCategory s WHERE s.creator.id = :id " +
+                                    "AND s.name = :name",
+                            SpendingCategory.class)
+                    .setParameter("id", user.getId())
+                    .setParameter("name", name);
+            List<SpendingCategory> result = query.list();
+            if (result.isEmpty()) {
+                throw new EntityNotFoundException("Category", "name", name);
+            }
+            return result.get(0);
+        }
+    }
+
 }

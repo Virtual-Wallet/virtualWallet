@@ -1,12 +1,18 @@
 package org.example.virtual_wallet.models.dtos;
 
-import jakarta.validation.constraints.Size;
-
-public class RoleDto {
-    @Size(min = 1,max = 32, message = "Content must be exactly 32 characters long!")
+public class CategoryUpdateDto {
+    private int id;
     private String name;
 
-    public RoleDto() {
+    public CategoryUpdateDto() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
