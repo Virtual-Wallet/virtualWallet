@@ -1,0 +1,63 @@
+#error-404-body{
+    background-position: top;
+    padding: 0 0 0 0;
+    background-repeat: no-repeat;
+    background-image: url("https://res.cloudinary.com/dgp8v40yp/image/upload/v1693989407/error-404.svg");
+    height: 100%;
+    width: 100%;
+}
+
+#error-500-body{
+    background-position: top;
+    padding: 0 0 0 0;
+    background-repeat: no-repeat;
+    background-image: url("https://res.cloudinary.com/dgp8v40yp/image/upload/v1693993026/%D0%9D%D0%B5%D0%BE%D0%B7%D0%B0%D0%B3%D0%BB%D0%B0%D0%B2%D0%B5%D0%BD_1700_x_880_%D0%BF%D0%B8%D0%BA%D1%81%D0%B5%D0%BB%D0%B0_12_euttfg.svg");
+    height: 100%;
+    width: 100%;
+}
+
+#not-found-body{
+    background-position: top;
+    padding: 0 0 0 0;
+    background-repeat: no-repeat;
+    background-image: url("https://res.cloudinary.com/dgp8v40yp/image/upload/v1693989407/error-404.svg");
+    height: 100%;
+    width: 100%;
+}
+
+#not-found-body h3,
+#insufficient-amount-body h3{
+    display: flex;
+    margin-bottom: 10%;
+    color: #3B5998;
+    padding-bottom: 100px;
+    justify-content: space-around;
+}
+
+#unauthorized-body{
+    background-position: top;
+    padding: 0 0 0 0;
+    background-repeat: no-repeat;
+    background-image: url("https://res.cloudinary.com/dgp8v40yp/image/upload/v1693990207/unauthorized-view.svg");
+    height: 100%;
+    width: 100%;
+}
+
+#unsuccessful-operation-body{
+    background-position: top;
+    padding: 0 0 0 0;
+    background-repeat: no-repeat;
+    background-image: url("https://res.cloudinary.com/dgp8v40yp/image/upload/v1694002325/unsuccessful-operation.svg");
+    height: 100%;
+    width: 100%;
+}
+
+#insufficient-amount-body{
+    background-position: top;
+    padding: 0 0 0 0;
+    background-repeat: no-repeat;
+    background-image: url("https://res.cloudinary.com/dgp8v40yp/image/upload/v1694002325/unsuccessful-operation.svg");
+    height: 100%;
+    width: 100%;
+}
+
