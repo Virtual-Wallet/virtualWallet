@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Entity not found</title>
+    <link href="../static/errors.css" th:href="@{/errors.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body id="insufficient-amount-body">
+<h3 class = "error" th:text="${error.toUpperCase()}">Error</h3>
+</body>
+</html>
