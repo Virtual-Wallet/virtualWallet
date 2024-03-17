@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Log in</title>
+    <link href="../static/category.css" th:href="@{/category.css}" rel="stylesheet">
+
     <!-- Vendor CSS Files -->
     <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
     <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -40,24 +42,29 @@
 
 <div th:replace="~{/PageFrame :: navbarTest}"></div>
 <br><br><br><br>
-<div class="centered-input">
-    <form action="#" th:action="@{/authentication/login}" th:object="${login}" method="post">
-        <label class="centered-input">Username</label>
-        <input class="input-group-text" type="text" th:field="*{username}" required/>
-        <label style="color: red; font-weight: normal;" th:errors="*{username}">Username error
-            placeholder</label>
-
-        <br>
-        <label class="centered-input">Password</label>
-        <input class="input-group-text" type="password" th:field="*{password}" required/>
-        <label class="flex-fill" style=" color: red; font-weight: normal;" th:errors="*{password}">Password error
-            placeholder</label>
-        <br>
-        <div class="centered-input">
-            <input class="buttonLogIn" type="submit" value="Sign in"/>
-        </div>
-    </form>
+<div class="section-title">
+    <h2>Log in</h2>
 </div>
+<section id="category-update-container" class="centered-input">
+    <div class="centered-input">
+        <form action="#" th:action="@{/authentication/login}" th:object="${login}" method="post">
+            <label class="centered-input">Username</label>
+            <input class="input-group-text" type="text" th:field="*{username}" required/>
+            <label style="color: red; font-weight: normal;" th:errors="*{username}">Username error
+                placeholder</label>
+
+            <br>
+            <label class="centered-input">Password</label>
+            <input class="input-group-text" type="password" th:field="*{password}" required/>
+            <label class="flex-fill" style=" color: red; font-weight: normal;" th:errors="*{password}">Password error
+                placeholder</label>
+            <br>
+            <div class="centered-input">
+                <input class="buttonLogIn" type="submit" value="Sign in"/>
+            </div>
+        </form>
+    </div>
+</section>
 <br>
 <div th:replace="~{/PageFrame :: footer}"></div>
 </body>
