@@ -54,7 +54,7 @@ public class TransactionsInternalServiceImpl implements TransactionsInternalServ
     }
 
     private Wallet getRecipientWallet(TransactionsInternal transaction) {
-        return walletService.getById(transaction.getRecipientWalletId());
+        return walletService.getById(transaction.getRecipientWallet().getId());
     }
 
     private BigDecimal calculateAmountSourceToTransactional(TransactionsInternal transaction, Wallet senderWallet) throws IOException {
@@ -89,5 +89,10 @@ public class TransactionsInternalServiceImpl implements TransactionsInternalServ
     @Override
     public List<TransactionsInternal> getOutgoing(User user) {
         return repository.getOutgoing(user);
+    }
+
+    @Override
+    public List<TransactionsInternal> getOutgoingPerCategory(int categoryId, User user) {
+        return repository.getOutgoingPerCategory(categoryId, user);
     }
 }
