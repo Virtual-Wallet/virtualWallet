@@ -8,10 +8,7 @@ import org.example.virtual_wallet.helpers.mappers.CardMapper;
 import org.example.virtual_wallet.helpers.mappers.TransactionsExternalMapper;
 import org.example.virtual_wallet.models.*;
 import org.example.virtual_wallet.models.dtos.*;
-import org.example.virtual_wallet.services.contracts.CardService;
-import org.example.virtual_wallet.services.contracts.CurrencyService;
-import org.example.virtual_wallet.services.contracts.TransactionsExternalService;
-import org.example.virtual_wallet.services.contracts.UserService;
+import org.example.virtual_wallet.services.contracts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -21,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -34,16 +32,19 @@ public class CardMvcController {
     private final TransactionsExternalMapper transactionsExternalMapper;
     private final TransactionsExternalService transactionsExternalService;
     private final CurrencyService currencyService;
-
+    private final TokenService tokenService;
+    private final EmailService emailService;
     private static final String DUMMY_END_POINT = "http://localhost:8080/api/dummy";
     private final static String INSUFFICIENT_AVAILABILITY = "Insufficient availability. Try with different amount.";
+    private static final String CURRENT_USER = "currentUser";
+
 
 
     @Autowired
     public CardMvcController(CardService cardService,
                              UserService userService,
                              CardMapper cardMapper,
-                             AuthenticationHelper authenticationHelper, TransactionsExternalMapper transactionsExternalMapper, TransactionsExternalService transactionsExternalService, CurrencyService currencyService) {
+                             AuthenticationHelper authenticationHelper, TransactionsExternalMapper transactionsExternalMapper, TransactionsExternalService transactionsExternalService, CurrencyService currencyService, TokenService tokenService, EmailService emailService) {
         this.service = cardService;
         this.userService = userService;
         this.cardMapper = cardMapper;
@@ -51,6 +52,8 @@ public class CardMvcController {
         this.transactionsExternalMapper = transactionsExternalMapper;
         this.transactionsExternalService = transactionsExternalService;
         this.currencyService = currencyService;
+        this.tokenService = tokenService;
+        this.emailService = emailService;
     }
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
@@ -268,7 +271,7 @@ public class CardMvcController {
 
              transactionsExternalService.createDeposit(transfer);
 
-            return "redirect:/";
+            return "SuccessfulTransactionView";
         } catch (EntityNotFoundException e){
             model.addAttribute("error", e.getMessage());
             return "NotFoundView";
@@ -278,6 +281,108 @@ public class CardMvcController {
         }
 
     }
+    @GetMapping("/withdraw")
+    public String showWithdrawPage(
+            @Valid Model model, HttpSession session){
+
+        try{
+            authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e){
+            return "redirect:/authentication/login";
+        }
+
+        User user = authenticationHelper.tryGetCurrentUser(session);
+
+
+        try {
+            model.addAttribute("user", user);
+            model.addAttribute("depositDto", new TransferDto());
+            model.addAttribute("cards", user.getCards());
+            return "WithdrawView";
+        }catch (EntityNotFoundException e){
+            model.addAttribute("error", e.getMessage());
+            return "NotFoundView";
+        }
+    }
+    @PostMapping("/withdraw")
+    public String withdraw(
+            @Valid @ModelAttribute("withdrawDto") TransferDto transferDto,
+            BindingResult bindingResult,
+            Model model,
+            HttpSession session) {
+        try{
+            authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e){
+            return "redirect:/authentication/login";
+        }
+
+        User user = authenticationHelper.tryGetCurrentUser(session);
+
+
+        if (bindingResult.hasErrors()){
+            return "WithdrawView";
+        }
+
+        try {
+            TransactionsExternal transfer = transactionsExternalMapper.withdrawalDto(user, transferDto);
+            transactionsExternalService.createWithdrawal(transfer);
+
+            return "SuccessfulTransactionView";
+        } catch (EntityNotFoundException e){
+            model.addAttribute("error", e.getMessage());
+            return "NotFoundView";
+        } catch (InsufficientAmountException e){
+            model.addAttribute("error", e.getMessage());
+            return "UnsuccessfulBankOperationView";
+        } catch (LargeTransactionDetectedException e){
+            Token token = tokenService.create(user);
+            emailService.sendTransactionEmail(user.getEmail(), token.getCode());
+            return "redirect:cards/verify";
+        }
+
+    }
+
+    @GetMapping("/verify")
+    public String showTokenVerificationPage(Model model) {
+        model.addAttribute("token", new Token());
+        return "TransactionVerify";
+    }
+
+    @PostMapping("/verify")
+    public String handleTokenVerification(@Valid @ModelAttribute("token") Token token,
+                                          BindingResult bindingResult,
+                                          HttpSession session) {
+        if (bindingResult.hasErrors()) {
+            return "TransactionVerify";
+        }
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            token = tokenService.getUserToken(user.getId());
+            tokenService.validateCorrectToken(token, user);
+            session.setAttribute(CURRENT_USER, user);
+            userService.advanceAccountStatus(user);
+
+            return "SuccessfulTransactionView";
+        } catch (InvalidTokenException | EntityNotFoundException e) {
+            bindingResult.rejectValue("code", "code_error", e.getMessage());
+            return "TransactionVerify";
+        }
+    }
+
+    @GetMapping("/resend")
+    public String handleResendToken(HttpSession session, RedirectAttributes redirectAttributes) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            Token token = tokenService.create(user);
+            emailService.sendTransactionEmail(user.getEmail(), token.getCode());
+            redirectAttributes.addFlashAttribute("message", "Token has been resent.");
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "An error occurred while trying to resend the token.");
+        }
+        return "redirect:/cards/verify";
+    }
+
 
 
 
