@@ -50,7 +50,7 @@ public class CardMvcController {
             authenticationHelper.tryGetCurrentUser(session);
         }catch (AuthorizationException e){
             model.addAttribute("error", e.getMessage());
-            return "redirect:/auth/login";
+            return "redirect:/authentication/login";
         }
 
         User user = authenticationHelper.tryGetCurrentUser(session);
@@ -75,7 +75,7 @@ public class CardMvcController {
             authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e){
             model.addAttribute("error", e.getMessage());
-            return "UnauthorizedView";
+            return "redirect:/authentication/login";
         }
                 User user = authenticationHelper.tryGetCurrentUser(session);
 
@@ -102,7 +102,7 @@ public class CardMvcController {
             authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e){
             model.addAttribute("error", e.getMessage());
-            return "UnauthorizedView";
+            return "redirect:/authentication/login";
         }
         User user = authenticationHelper.tryGetCurrentUser(session);
 
@@ -117,9 +117,6 @@ public class CardMvcController {
         } catch (EntityNotFoundException e) {
             model.addAttribute("error", e.getMessage());
             return "NotFoundView";
-        } catch (UnauthorizedOperationException e) {
-            model.addAttribute("error", e.getMessage());
-            return "UnauthorizedView";
         }
     }
 
@@ -128,8 +125,8 @@ public class CardMvcController {
                 try{
             authenticationHelper.tryGetCurrentUser(session);
         }catch (AuthorizationException e){
-            return "redirect:/auth/login";
-        }
+                    return "redirect:/authentication/login";
+                }
 
         User user = authenticationHelper.tryGetCurrentUser(session);
 
@@ -150,7 +147,7 @@ public class CardMvcController {
         try{
             authenticationHelper.tryGetCurrentUser(session);
         }catch (AuthorizationException e){
-            return "redirect:/auth/login";
+            return "redirect:/authentication/login";
         }
 
         User user = authenticationHelper.tryGetCurrentUser(session);
@@ -173,7 +170,7 @@ public class CardMvcController {
         try{
             authenticationHelper.tryGetCurrentUser(session);
         }catch (AuthorizationException e){
-            return "redirect:/auth/login";
+            return "redirect:/authentication/login";
         }
 
         User user = authenticationHelper.tryGetCurrentUser(session);

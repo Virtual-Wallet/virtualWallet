@@ -53,7 +53,7 @@ public class WalletMvcController {
             authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e){
             model.addAttribute("error", e.getMessage());
-            return "redirect:/auth/login";
+            return "redirect:/authentication/login";
         }
         User user = authenticationHelper.tryGetCurrentUser(session);
 
@@ -76,7 +76,7 @@ public class WalletMvcController {
             authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e){
             model.addAttribute("error", e.getMessage());
-            return "redirect:/auth/login";
+            return "redirect:/authentication/login";
         }
         User user = authenticationHelper.tryGetCurrentUser(session);
         if (errors.hasErrors()) {

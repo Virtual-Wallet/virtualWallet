@@ -51,7 +51,7 @@ public class CategoryMvcController {
         try{
             authenticationHelper.tryGetCurrentUser(session);
         }catch (AuthorizationException e){
-            return "redirect:/auth/login";
+            return "redirect:/authentication/login";
         }
 
         User user = authenticationHelper.tryGetCurrentUser(session);
@@ -76,7 +76,7 @@ public class CategoryMvcController {
         try{
             authenticationHelper.tryGetCurrentUser(session);
         }catch (AuthorizationException e){
-            return "redirect:/auth/login";
+            return "redirect:/authentication/login";
         }
 
         User user = authenticationHelper.tryGetCurrentUser(session);
@@ -104,7 +104,7 @@ public class CategoryMvcController {
         try{
             authenticationHelper.tryGetCurrentUser(session);
         }catch (AuthorizationException e){
-            return "redirect:/auth/login";
+            return "redirect:/authentication/login";
         }
 
         User user = authenticationHelper.tryGetCurrentUser(session);
@@ -132,8 +132,8 @@ public class CategoryMvcController {
                 try{
             authenticationHelper.tryGetCurrentUser(session);
         }catch (AuthorizationException e){
-            return "redirect:/auth/login";
-        }
+                    return "redirect:/authentication/login";
+                }
 
         User user = authenticationHelper.tryGetCurrentUser(session);
 
@@ -158,8 +158,8 @@ public class CategoryMvcController {
                 try{
             authenticationHelper.tryGetCurrentUser(session);
         }catch (AuthorizationException e){
-            return "redirect:/auth/login";
-        }
+                    return "redirect:/authentication/login";
+                }
 
         User user = authenticationHelper.tryGetCurrentUser(session);
 
