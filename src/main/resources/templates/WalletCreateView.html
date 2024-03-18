@@ -6,27 +6,8 @@
     <link href="../static/card.css" th:href="@{/card.css}" rel="stylesheet">
     <link href="../static/category.css" th:href="@{/category.css}" rel="stylesheet">
     <link href="../static/navbar.css" th:href="@{/navbar.css}" rel="stylesheet">
-    <!--    <link href="../static/footer.css" th:href="@{/footer.css}" rel="stylesheet">-->
 
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
-
-
-    <!--    <link href="../static/assets/vendor/scss/helpers/_position.scss" th:href="@{/_position.scss}" rel="stylesheet">-->
-    <!--    <meta charset="utf-8">-->
-    <!--    <meta content="width=device-width, initial-scale=1.0" name="viewport">-->
-
-    <!--    <title>Arsha Bootstrap Template - Index</title>-->
-    <!--    <meta content="" name="description">-->
-    <!--    <meta content="" name="keywords">-->
-
-    <!--    &lt;!&ndash; Favicons &ndash;&gt;-->
-    <!--    <link href="../../assets/img/favicon.png" rel="icon">-->
-    <!--    <link href="../../assets/img/apple-touch-icon.png" rel="apple-touch-icon">-->
-
-
-    <!--    &lt;!&ndash; Google Fonts &ndash;&gt;-->
-    <!--    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"-->
-    <!--          rel="stylesheet">-->
 
     <!-- Vendor CSS Files -->
     <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
@@ -40,22 +21,11 @@
     <link href="../../assets/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--    <title>Transactions</title>-->
-    <!--    &lt;!&ndash; Include DataTables CSS &ndash;&gt;-->
-    <!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">-->
 
-    <!-- =======================================================
-    * Template Name: Arsha
-    * Updated: Mar 12 2024 with Bootstrap v5.3.3
-    * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
-    * Author: BootstrapMade.com
-    * License: https://bootstrapmade.com/license/
-    ======================================================== -->
 </head>
 
 
 <body>
-<!--<header th:replace="NavBar.html :: navbar"></header>-->
 <div th:replace="~{/NavBar.html :: navbar}"></div>
 <br><br>
 <section id="faq" class="faq section-bg">
@@ -159,32 +129,6 @@
         outline: none;
     }
 
-    .wrapper {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: white;
-    }
-
-    .inner {
-        position: fixed;
-        width: 435px;
-    }
-
-    .image-1 {
-        position: absolute;
-        bottom: -12px;
-        left: -191px;
-        z-index: 99;
-    }
-
-    .image-2 {
-        position: absolute;
-        bottom: 0;
-        right: -129px;
-    }
-
     form {
         width: 100%;
         position: relative;
@@ -208,11 +152,6 @@
         margin-bottom: 33px;
     }
 
-    .form-holder {
-        position: relative;
-        margin-bottom: 21px;
-    }
-
     .form-holder span {
         position: absolute;
         left: 0;
@@ -224,91 +163,6 @@
 
     .form-holder span.lnr-lock {
         left: 3px;
-    }
-
-
-    .text--center {
-        text-align: center;
-        color: #7AA6C4;
-    }
-
-    .form-control-message {
-        border: none;
-        border-bottom: 1px solid #e6e6e6;
-        display: block;
-        width: 100%;
-        height: 100px;
-        background: none;
-        padding: 50px 42px 0px;
-        color: #666;
-        font-family: "Muli-SemiBold";
-        font-size: 16px;
-    }
-
-    .form-control {
-        border: none;
-        border-bottom: 1px solid #e6e6e6;
-        display: block;
-        width: 100%;
-        height: 38px;
-        background: none;
-        padding: 3px 42px 0px;
-        color: #666;
-        font-family: "Muli-SemiBold";
-        font-size: 16px;
-    }
-
-    .form-control, .form-control-message::-webkit-input-placeholder {
-        font-size: 14px;
-        font-family: "Muli-Regular";
-        color: #999;
-        transform: translateY(1px);
-    }
-
-    .form-control, .form-control-message::-moz-placeholder {
-        font-size: 14px;
-        font-family: "Muli-Regular";
-        color: #999;
-        transform: translateY(1px);
-    }
-
-    .form-control, .form-control-message:-ms-input-placeholder {
-        font-size: 14px;
-        font-family: "Muli-Regular";
-        color: #999;
-        transform: translateY(1px);
-    }
-
-    .form-control, .form-control-message:-moz-placeholder {
-        font-size: 14px;
-        font-family: "Muli-Regular";
-        color: #999;
-        transform: translateY(1px);
-    }
-
-    .form-control, .form-control-message:focus {
-        border-bottom: 1px solid #accffe;
-    }
-
-    #button-cancel {
-        border: none;
-        width: 100%;
-        height: 49px;
-        margin-top: 10px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-        background: #fff;
-        color: #7AA6C4;
-        text-transform: uppercase;
-        font-family: "Muli-SemiBold", serif;
-        font-size: 15px;
-        letter-spacing: 2px;
-        transition: all 0.5s;
-        position: relative;
-        overflow: hidden;
     }
 
     button {
@@ -373,20 +227,7 @@
         }
     }
 
-    .inner-contact {
-        width: 800px;
-        left: 4%;
-    }
-
     @media (max-width: 767px) {
-        .inner {
-            width: 100%;
-            left: 0;
-        }
-
-        .image-1, .image-2 {
-            display: none;
-        }
 
         form {
             padding: 35px;
@@ -397,13 +238,7 @@
             -o-box-shadow: none;
         }
 
-        .wrapper {
-            background: none;
-        }
     }
-
-    /*sourceMappingURL=style.css.map */
-
 
 </style>
 </body>

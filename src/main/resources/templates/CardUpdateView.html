@@ -5,27 +5,8 @@
     <title>Create a saving wallet</title>
     <link href="../static/card.css" th:href="@{/card.css}" rel="stylesheet">
     <link href="../static/navbar.css" th:href="@{/navbar.css}" rel="stylesheet">
-<!--    <link href="../static/footer.css" th:href="@{/footer.css}" rel="stylesheet">-->
 
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
-
-
-    <!--    <link href="../static/assets/vendor/scss/helpers/_position.scss" th:href="@{/_position.scss}" rel="stylesheet">-->
-    <!--    <meta charset="utf-8">-->
-    <!--    <meta content="width=device-width, initial-scale=1.0" name="viewport">-->
-
-    <!--    <title>Arsha Bootstrap Template - Index</title>-->
-    <!--    <meta content="" name="description">-->
-    <!--    <meta content="" name="keywords">-->
-
-    <!--    &lt;!&ndash; Favicons &ndash;&gt;-->
-    <!--    <link href="../../assets/img/favicon.png" rel="icon">-->
-    <!--    <link href="../../assets/img/apple-touch-icon.png" rel="apple-touch-icon">-->
-
-
-    <!--    &lt;!&ndash; Google Fonts &ndash;&gt;-->
-    <!--    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"-->
-    <!--          rel="stylesheet">-->
 
     <!-- Vendor CSS Files -->
     <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
@@ -39,36 +20,23 @@
     <link href="../../assets/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--    <title>Transactions</title>-->
-    <!--    &lt;!&ndash; Include DataTables CSS &ndash;&gt;-->
-    <!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">-->
 
-    <!-- =======================================================
-    * Template Name: Arsha
-    * Updated: Mar 12 2024 with Bootstrap v5.3.3
-    * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
-    * Author: BootstrapMade.com
-    * License: https://bootstrapmade.com/license/
-    ======================================================== -->
 </head>
 
 
 <body>
-<!--<header th:replace="NavBar.html :: navbar"></header>-->
 <div th:replace="~{/NavBar.html :: navbar}"></div>
 <br><br>
 <section id="faq" class="faq section-bg">
     <div class="section-title">
         <h2>Update Card</h2>
-        <p>This is your category page. Here you can view and manage your spending categories. Click on a
-            category name to expand and view its transactions.</p>
     </div>
 
     <form class="credit-card" action="#" th:object="${cardDto}" method="post">
 
         <div class="form-body">
             <div class="form-group input-group-lg">
-                <!-- Card Number -->
+
                 <label><span class="hidden-xs">Card </span><span class="visible-xs-inline"></span>Number</label>
                 <input type="text" class="form-control" placeholder="Card Number" th:field="*{cardNumber}">
                 <label class="error" th:errors="*{cardNumber}">Number error placeholder</label>
