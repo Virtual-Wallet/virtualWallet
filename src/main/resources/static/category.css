@@ -158,8 +158,10 @@
 #category-update-container{
     margin-left: 40%;
     margin-top: 5%;
-    min-width: 18%;
-    max-width: 18%;
+    /*min-width: 18%;*/
+    /*max-width: 18%;*/
+    width: fit-content;
+    /*display: flex;*/
 }
 
 #category-updated-name{
