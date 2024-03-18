@@ -34,24 +34,12 @@
     <!-- Include DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
 
-    <!-- =======================================================
-    * Template Name: Arsha
-    * Updated: Mar 12 2024 with Bootstrap v5.3.3
-    * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
-    * Author: BootstrapMade.com
-    * License: https://bootstrapmade.com/license/
-    ======================================================== -->
 </head>
 
 <body>
 <div th:replace="~{/NavBar.html :: navbar}"></div>
 <br><br>
-<div th:if="${categories.isEmpty()}">
-    <h3 id="no-categories" th:text="#{'YOU STILL HAVE NO CATEGORIES'}">YOU STILL HAVE NO CATEGORIES</h3>
-</div>
 
-<div id="categories" th:unless="${categories.isEmpty()}">
-    <!-- ======= Frequently Asked Questions Section ======= -->
     <section id="faq" class="faq section-bg">
         <div class="container" data-aos="fade-up">
 
@@ -60,11 +48,21 @@
                 <p>This is your category page. Here you can view and manage your spending categories. Click on a
                     category name to expand and view its transactions.</p>
 
+                <br><br>
+                <div th:if="${categories.isEmpty()}">
+                    <h3 id="no-categories" th:text="#{category.title.empty}">YOU STILL HAVE NO CATEGORIES</h3>
+                </div>
 
                 <div class="form-popup" id="myForm">
-                    <form th:method="post" class="form-container" th:action="@{/categories/new}"
-                          th:object="${categoryDto}">
-                        <input type="text" placeholder="Enter New Category" th:field="*{name}" required>
+
+                    <form class="form-container" action="#" th:action="@{/categories/new}" th:object="${categoryDto}" method="post">
+                        <label>
+                            <input  type="text" placeholder="Enter New Category" th:field="*{categoryName}" required>
+                        </label>
+                        <label style="color: red; font-weight: normal;" th:errors="*{categoryName}">Name error
+                            placeholder</label>
+
+                        <br>
                         <button class="submit">Submit</button>
                         <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
                     </form>
@@ -82,7 +80,7 @@
 
             <br><br>
 
-
+            <div id="categories" th:unless="${categories.isEmpty()}">
             <div class="faq-list">
                 <ul>
                     <!-- Loop through user categories -->
@@ -102,7 +100,6 @@
                             <div class="buttons">
                                 <a id="edit-icon" data-toggle="modal" data-target="#editCategoryModal" th:href="@{/categories/{name}/update(name=${category.name})}">
 
-<!--                                                                   th:href="@{/categories/{name}/update(name=${category.getName().toLowerCase()})}">-->
                                     <button class="edit-btn" value='Edit category' title="Edit category"><i
                                             class="fa fa-edit"></i></button>
                                 </a>
@@ -111,12 +108,8 @@
                                             class="fa fa-trash"></i></button>
                                 </a>
                             </div>
-
                             <br><br>
 
-                            <!--                            <i class="bx bx-chevron-down icon-show"></i>-->
-                            <!--                            <i class="bx bx-chevron-up icon-close"></i>-->
-                            <!--                            </a>-->
                             <div th:id="'faq-list-' + ${category.spendingCategoryId}" class="collapse"
                                  data-bs-parent=".faq-list">
                                 <br><br>
@@ -149,7 +142,7 @@
             </div>
         </div>
     </section>
-</div>
+<!--</div>-->
 <div th:replace="~{/PageFrame :: footer}"></div>
 <!-- Vendor JS Files -->
 <script src="../assets/vendor/aos/aos.js"></script>
@@ -228,8 +221,8 @@
 
     /* Full-width input fields */
     .form-container input[type=text], .form-container input[type=password] {
-        width: 75%;
-        padding: 15px;
+        /*width: 75%;*/
+        padding: 25px;
         margin: 5px 0 22px 0;
         border: none;
         background: #f1f1f1;
@@ -330,20 +323,6 @@
         transition: all 0.4s ease 0s;
     }
 
-    .plus__link {
-        color: #fff;
-        font-size: 30px;
-        opacity: 0;
-        visibility: hidden;
-        transition: 0.3s ease 0s;
-        transform: scale(0.5);
-    }
-
-    .plus--active {
-        height: 32px;
-        border-radius: 30px;
-    }
-
     .plus--active .plus__line--v {
         height: 68px;
         top: calc(-100% - 60px);
@@ -368,124 +347,6 @@
         align-items: center;
         justify-content: center;
     }
-
-    /*#3498db  edit   */
-    /*#8e44ad  save   */
-    /*#2ecc71    new  */
-    /*#555555  cancel   */
-    /*#c0392b  delete   */
-    /* 1st alternate hover colors if hover inset shadow not working properly
-     $gw-blue-dark: rgb(27, 79, 114); /*#1b4f72
-     $gw-purple-dark: rgb(74, 35, 90);  /*#4a235a
-     $gw-green-dark: rgb(29, 131, 72); /*#1d8348
-     $black: rgb(0, 0, 0); /*#000000
-     $gw-red-dark: rgb(123, 36, 28); /*#7b241c */
-    .button {
-        font-family: 'Open Sans';
-        font-size: 16px;
-        font-weight: 400;
-        display: inline-block;
-        color: #FFF;
-        border-radius: 0.25em;
-        text-shadow: -1px -1px 0px rgba(0, 0, 0, 0.4);
-    }
-
-    .primary {
-        line-height: 40px;
-        transition: ease-in-out 0.2s;
-        padding: 0 16px;
-    }
-
-    .primary:hover, .condensed:hover, .touch:hover {
-        transform: scale(1.02);
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2), inset 0 0 0 99999px rgba(0, 0, 0, 0.2);
-    }
-
-    /* 2nd alternate hover colors if hover inset shadow not working properly
-     .edit:hover {
-     background: darken($gw-blue, 10%);
-     }
-     .save:hover {
-     background: darken($gw-purple, 10%);
-     }
-     .new:hover {
-     background: darken($gw-green, 10%);
-     }
-     .cancel:hover {
-     background: darken($gw-gray-5, 10%);
-     }
-     .delete:hover {
-     background: darken($gw-red, 10%);
-     }
-     */
-    .condensed {
-        transition: ease-in-out 0.2s;
-        line-height: 24px;
-        padding: 0 8px;
-        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
-    }
-
-    .touch {
-        transition: ease-in-out 0.2s;
-        line-height: 30px;
-        width: 30px;
-        padding: 0px;
-        text-align: center;
-    }
-
-    .edit:before, .save:before, .new:before, .cancel:before, .delete:before {
-        font-family: FontAwesome;
-        display: inline-block;
-        font-size: 1rem;
-        padding-right: 12px;
-        background: none;
-        color: #FFF;
-    }
-
-    .condensed.edit:before, .condensed.save:before, .condensed.new:before, .condensed.cancel:before, .condensed.delete:before {
-        content: none;
-    }
-
-    .touch.edit:before, .touch.save:before, .touch.new:before, .touch.cancel:before, .touch.delete:before {
-        width: 100%;
-        text-align: center;
-        font-size: 1.25rem;
-    }
-
-    .inlineIcon.edit, .inlineIcon.save, .inlineIcon.new, .inlineIcon.cancel, .inlineIcon.delete {
-        background: transparent;
-    }
-
-    .inlineIcon.edit:before, .inlineIcon.save:before, .inlineIcon.new:before, .inlineIcon.cancel:before, .inlineIcon.delete:before {
-        line-height: 32px;
-        font-size: 32px;
-        padding: 4px 0px;
-    }
-
-    .edit {
-        background: rebeccapurple;
-    }
-
-    .edit:before {
-        content: "\f040";
-    }
-
-    .inlineIcon.new:before {
-        color: #2ecc71;
-    }
-
-    .delete {
-        background: #c0392b;
-    }
-
-    .delete:before {
-        content: "\f1f8";
-    }
-
-    .inlineIcon.delete:before {
-        color: #c0392b;
-    }
-
 
 </style>
 </body>

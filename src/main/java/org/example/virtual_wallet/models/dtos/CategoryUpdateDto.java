@@ -1,7 +1,13 @@
 package org.example.virtual_wallet.models.dtos;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class CategoryUpdateDto {
+
+    @NotEmpty(message = "The category id cannot be empty!")
     private int id;
+
+    @NotEmpty(message = "The category cannot be empty!")
     private String name;
 
     public CategoryUpdateDto() {
