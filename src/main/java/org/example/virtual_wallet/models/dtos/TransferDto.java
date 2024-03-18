@@ -13,6 +13,9 @@ public class TransferDto {
         this.currency = currency;
     }
 
+    public TransferDto() {
+    }
+
     public double getAmount() {
         return amount;
     }

@@ -11,6 +11,7 @@ import org.example.virtual_wallet.models.SpendingCategory;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.dtos.CategoryDto;
 import org.example.virtual_wallet.models.dtos.CategoryUpdateDto;
+import org.example.virtual_wallet.models.dtos.UserDto;
 import org.example.virtual_wallet.services.contracts.SpendingCategoryService;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -46,16 +49,25 @@ public class CategoryMvcController {
         return request.getRequestURI();
     }
 
+    @ModelAttribute("categories")
+    public List<SpendingCategory> categories() {
+        return new ArrayList<>();
+    }
+    @ModelAttribute("categoryDto")
+    public CategoryDto categoryDto() {
+        return new CategoryDto();
+    }
+
     @GetMapping
     public String showCategoriesPage(Model model, HttpSession session) {
-        try{
+
+        try {
             authenticationHelper.tryGetCurrentUser(session);
-        }catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             return "redirect:/authentication/login";
         }
 
         User user = authenticationHelper.tryGetCurrentUser(session);
-
 
         try {
             List<SpendingCategory> categories = service.getAllUserCategories(user);
@@ -69,21 +81,15 @@ public class CategoryMvcController {
     }
 
     @PostMapping("/new")
-    public String createCategory(@ModelAttribute("categoryDto") CategoryDto categoryDto,
-                                 BindingResult bindingResult,
-                                 Model model,
-                                 HttpSession session) {
-        try{
+    public String createCategory(@ModelAttribute("categoryDto") CategoryDto categoryDto, HttpSession session,
+                                 Model model) {
+        try {
             authenticationHelper.tryGetCurrentUser(session);
-        }catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             return "redirect:/authentication/login";
         }
 
         User user = authenticationHelper.tryGetCurrentUser(session);
-
-        if (bindingResult.hasErrors()){
-            return "categoriesView";
-        }
 
         try {
             SpendingCategory category = mapper.fromDTO(categoryDto, user);
@@ -97,13 +103,15 @@ public class CategoryMvcController {
             return "UnsuccessfulBankOperationView";
         }
 
+
     }
 
     @GetMapping("/{name}/update")
-    public String showEditCategoryPage(@PathVariable String name, Model model, HttpSession session){
-        try{
+    public String showEditCategoryPage(@PathVariable String name, Model model,
+                                       HttpSession session) {
+        try {
             authenticationHelper.tryGetCurrentUser(session);
-        }catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             return "redirect:/authentication/login";
         }
 
@@ -117,7 +125,7 @@ public class CategoryMvcController {
             categoryUpdateDto.setId(category.getSpendingCategoryId());
             model.addAttribute("category", categoryUpdateDto);
             return "CategoryUpdateView";
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             model.addAttribute("error", e.getMessage());
             return "NotFoundView";
         }
@@ -128,12 +136,12 @@ public class CategoryMvcController {
                                  @Valid @ModelAttribute("category") CategoryUpdateDto categoryUpdateDto,
                                  BindingResult bindingResult,
                                  Model model,
-                                 HttpSession session){
-                try{
+                                 HttpSession session) {
+        try {
             authenticationHelper.tryGetCurrentUser(session);
-        }catch (AuthorizationException e){
-                    return "redirect:/authentication/login";
-                }
+        } catch (AuthorizationException e) {
+            return "redirect:/authentication/login";
+        }
 
         User user = authenticationHelper.tryGetCurrentUser(session);
 
@@ -145,7 +153,7 @@ public class CategoryMvcController {
             SpendingCategory category = service.getByCategoryAndUser(name, user);
             category.setName(categoryUpdateDto.getName().toUpperCase());
             service.update(category, user);
-        return "redirect:/categories";
+            return "redirect:/categories";
         } catch (EntityNotFoundException | UnauthorizedOperationException e) {
             model.addAttribute("error", e.getMessage());
             return "NotFoundView";
@@ -154,23 +162,23 @@ public class CategoryMvcController {
 
 
     @GetMapping("/{name}/delete")
-    public String deleteCategory(@PathVariable String name, Model model, HttpSession session){
-                try{
+    public String deleteCategory(@PathVariable String name, Model model, HttpSession session) {
+        try {
             authenticationHelper.tryGetCurrentUser(session);
-        }catch (AuthorizationException e){
-                    return "redirect:/authentication/login";
-                }
+        } catch (AuthorizationException e) {
+            return "redirect:/authentication/login";
+        }
 
         User user = authenticationHelper.tryGetCurrentUser(session);
 
 
         try {
             service.delete(service.getByCategoryAndUser(name, user).getSpendingCategoryId(), user);
-        return "redirect:/categories";
+            return "redirect:/categories";
         } catch (EntityNotFoundException | UnauthorizedOperationException e) {
             model.addAttribute("error", e.getMessage());
             return "NotFoundView";
-        }catch (InvalidOperationException e){
+        } catch (InvalidOperationException e) {
             model.addAttribute("error", e.getMessage());
             return "UnsuccessfulBankOperationView";
         }

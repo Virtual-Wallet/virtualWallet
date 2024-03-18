@@ -5,19 +5,22 @@ import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.*;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.helpers.mappers.CardMapper;
-import org.example.virtual_wallet.models.Card;
-import org.example.virtual_wallet.models.SpendingCategory;
-import org.example.virtual_wallet.models.User;
-import org.example.virtual_wallet.models.dtos.CardDto;
-import org.example.virtual_wallet.models.dtos.CategoryDto;
-import org.example.virtual_wallet.models.dtos.CategoryUpdateDto;
+import org.example.virtual_wallet.helpers.mappers.TransactionsExternalMapper;
+import org.example.virtual_wallet.models.*;
+import org.example.virtual_wallet.models.dtos.*;
 import org.example.virtual_wallet.services.contracts.CardService;
+import org.example.virtual_wallet.services.contracts.CurrencyService;
+import org.example.virtual_wallet.services.contracts.TransactionsExternalService;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -28,22 +31,35 @@ public class CardMvcController {
     private final UserService userService;
     private final CardMapper cardMapper;
     private final AuthenticationHelper authenticationHelper;
+    private final TransactionsExternalMapper transactionsExternalMapper;
+    private final TransactionsExternalService transactionsExternalService;
+    private final CurrencyService currencyService;
+
+    private static final String DUMMY_END_POINT = "http://localhost:8080/api/dummy";
+    private final static String INSUFFICIENT_AVAILABILITY = "Insufficient availability. Try with different amount.";
+
 
     @Autowired
     public CardMvcController(CardService cardService,
                              UserService userService,
                              CardMapper cardMapper,
-                             AuthenticationHelper authenticationHelper) {
+                             AuthenticationHelper authenticationHelper, TransactionsExternalMapper transactionsExternalMapper, TransactionsExternalService transactionsExternalService, CurrencyService currencyService) {
         this.service = cardService;
         this.userService = userService;
         this.cardMapper = cardMapper;
         this.authenticationHelper = authenticationHelper;
+        this.transactionsExternalMapper = transactionsExternalMapper;
+        this.transactionsExternalService = transactionsExternalService;
+        this.currencyService = currencyService;
     }
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
         return session.getAttribute("currentUser") != null;
     }
-
+    @ModelAttribute("allCurrencies")
+    public List<Currency>allCurrencies(){
+        return currencyService.getAll();
+    }
     @GetMapping
     public String showCardsPage(Model model, HttpSession session) {
         try{
@@ -193,5 +209,76 @@ public class CardMvcController {
         }
 
     }
+
+    @GetMapping("/deposit")
+    public String showDepositPage(
+            @Valid Model model, HttpSession session){
+
+        try{
+            authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e){
+            return "redirect:/authentication/login";
+        }
+
+        User user = authenticationHelper.tryGetCurrentUser(session);
+
+
+        try {
+            model.addAttribute("user", user);
+            model.addAttribute("depositDto", new TransferDto());
+            model.addAttribute("cards", user.getCards());
+            return "DepositView";
+        }catch (EntityNotFoundException e){
+            model.addAttribute("error", e.getMessage());
+            return "NotFoundView";
+        }
+    }
+    @PostMapping("/deposit")
+    public String deposit(
+                          @Valid @ModelAttribute("depositDto") TransferDto transferDto,
+                             BindingResult bindingResult,
+                             Model model,
+                             HttpSession session) {
+        try{
+            authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e){
+            return "redirect:/authentication/login";
+        }
+
+        User user = authenticationHelper.tryGetCurrentUser(session);
+
+
+        if (bindingResult.hasErrors()){
+            return "DepositView";
+        }
+
+        try {
+            Card card = service.getByCardNumber(transferDto.getCardNumber());
+            TransactionsExternal transfer = transactionsExternalMapper.depositDto(user, transferDto);
+            String depositUrl = DUMMY_END_POINT + "/deposit";
+            RestTemplate template = new RestTemplate();
+
+            HttpHeaders headers = new HttpHeaders();
+            HttpEntity<DummyDto> entity = new HttpEntity<>(transactionsExternalMapper
+                    .transferToDummyDto(transfer), headers);
+            ResponseEntity<String> response = template.exchange(depositUrl, HttpMethod.POST, entity, String.class);
+            if (!response.getStatusCode().equals(HttpStatus.OK)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INSUFFICIENT_AVAILABILITY);
+            }
+
+             transactionsExternalService.createDeposit(transfer);
+
+            return "redirect:/";
+        } catch (EntityNotFoundException e){
+            model.addAttribute("error", e.getMessage());
+            return "NotFoundView";
+        } catch (RestClientException e){
+            model.addAttribute("error", "Unsuccessful Transaction. Please check with your provider!");
+            return "UnsuccessfulBankOperationView";
+        }
+
+    }
+
+
 
 }

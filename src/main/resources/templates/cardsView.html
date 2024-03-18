@@ -6,7 +6,6 @@
     <link href="../static/card.css" th:href="@{/card.css}" rel="stylesheet">
     <link href="../static/plusModal.css" th:href="@{/plusModal.css}" rel="stylesheet">
     <link href="../static/navbar.css" th:href="@{/navbar.css}" rel="stylesheet">
-    <!--    <link href="../static/footer.css" th:href="@{/footer.css}" rel="stylesheet">-->
 
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
 
@@ -26,67 +25,48 @@
     <!-- Vendor CSS Files -->
     <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
     <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <!--    <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">-->
-    <!--    <link href="../../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">-->
-    <!--    <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">-->
-    <!--    <link href="../../assets/vendor/remixicon/remixicon.css" rel="stylesheet">-->
-    <!--    <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">-->
+
     <!--    Template Main CSS File-->
     <link href="../assets/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- =======================================================
-    * Template Name: Arsha
-    * Updated: Mar 12 2024 with Bootstrap v5.3.3
-    * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
-    * Author: BootstrapMade.com
-    * License: https://bootstrapmade.com/license/
-    ======================================================== -->
 </head>
 
 
 <body>
 <div th:replace="~{/NavBar.html :: navbar}"></div>
 <br><br>
-<div th:if="${cards.isEmpty()}">
-    <h3 id="no-categories" th:text="#{'YOU STILL HAVE NO CARDS'}">YOU STILL HAVE NO CARDS</h3>
-</div>
 
-<div id="cards" th:unless="${cards.isEmpty()}">
-    <!-- ======= Frequently Asked Questions Section ======= -->
-    <section id="faq" class="faq section-bg">
-        <div class="container" data-aos="fade-up">
+<section id="faq" class="faq section-bg">
+    <div class="container" data-aos="fade-up">
 
-            <div class="section-title">
-                <h2>My cards</h2>
-                <p>This is your category page. Here you can view and manage your spending categories. Click on a
-                    category name to expand and view its transactions.</p>
+        <div class="section-title">
+            <h2>My cards</h2>
+            <p>This is your Cards page. Here you can view and manage your cards. Click on a
+                card number to expand and view its details.</p>
 
-<!--                <div class="form-popup" id="myForm">-->
-<!--                    <form th:method="post" class="form-container" th:action="@{/cards/new}"-->
-<!--                          th:object="${cardDto}">-->
-<!--                        <input type="text" placeholder="Enter New Card" th:field="*{ca}" required>-->
-<!--                        <button class="submit">Submit</button>-->
-<!--                        <button type="button" class="btn cancel" onclick="closeForm()">Close</button>-->
-<!--                    </form>-->
-<!--                </div>-->
-
-                <div style="margin-top: 50px;">
-                    <div class="centered">
-                        <a th:href="@{/cards/new}">
-                            <div class="plus" id="plus">
-                                <div class="plus__line plus__line--v"></div>
-                                <div class="plus__line plus__line--h"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
+            <div th:if="${cards.isEmpty()}">
+                <br><br>
+                <h3 id="no-categories" th:text="#{cards.title.empty}">YOU STILL HAVE NO CARDS</h3>
             </div>
 
-            <br><br>
+            <div style="margin-top: 50px;">
+                <div class="centered">
+                    <a th:href="@{/cards/new}">
+                        <div class="plus" id="plus">
+                            <div class="plus__line plus__line--v"></div>
+                            <div class="plus__line plus__line--h"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
 
+        </div>
+
+        <br><br>
+
+        <div id="cards" th:unless="${cards.isEmpty()}">
             <div class="faq-list">
                 <ul>
                     <!-- Loop through user categories -->
@@ -126,13 +106,6 @@
                                                     class="fa fa-trash"></i></button>
                                         </a>
                                     </div>
-<!--                                    <a th:href="@{/cards/user/{id}/new(id=${user.getId()})}">-->
-<!--                                        <button class="btn" value='Add new card' title="Add new card">Add Card</button>-->
-<!--                                    </a>-->
-                                    <!--        <a th:href="@{/cards}">-->
-                                    <!--            <button class="btn" value='Back to card dashboard' title="Back to card dashboard">-->
-                                    <!--                <i class="fa fa-arrow-left"></i></button>-->
-                                    <!--        </a>-->
                                 </div>
 
                             </div>
@@ -141,7 +114,7 @@
                 </ul>
             </div>
         </div>
-    </section>
+</section>
 </div>
 <br>
 <div th:replace="~{/PageFrame :: footer}"></div>
