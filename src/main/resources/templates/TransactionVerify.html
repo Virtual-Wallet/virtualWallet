@@ -42,7 +42,7 @@
                                 <input type="text" maxlength=1/>
                             </div>
 
-                            <form th:action="@{/cards/verify}" th:object="${token}" method="post">
+                            <form th:action="@{/cards/verify}" action="#" th:object="${token}" method="post">
                                 <button class="btn btn-primary mb-3" type="submit" value="submit">
                                     Verify
                                 </button>
@@ -53,7 +53,7 @@
                             </form>
 
 
-                            <form th:action="@{/authentication/resend}" method="get">
+                            <form th:action="@{/cards/resend}" method="get">
                                 <p class="resendTOKEN text-muted mb-0">
                                     Didn't receive code?
                                     <button class="request-again-button" type="submit" value="Request again">Request again</button>

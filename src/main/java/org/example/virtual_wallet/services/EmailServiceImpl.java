@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
-    private final static String TRANSACTION_VERIFICATION_URL = "http://localhost:8080/card/transactionVerify";
+    private final static String TRANSACTION_VERIFICATION_URL = "http://localhost:8080/cards/verify";
     private final static String EMAIL_VERIFICATION_URL = "http://localhost:8080/authentication/verify";
     private static final String EMAIL_SUBJECT = "Verification code from Flex Pay";
 

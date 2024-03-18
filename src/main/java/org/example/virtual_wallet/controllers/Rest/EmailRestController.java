@@ -43,7 +43,7 @@ public class EmailRestController {
     public ResponseEntity sendTransactionEmail(@RequestHeader HttpHeaders headers) {
         User user = authenticationHelper.tryGetUser(headers);
         Token token = tokenService.create(user);
-        emailService.sendTransactionEmail(user.getEmail(), LARGE_TRANSACTION_SUBJECT, token.getCode());
+        emailService.sendTransactionEmail(user.getEmail(), token.getCode());
         return ResponseEntity.ok("EMAIL SEND!");
     }
 

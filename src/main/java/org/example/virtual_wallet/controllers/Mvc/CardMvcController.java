@@ -63,6 +63,10 @@ public class CardMvcController {
     public List<Currency>allCurrencies(){
         return currencyService.getAll();
     }
+    @ModelAttribute("token")
+    public Token token() {
+        return new Token();
+    }
     @GetMapping
     public String showCardsPage(Model model, HttpSession session) {
         try{
@@ -296,7 +300,7 @@ public class CardMvcController {
 
         try {
             model.addAttribute("user", user);
-            model.addAttribute("depositDto", new TransferDto());
+            model.addAttribute("withdrawDto", new TransferDto());
             model.addAttribute("cards", user.getCards());
             return "WithdrawView";
         }catch (EntityNotFoundException e){
@@ -337,7 +341,7 @@ public class CardMvcController {
         } catch (LargeTransactionDetectedException e){
             Token token = tokenService.create(user);
             emailService.sendTransactionEmail(user.getEmail(), token.getCode());
-            return "redirect:cards/verify";
+            return "TransactionVerify";
         }
 
     }
@@ -357,7 +361,7 @@ public class CardMvcController {
         }
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
-            token = tokenService.getUserToken(user.getId());
+//            token = tokenService.getUserToken(user.getId());
             tokenService.validateCorrectToken(token, user);
             session.setAttribute(CURRENT_USER, user);
             userService.advanceAccountStatus(user);
