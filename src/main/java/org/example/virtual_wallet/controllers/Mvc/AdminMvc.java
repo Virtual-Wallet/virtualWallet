@@ -55,7 +55,6 @@ public class AdminMvc {
                 userFilterDto.getSortBy(),
                 userFilterDto.getSortOrder());
 
-
         try {
             List<User> filteredList = userService.getAllFiltered(userFilterOptions, user);
             Page<User> usersPage = userService.findPage(filteredList, PageRequest.of(currentPage - 1, pageSize));
@@ -69,6 +68,7 @@ public class AdminMvc {
             }
             model.addAttribute("filterOptions", userFilterDto);
             model.addAttribute("users", usersPage);
+            model.addAttribute("currentRole",user.getRoleType());
 
             return "AdminView";
         } catch (UnauthorizedOperationException e) {
