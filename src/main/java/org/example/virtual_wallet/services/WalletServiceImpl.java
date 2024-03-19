@@ -97,7 +97,7 @@ public class WalletServiceImpl implements WalletService {
     private void validateWithdrawAmount(Wallet wallet, double amount){
         double diff = wallet.getBalance() - amount;
         if (diff < 0){
-            throw new InsufficientAmountException(amount);
+            throw new InsufficientAmountException(wallet.getBalance());
         }
     }
 }
