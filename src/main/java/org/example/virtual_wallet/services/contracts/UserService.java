@@ -41,4 +41,5 @@ public interface UserService {
 
     void removeUserFromContactList(User owner, User toRemove);
     void promoteUserToAdmin(User toPromote,User admin);
+    User getByUserInput(String userInput);
 }

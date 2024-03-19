@@ -236,4 +236,10 @@ public class UserServiceImpl implements UserService {
 
         return new PageImpl<>(result, PageRequest.of(currentPage, pageSize), filteredList.size());
     }
+
+    @Override
+    public User getByUserInput(String userInput) {
+        return userRepository.getByUserInput(userInput);
+    }
+
 }

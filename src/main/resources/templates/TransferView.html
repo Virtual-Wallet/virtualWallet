@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create deposit</title>
+    <link href="../static/card.css" th:href="@{/card.css}" rel="stylesheet">
+    <link href="../static/plusModal.css" th:href="@{/plusModal.css}" rel="stylesheet">
+    <link href="../static/category.css" th:href="@{/category.css}" rel="stylesheet">
+    <link href="../static/navbar.css" th:href="@{/navbar.css}" rel="stylesheet">
+    <link href="../static/footer.css" th:href="@{/footer.css}" rel="stylesheet">
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
+
+    <title>Arsha Bootstrap Template - Index</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="../../assets/img/favicon.png" rel="icon">
+    <link href="../../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--    Template Main CSS File-->
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+
+<body>
+<!--<header th:replace="NavBar.html :: navbar"></header>-->
+<div th:replace="~{/NavBar.html :: navbar}"></div>
+
+<br><br>
+<section id="transaction-body-container">
+    <section id="transaction-form-container">
+        <form id="transaction-form" action="#" th:action="@{/wallets/transfer}" th:object="${transactionDto}" method="post">
+            <br>
+            <label class="t-form-label" th:text="#{transaction.label.form.identity}">USER IDENTITY</label>
+            <input class="transaction-form" id="tr-form-username" type="text" th:field="*{targetUserIdentity}"/>
+            <label class="transaction-error" th:errors="*{targetUserIdentity}">Target user error placeholder</label>
+            <br><br>
+            <label class="t-form-label" id="amount-label" th:text="#{transaction.label.form.amount}">AMOUNT</label>
+            <input class="transaction-form" id="tr-form-amount" type="text" th:field="*{amount}" style="display: block"/>
+            <label class="transaction-error" th:errors="*{amount}">Amount error placeholder</label>
+            <br>
+            <label class="t-form-label" th:text="#{transaction.label.form.category}">CATEGORY</label>
+            <select class="transaction-form" id="user-categories" th:field="*{categoryName}">
+                <option  th:each="category : ${categories}" th:value="${category.getName()}" th:text="${category.getName()}"></option>
+            </select>
+            <br/>
+            <label class="t-form-label" th:text="#{wallet.label.currency}">CURRENCY</label>
+            <select class="transaction-form" id="currency" th:field="*{currency}">
+                <option  th:each="currency : ${allCurrencies}" th:value="${currency.currency}" th:text="${currency.currency}"></option>
+            </select>
+            <br/>
+            <input id="transaction-form-button" type="submit" value="SUBMIT"/>
+        </form>
+    </section>
+</section>
+
+
+<div th:replace="~{/PageFrame :: footer}"></div>
+
+<!-- Vendor JS Files -->
+<script src="../assets/vendor/aos/aos.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="../assets/vendor/php-email-form/validate.js"></script>
+<script src="../assets/js/main.js"></script>
+
+<!-- Template Main JS File -->
+<script src="../assets/js/main.js"></script>
+<style>
+    #transaction-body-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        justify-items: center;
+        margin-top: 7%;
+    }
+    #transaction-form-container{
+        display: flex;
+        box-shadow: 2px 2px 8px 2px #3b4c78;
+        width: 40%;
+        min-height: 450px;
+        max-height: max-content;
+        padding: 15px;
+        background-color: #b6d0e2;
+        border-radius: 10px;
+        justify-content: space-around;
+        margin-right: 6%;
+        margin-left: 4%;
+    }
+    .t-form-label{
+        color: #3b4c78;
+        display: block;
+        font-weight: bold;
+        width: 100%;
+        font-size: medium;
+        margin-left: 3%;
+        margin-bottom: 1%;
+    }
+
+    .transaction-form{
+        width: 300px;
+        height: 6%;
+        margin: 5px;
+        padding: 2px 2px 2px 5px;
+        border: none;
+    }
+    #transaction-form-button{
+        margin-left: 31%;
+        margin-bottom: 20px;
+        width: 40%;
+        height: 8%;
+        border: none;
+        font-size: large;
+        cursor: pointer;
+    }
+    .transaction-error{
+        display: block;
+        margin-left: 2%;
+        font-size: small;
+        color: red;
+        margin-bottom: 0px;
+    }
+    #user-categories,
+    #currency{
+        width: 310px;
+        height: 8%;
+        margin: 5px 5px 25px 5px;
+        padding: 2px 2px 2px 5px;
+        border-radius: 5px !important;
+        border: 2px solid #6aa0a5;
+    }
+
+
+    #transaction-form-button:hover{
+        background-color: #6aa0a5;
+    }
+
+    #transaction-form-button:active{
+        background-color: lightgreen;
+    }
+    #transaction-form{
+        border-radius: 10px;
+    }
+</style>
+
+</body>
+</html>

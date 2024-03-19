@@ -26,5 +26,6 @@ public interface UserRepository extends BaseCRUDRepository<User> {
     void delete(int userId);
 
     List<Card> getAllUserCards(int userId);
+    User getByUserInput(String userInput);
 
 }

@@ -54,10 +54,6 @@ public class HomeMvcController {
             model.addAttribute("currentUser", userService.getByUsername(currentUsername));
             return "HomePageView";
         } else {
-//            model.addAttribute("mostCommentedPosts", postService.getMostCommented());
-//            model.addAttribute("mostRecentPosts", postService.getMostRecent());
-//            model.addAttribute("postCount", postService.getPostCount());
-//            return "HomePageNotLogged";
             return "index";
         }
 

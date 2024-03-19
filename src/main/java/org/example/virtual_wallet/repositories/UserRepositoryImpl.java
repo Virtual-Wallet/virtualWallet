@@ -4,6 +4,7 @@ import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.filters.UserFilterOptions;
 import org.example.virtual_wallet.models.Card;
 import org.example.virtual_wallet.models.User;
+import org.example.virtual_wallet.models.Wallet;
 import org.example.virtual_wallet.repositories.contracts.UserRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -164,4 +165,21 @@ public class UserRepositoryImpl extends AbstractCRUDRepository<User> implements 
 
         return orderBy;
     }
+    @Override
+    public User getByUserInput(String userInput) {
+        try(Session session = sessionFactory.openSession()){
+            User user = session.createQuery(
+                    "from User where email = :userInput OR phoneNumber = :userInput OR username = :userInput", User.class)
+            .setParameter("userInput", userInput)
+                    .uniqueResult();
+
+
+            if (user == null) {
+                throw new EntityNotFoundException("User not found");
+            }
+
+            return user;
+        }
+    }
+
 }
