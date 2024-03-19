@@ -36,6 +36,7 @@ public class TransactionsInternalServiceImpl implements TransactionsInternalServ
     public TransactionsInternal create(TransactionsInternal transaction) {
         Wallet senderWallet = getSenderWallet(transaction);
         Wallet recipientWallet = getRecipientWallet(transaction);
+        transaction.getSpendingCategory().getTransactions().add(transaction);
 
         try {
             BigDecimal amountSourceToTransactional = calculateAmountSourceToTransactional(transaction, senderWallet);

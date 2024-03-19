@@ -55,7 +55,7 @@ public class TransactionsInternalMapper {
         transaction.setAmount(dto.getAmount());
         transaction.setTimestamp(timestamp);
         transaction.setCurrency(currencyService.get(dto.getCurrency()));
-        transaction.setSpendingCategory(categoryService.getByCategory(dto.getCategoryName()));
+        transaction.setSpendingCategory(categoryService.getByCategoryAndUser(dto.getCategoryName(), sender));
 
         return transaction;
     }

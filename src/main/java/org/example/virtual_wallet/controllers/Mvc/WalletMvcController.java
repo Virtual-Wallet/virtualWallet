@@ -122,7 +122,9 @@ public class WalletMvcController {
 
         User user = authenticationHelper.tryGetCurrentUser(session);
 
-
+        if (user.getWallet() == null){
+            return "redirect:/";
+        }
         try {
             model.addAttribute("user", user);
             model.addAttribute("transactionDto", new TransactionDtoIn());
