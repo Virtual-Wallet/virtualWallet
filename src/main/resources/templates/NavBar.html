@@ -54,14 +54,13 @@
         <nav id="navbar" class="navbar">
             <ul>
                 <li><a class="nav-link scrollto active" th:href="@{/}">Home</a></li>
-                <li><a class="nav-link scrollto" href="#about">About</a></li>
-                <li th:unless="${isAuthenticated}"><a class="nav-link scrollto"
-                                                      th:href="@{/authentication/login}">Login</a></li>
-                <li><a class="nav-link scrollto" th:href="@{/authentication/logout}">Log out</a></li>
-                <li><a class="nav-link scrollto" href="#team">Team</a></li>
+                <!--                <li><a class="nav-link scrollto" href="#about">About</a></li>-->
+                <li th:if="${!isAuthenticated}"><a class="nav-link scrollto" href="#services">Services</a></li>
+
+                <li th:if="${!isAuthenticated}"><a class="nav-link scrollto" href="#team">Team</a></li>
 
 
-                <li th:unless="${isAuthenticated}" class="dropdown">
+                <li th:if="${isAuthenticated}" class="dropdown">
                     <a href="#"><span>Cards</span> <i class="bi bi-chevron-down"></i></a>
                     <ul>
                         <li><a th:href="@{/cards}">All cards</a></li>
@@ -71,18 +70,34 @@
                     </ul>
                 </li>
 
-                <li th:unless="${isAuthenticated}" class="dropdown">
+                <!--                <li><a th:href="@{/wallet/new}">Create Wallet</a></li>-->
+
+                <li th:if="${isAuthenticated}" class="dropdown">
                     <a href="#"><span>Wallets</span> <i class="bi bi-chevron-down"></i></a>
                     <ul>
-                        <li><a class="nav-link scrollto" href="#wallet">Wallet</a></li>
                         <li><a class="nav-link scrollto" href="#contactList">Contact List</a></li>
                         <li><a th:href="@{/categories}">Categories</a></li>
                     </ul>
                 </li>
 
+                <li th:if="${!isAuthenticated}"><a class="nav-link scrollto"
+                                                   th:href="@{/authentication/login}">Login</a></li>
+                <li th:if="${isAuthenticated}"><a class="nav-link scrollto" th:href="@{/authentication/logout}">Log
+                    out</a></li>
 
-                <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-                <li><a class="getstarted scrollto" th:href="@{/authentication/register}">Get Started</a></li>
+                <li th:if="${!isAuthenticated}"><a class="getstarted scrollto" th:href="@{/authentication/register}">Start
+                    Flexing</a>
+
+                <li th:if="${isAuthenticated}">
+                    <div class="flex-shrink-0">
+                        <img class="rounded-circle" th:src="@{${currentUser.picture != null ? currentUser.picture : '/image-1.png'}}" alt="User profile picture"
+                             style="max-width: 65px; max-height: 65px;">
+                    </div>
+                </li>
+
+
+
+
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav><!-- .navbar -->
