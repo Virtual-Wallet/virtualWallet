@@ -42,47 +42,51 @@
 <section id="faq" class="faq section-bg">
     <div class="container">
         <br><br>
-    <div class="row">
-        <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1"
-             data-aos="fade-up" data-aos-delay="200">
+        <div class="row">
+            <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1"
+                 data-aos="fade-up" data-aos-delay="200">
 
-            <div th:if="${currentUser.wallet == null}">
-                <h3 id="no-wallets" th:text="#{wallet.title.empty}">YOU STILL HAVE NO WALLET</h3>
-                <div class="buttons">
-                     <a th:href="@{/wallets/new}">
-                            <button type="submit" class="buttonDeposit" th:text="#{wallet.label.create}">Create Wallet</button>
-                        </a>
-                    </div>
-            </div>
-
-            <div class="containerWallet" data-aos="fade-up" th:if="${currentUser.wallet != null and currentUser.wallet.isActive()}">
-                <div class="section-title">
-                    <h2>Wallet</h2>
-                </div>
-                <p class="wallet-balance">
-                    Balance: <span th:text="${currentUser.getWallet().getBalance()}"></span>
-                    <span class="currency" th:text="${currentUser.getWallet().getCurrency().currency}"></span>
-                </p>
-                <div class="buttons">
-                    <div>
-                        <a th:href="@{/cards/deposit}">
-                            <button type="submit" class="buttonDeposit" th:text="#{deposit.label}">Deposit</button>
-                        </a>
-                        <a th:href="@{/cards/withdraw}">
-                            <button type="button" class="buttonWithdraw" th:text="#{withdraw.label}">Withdraw</button>
-                        </a>
-                        <a th:href="@{/cards/withdraw}">
-                            <button type="button" class="buttonTransfer" th:text="#{transfer.label}">Transfer</button>
+                <div th:if="${currentUser.wallet == null}">
+                    <h3 id="no-wallets" th:text="#{wallet.title.empty}">YOU STILL HAVE NO WALLET</h3>
+                    <div class="buttons">
+                        <a th:href="@{/wallets/new}">
+                            <button type="submit" class="buttonDeposit" th:text="#{wallet.label.create}">Create Wallet
+                            </button>
                         </a>
                     </div>
                 </div>
+
+                <div class="containerWallet" data-aos="fade-up"
+                     th:if="${currentUser.wallet != null and currentUser.wallet.isActive()}">
+                    <div class="section-title">
+                        <h2>Wallet</h2>
+                    </div>
+                    <p class="wallet-balance">
+                        Balance: <span th:text="${currentUser.getWallet().getBalance()}"></span>
+                        <span class="currency" th:text="${currentUser.getWallet().getCurrency().currency}"></span>
+                    </p>
+                    <div class="buttons">
+                        <div>
+                            <a th:href="@{/cards/deposit}">
+                                <button type="submit" class="buttonDeposit" th:text="#{deposit.label}">Deposit</button>
+                            </a>
+                            <a th:href="@{/cards/withdraw}">
+                                <button type="button" class="buttonWithdraw" th:text="#{withdraw.label}">Withdraw
+                                </button>
+                            </a>
+                            <a th:href="@{/cards/withdraw}">
+                                <button type="button" class="buttonTransfer" th:text="#{transfer.label}">Transfer
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
+                <img src="../assets/img/hero-img.png" class="img-fluid animated" alt="">
             </div>
         </div>
-
-        <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
-            <img src="../assets/img/hero-img.png" class="img-fluid animated" alt="">
-        </div>
-    </div>
     </div>
 </section>
 <!-- End About Us Section -->
@@ -155,7 +159,8 @@
                         <span>Junior Java Developer</span>
                         <p>Kpanayotova98@gmail.com</p>
                         <div class="social">
-                            <a href="https://www.linkedin.com/in/katrinpanayotova?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"> <i class="ri-linkedin-box-fill"></i> </a>
+                            <a href="https://www.linkedin.com/in/katrinpanayotova?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app">
+                                <i class="ri-linkedin-box-fill"></i> </a>
                         </div>
                     </div>
                 </div>
@@ -169,7 +174,8 @@
                         <span>Junior Java Developer</span>
                         <p>daradjanov@gmail.com</p>
                         <div class="social">
-                            <a href="https://www.linkedin.com/in/grisha-daradjanov-b2b6b02a7/"> <i class="ri-linkedin-box-fill"></i> </a>
+                            <a href="https://www.linkedin.com/in/grisha-daradjanov-b2b6b02a7/"> <i
+                                    class="ri-linkedin-box-fill"></i> </a>
                         </div>
                     </div>
                 </div>
@@ -183,7 +189,8 @@
                         <span>Junior Java Developer</span>
                         <p>valchanov.biz@gmail.com</p>
                         <div class="social">
-                            <a href="https://www.linkedin.com/in/g-valchanov/"> <i class="ri-linkedin-box-fill"></i> </a>
+                            <a href="https://www.linkedin.com/in/g-valchanov/"> <i class="ri-linkedin-box-fill"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -195,48 +202,88 @@
 
 <br><br>
 
-    <section id="faq" class="faq section-bg">
-        <div class="container" data-aos="fade-up">
+<section id="faq" class="faq section-bg">
+    <div class="container" data-aos="fade-up">
 
-            <div class="section-title">
-                <h2>My categories</h2>
-                <br><br>
-            </div>
-
+        <div class="section-title">
+            <h2>My incoming transactions</h2>
             <br><br>
+        </div>
 
-            <div id="categories" th:unless="${transactionsIncoming.isEmpty()}">
-                <div class="faq-list">
-                    <ul>
-                        <!-- Loop through user categories -->
-                        <li th:each="transaction : ${transactionsIncoming}">
-                            <div class="table-responsive-sm">
-                                <table class="table table-hover table-sm transactionsTable">
-                                    <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Amount</th>
-                                        <th scope="col">Currency</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Recipient</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td th:text="${transaction.id}"></td>
-                                        <td th:text="${transaction.amount}"></td>
-                                        <td th:text="${transaction.currency.currency}"></td>
-                                        <td th:text="${transaction.timestamp}"></td>
-                                        <td th:text="${transaction.recipientWallet.getUser().username}"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+        <div id="categories" th:unless="${transactionsIncoming.isEmpty()}">
+            <div class="faq-list">
+                <ul>
+                    <!-- Loop through user categories -->
+                    <li>
+                        <div class="table-responsive-sm">
+                            <table class="table table-hover table-sm transactionsTable">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Currency</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Recipient</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="transaction : ${transactionsIncoming}">
+                                    <td th:text="${transaction.id}"></td>
+                                    <td th:text="${transaction.amount}"></td>
+                                    <td th:text="${transaction.currency.currency}"></td>
+                                    <td th:text="${transaction.timestamp}"></td>
+                                    <td th:text="${transaction.recipientWallet.getUser().username}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </li>
+                </ul>
             </div>
-    </section>
+        </div>
+</section>
+
+
+<section id="faq" class="faq section-bg">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+            <h2>My outgoing transactions</h2>
+            <br><br>
+        </div>
+<!--//STOP-->
+        <div th:unless="${transactionsOutgoing.isEmpty()}">
+            <div class="faq-list">
+                <ul>
+                    <!-- Loop through user categories -->
+                    <li>
+                        <div class="table-responsive-sm">
+                            <table class="table table-hover table-sm transactionsTable">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Currency</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Recipient</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="transaction : ${transactionsOutgoing}">
+                                    <td th:text="${transaction.id}"></td>
+                                    <td th:text="${transaction.amount}"></td>
+                                    <td th:text="${transaction.currency.currency}"></td>
+                                    <td th:text="${transaction.timestamp}"></td>
+                                    <td th:text="${transaction.recipientWallet.getUser().username}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+</section>
 
 <div th:replace="~{/PageFrame :: footer}"></div>
 

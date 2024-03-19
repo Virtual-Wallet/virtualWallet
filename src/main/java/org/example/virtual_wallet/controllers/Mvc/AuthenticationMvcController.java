@@ -150,7 +150,7 @@ public class AuthenticationMvcController {
             session.setAttribute(CURRENT_USER, user);
             userService.advanceAccountStatus(user);
 
-            return "redirect:/id-verification";
+            return "redirect:/authentication/id-verification";
 //            return "redirect:/";
         } catch (InvalidTokenException | EntityNotFoundException e) {
             bindingResult.rejectValue("code", "code_error", e.getMessage());

@@ -62,6 +62,9 @@ public class HomeMvcController {
 //        model.addAttribute("transactionsCount", transactionService.get(
 //                        new FilterOptionsTransaction(null, null, null, null, null, null, null, null))
 //                .size());
+        if (!populateIsAuthenticated(session)) {
+            return "index";
+        }
 
         User user;
 
@@ -73,12 +76,14 @@ public class HomeMvcController {
 
         try {
             List<TransactionsInternal> transactionsIncoming = transactionsInternalService.getIncoming(user);
+            List<TransactionsInternal> transactionsOutgoing = transactionsInternalService.getOutgoing(user);
             model.addAttribute("transactionsIncoming", transactionsIncoming);
+            model.addAttribute("transactionsOutgoing", transactionsOutgoing);
             model.addAttribute("currentUser", user);
             model.addAttribute("transactionDto", new TransactionsInternal());
             return "HomePageView";
         } catch (EntityNotFoundException e) {
-            return "categoriesView" /* OPRAVI ME */;
+            return "NotFoundView";
         }
     }
 
