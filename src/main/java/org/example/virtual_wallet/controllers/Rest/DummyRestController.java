@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.controllers.Rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.example.virtual_wallet.exceptions.InvalidOperationException;
 import org.example.virtual_wallet.models.dtos.DummyDto;
 import org.example.virtual_wallet.services.contracts.DummyService;
@@ -25,21 +26,23 @@ public class DummyRestController {
         this.dummyService = dummyService;
     }
 
+    @Operation(summary = "Deposit money", description = "Deposit money into the account.")
     @PostMapping("/deposit")
-    public ResponseEntity<String> depositMoney(@RequestBody DummyDto dto){
+    public ResponseEntity<String> depositMoney(@RequestBody DummyDto dto) {
         try {
             if (dummyService.depositMoney(dto.getExpirationDate(), dto.getAmount())) {
-                return new ResponseEntity(HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.OK);
             } else {
-                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } catch (InvalidOperationException e) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-
     }
+
+    @Operation(summary = "Withdraw money", description = "Withdraw money from the account.")
     @PostMapping("/withdraw")
-    public ResponseEntity<String> withdrawMoney(@RequestBody DummyDto dto){
+    public ResponseEntity<String> withdrawMoney(@RequestBody DummyDto dto) {
         try {
             if (dummyService.withdrawMoney(dto.getExpirationDate(), dto.getAmount())) {
                 return new ResponseEntity<>(HttpStatus.OK);
@@ -49,7 +52,6 @@ public class DummyRestController {
         } catch (InvalidOperationException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-
     }
 
     private LocalDate stringToLocalDate(String date){

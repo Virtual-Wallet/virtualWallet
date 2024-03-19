@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Bootstrap User Management Data Table</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Vendor CSS Files -->
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            color: #566787;
+            background: #f5f5f5;
+            font-family: 'Varela Round', sans-serif;
+            font-size: 13px;
+        }
+
+        .table-responsive {
+            margin: 30px 0;
+        }
+
+        .table-wrapper {
+            min-width: 1000px;
+            background: #fff;
+            padding: 20px 25px;
+            border-radius: 3px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+        }
+
+        .table-title {
+            padding-bottom: 15px;
+            background: rgba(40, 58, 90, 0.9);
+            color: #fff;
+            padding: 16px 30px;
+            margin: -20px -25px 10px;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .table-title h2 {
+            margin: 5px 0 0;
+            font-size: 24px;
+        }
+
+        .table-title .btn {
+            color: #566787;
+            float: right;
+            font-size: 13px;
+            background: #fff;
+            border: none;
+            min-width: 50px;
+            border-radius: 2px;
+            border: none;
+            outline: none !important;
+            margin-left: 10px;
+        }
+
+        .table-title .btn:hover, .table-title .btn:focus {
+            color: #566787;
+            background: #f2f2f2;
+        }
+
+        .table-title .btn i {
+            float: left;
+            font-size: 21px;
+            margin-right: 5px;
+        }
+
+        .table-title .btn span {
+            float: left;
+            margin-top: 2px;
+        }
+
+        table.table tr th, table.table tr td {
+            border-color: #e9e9e9;
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+
+        table.table tr th:first-child {
+            width: 60px;
+        }
+
+        table.table tr th:last-child {
+            width: 100px;
+        }
+
+        table.table-striped tbody tr:nth-of-type(odd) {
+            background-color: #fcfcfc;
+        }
+
+        table.table-striped.table-hover tbody tr:hover {
+            background: #f5f5f5;
+        }
+
+        table.table th i {
+            font-size: 13px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        table.table td:last-child i {
+            opacity: 0.9;
+            font-size: 22px;
+            margin: 0 5px;
+        }
+
+        table.table td a {
+            font-weight: bold;
+            color: #566787;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        table.table td a:hover {
+            color: #2196F3;
+        }
+
+        table.table td a.settings {
+            color: #2196F3;
+        }
+
+        table.table td a.delete {
+            color: #F44336;
+        }
+
+        table.table td i {
+            font-size: 19px;
+        }
+
+        table.table .avatar {
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .status {
+            font-size: 30px;
+            margin: 2px 2px 0 0;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 10px;
+        }
+
+        .text-success {
+            color: #10c469;
+        }
+
+        .text-info {
+            color: #62c9e8;
+        }
+
+        .text-warning {
+            color: #FFC107;
+        }
+
+        .text-danger {
+            color: #ff5b5b;
+        }
+
+        .pagination {
+            float: right;
+            margin: 0 0 5px;
+        }
+
+        .pagination li a {
+            border: none;
+            font-size: 13px;
+            min-width: 30px;
+            min-height: 30px;
+            color: #999;
+            margin: 0 2px;
+            line-height: 30px;
+            border-radius: 2px !important;
+            text-align: center;
+            padding: 0 6px;
+        }
+
+        .pagination li a:hover {
+            color: #666;
+        }
+
+        .pagination li.active a, .pagination li.active a.page-link {
+            background: #03A9F4;
+        }
+
+        .pagination li.active a:hover {
+            background: #0397d6;
+        }
+
+        .pagination li.disabled i {
+            color: #ccc;
+        }
+
+        .pagination li i {
+            font-size: 16px;
+            padding-top: 6px
+        }
+
+        .hint-text {
+            float: left;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Two equal columns */
+            gap: 5px; /* Optional spacing between buttons */
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center; /* Aligns elements vertically */
+            border-radius: 5px; /* Rounded corners */
+            padding: 5px 10px; /* Inner padding */
+            margin-bottom: 15px;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 8px; /* Adjust padding for desired size */
+            font-size: 14px; /* Adjust font size for readability */
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 4px; /* Rounded corners */
+            flex-grow: 1; /* Fills remaining space */
+            margin-right: 10px;
+        }
+
+        .sort-controls {
+            display: flex; /* Arranges sort controls horizontally */
+        }
+
+        .sort-controls select {
+            padding: 5px 8px; /* Adjust padding for smaller size */
+            font-size: 12px; /* Adjust font size for smaller size */
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 4px; /* Rounded corners */
+            outline: none;
+            margin-right: 5px; /* Small margin between controls */
+        }
+
+        .search-bar button {
+            padding: 5px 12px; /* Adjust padding for smaller size */
+            font-size: 12px; /* Adjust font size for smaller size */
+            background-color: #299be4; /* Blue background color */
+            color: #fff; /* White text color */
+            border: none;
+            border-radius: 4px; /* Rounded corners */
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+</head>
+<body>
+<div th:replace="~{/NavBar :: navbar}"></div>
+<br><br><br>
+<div class="container-xl">
+    <div class="table-responsive">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <h2>User <b>Management</b></h2>
+                    </div>
+                    <br>
+                </div>
+                <form class="search-bar" action="#" th:action="@{/admin}" th:object="${filterOptions}" method="get">
+                    <input type="text" th:field="*{username}" placeholder="Search by username">
+                    <input type="text" th:field="*{email}" placeholder="Search by email">
+                    <input type="text" th:field="*{phoneNumber}" placeholder="Search by phone number">
+                    <div class="sort-controls">
+                        <select th:field="*{sortBy}">
+                            <option value="username">Username</option>
+                            <option value="email">Email</option>
+                            <option value="phoneNumber">Phone Number</option>
+                        </select>
+                        <select th:field="*{sortOrder}">
+                            <option value="asc">Ascending</option>
+                            <option value="desc">Descending</option>
+                        </select>
+                    </div>
+                    <button type="submit" value="Search">Search</button>
+                </form>
+            </div>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>№</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone number</th>
+                <th>Date Created</th>
+                <th>Role</th>
+                <th>Account Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody th:each="user : ${users.content}">
+            <tr>
+                <td th:text="${userStat.index + 1}"></td>
+                <td><a><img src="/examples/images/avatar/1.jpg" class="avatar" alt="Avatar"> <span
+                        th:text="${user.username}"></span></a></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.phoneNumber}"></td>
+                <td th:text="${user.creationDate}"></td>
+                <td th:text="${user.roleType}"></td>
+                <td><span class="status text-success" th:classappend="${user.accountStatus}"></span> <span
+                        th:text="${user.accountStatus}"></span>
+                </td>
+                <div class="button-container">
+                    <td>
+                        <form th:action="@{/admin/__${user.id}__/ban}" method="post">
+                            <button title="BAN" type="submit"
+                                    data-toggle="tooltip"><i
+                                    class="material-icons">&#9760;</i></button>
+                        </form>
+                        <br>
+                        <form th:action="@{/admin/__${user.id}__/active}" method="post">
+                            <button style="width: 35pt" title="UNBAN" type="submit" data-toggle="tooltip"><i
+                                    class="material-icons">&#9765;</i></button>
+                        </form>
+                    </td>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+        <div class="clearfix">
+            <ul th:each="pageNumbers : ${pageNumbers}" class="pagination">
+                <li class="page-item" th:each="pageNumber : ${pageNumbers}"
+                    th:classappend="${pageNumber==currentPage ? 'active' : ''}">
+                    <a th:href="@{/admin(size=${users.size}, page=${pageNumber})}" class="page-link"
+                       th:text="${pageNumber}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+<div th:replace="~{/PageFrame :: footer}"></div>
+</body>
+</html>

@@ -16,24 +16,24 @@ public class SpendingCategoryMapper {
 
     public SpendingCategory createCategoryDto(CategoryDto categoryDto) {
         SpendingCategory category = new SpendingCategory();
-        category.setName(categoryDto.getName());
+        category.setName(categoryDto.getCategoryName());
         return category;
     }
     public SpendingCategory fromDTO(CategoryDto categoryDto, User user) {
         SpendingCategory category = new SpendingCategory();
-        category.setName(categoryDto.getName());
+        category.setName(categoryDto.getCategoryName());
         category.setCreator(user);
         return category;
     }
     public SpendingCategory dtoCategoryUpdate(CategoryDto categoryDto, int categoryId) {
         SpendingCategory category = service.getById(categoryId);
-        category.setName(categoryDto.getName());
+        category.setName(categoryDto.getCategoryName());
         return category;
     }
 
     public CategoryDto toDto(SpendingCategory spendingCategory){
         CategoryDto dto = new CategoryDto();
-        dto.setName(spendingCategory.getName());
+        dto.setCategoryName(spendingCategory.getName());
         return dto;
     }
 }

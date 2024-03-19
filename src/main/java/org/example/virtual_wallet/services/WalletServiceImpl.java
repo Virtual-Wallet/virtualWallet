@@ -2,6 +2,7 @@ package org.example.virtual_wallet.services;
 
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
+import org.example.virtual_wallet.exceptions.InsufficientAmountException;
 import org.example.virtual_wallet.exceptions.InvalidOperationException;
 import org.example.virtual_wallet.helpers.AuthorizationHelper;
 import org.example.virtual_wallet.models.User;
@@ -96,7 +97,7 @@ public class WalletServiceImpl implements WalletService {
     private void validateWithdrawAmount(Wallet wallet, double amount){
         double diff = wallet.getBalance() - amount;
         if (diff < 0){
-            throw new InvalidOperationException(String.format("The Withdraw cannot be performed. Your balance is %.2f", wallet.getBalance()));
+            throw new InsufficientAmountException(amount);
         }
     }
 }

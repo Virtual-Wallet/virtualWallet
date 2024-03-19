@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create a saving wallet</title>
+    <link href="../static/card.css" th:href="@{/card.css}" rel="stylesheet">
+    <link href="../static/category.css" th:href="@{/category.css}" rel="stylesheet">
+    <link href="../static/navbar.css" th:href="@{/navbar.css}" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
+
+    <title>Arsha Bootstrap Template - Index</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="../../assets/img/favicon.png" rel="icon">
+    <link href="../../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--    Template Main CSS File-->
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+
+<body>
+<!--<header th:replace="NavBar.html :: navbar"></header>-->
+<div th:replace="~{/NavBar.html :: navbar}"></div>
+
+<br><br>
+<section id="faq" class="faq section-bg">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+            <h2>Deposit</h2>
+
+            <div th:if="${user.getCards().isEmpty()}">
+                <br><br>
+                <h3 id="no-categories" th:text="#{cards.title.empty}">YOU STILL HAVE NO CARDS</h3>
+            </div>
+
+            <div style="margin-top: 50px;">
+                <div class="centered">
+                    <a th:href="@{/cards/new}">
+                        <div class="plus" id="plus">
+                            <div class="plus__line plus__line--v"></div>
+                            <div class="plus__line plus__line--h"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <section th:unless="${user.getCards().isEmpty()}" id="category-update-container">
+            <form id="category-update-form" action="#" th:action="@{/cards/deposit}"
+                  th:object="${depositDto}" method="post">
+
+
+                <label id="category-update-title">Amount: </label>
+
+                <input id="deposit-form-amount" type="text" th:field="*{amount}"/>
+                <label class="error" th:errors="*{amount}">Title error placeholder</label>
+                <br/><br>
+
+
+                <div class="dropdown-container">
+                    <div class="dropdown">
+                        <label for="cardNumber">From Card Number:</label>
+                        <select id="cardNumber" th:field="*{cardNumber}" name="Card Number">
+                            <!--                        <option value="">Select Card</option>-->
+                            <option th:each="card : ${cards}" th:value="${card.cardNumber}"
+                                    th:text="${card.cardNumber}"></option>
+                        </select>
+                        <label class="error" th:errors="*{cardNumber}">Card Number error placeholder</label>
+                        <br/><br>
+
+                        <div class="dropdown">
+                            <label for="currency">Currency:</label>
+                            <select id="currency" th:field="*{currency}" name="Currency">
+                                <!--                            <option value="">Select Currency</option>-->
+                                <option th:each="currency : ${allCurrencies}" th:value="${currency.currency}"
+                                        th:text="${currency.currency}">
+                                </option>
+                            </select>
+                        </div>
+                        <label class="error" th:errors="*{currency}">Currency error placeholder</label>
+                        <br><br>
+                        <div class="buttons">
+                            <div>
+                                <a th:href="@{/}">
+                                    <button type="submit" class="proceed-btn" th:text="#{deposit.label}">Deposit
+                                    </button>
+                                </a>
+                                <a th:href="@{/}">
+                                    <button type="button" class="cancel-btn" th:text="#{navigation.cancel}">Cancel
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</section>
+
+
+<div th:replace="~{/PageFrame :: footer}"></div>
+<style>
+    #deposit-form-amount {
+        width: 50%;
+        height: 5%;
+        border-radius: 5px;
+        font-size: large;
+        border: solid #3b4c78;
+        padding: 5px;
+
+    }
+
+    .dropdown-container {
+        display: flex; /* Arranges dropdowns horizontally */
+        margin-bottom: 10px; /* Add spacing for better layout */
+    }
+
+    .dropdown {
+        margin-right: 10px; /* Spacing between dropdowns */
+        position: relative; /* Needed for dropdown positioning */
+    }
+
+    .dropdown label {
+        display: block;
+        margin-bottom: 5px; /* Adjust spacing between label and dropdown */
+    }
+
+    .dropdown select {
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px; /* Add rounded corners for aesthetics */
+        font-size: 20px; /* Adjust font size for better look */
+        width: 250px; /* Set a fixed width for dropdowns */
+        cursor: pointer; /* Indicates interactivity */
+    }
+
+    .dropdown:hover select { /* Change border color on hover */
+        border-color: #aaa;
+    }
+
+    .dropdown select:focus { /* Enhance styling on focus for better UX */
+        outline: none; /* Remove default outline */
+        border-color: #888; /* Change border color on focus */
+    }
+
+    /* Optional: Style the dropdown content (not visible by default) */
+    .dropdown select option {
+        padding: 5px 10px;
+    }
+</style>
+
+<!-- Vendor JS Files -->
+<script src="../assets/vendor/aos/aos.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="../assets/vendor/php-email-form/validate.js"></script>
+<script src="../assets/js/main.js"></script>
+
+<!-- Template Main JS File -->
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

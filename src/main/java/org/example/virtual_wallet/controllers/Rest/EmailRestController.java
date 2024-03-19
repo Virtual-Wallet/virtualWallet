@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.controllers.Rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.models.Token;
 import org.example.virtual_wallet.models.User;
@@ -31,20 +32,21 @@ public class EmailRestController {
         this.authenticationHelper = authenticationHelper;
     }
 
+    @Operation(summary = "Send email", description = "Send an email to the user.")
     @PostMapping("/send")
-    public ResponseEntity sendEmail(@RequestHeader HttpHeaders headers) {
-        User user = authenticationHelper.tryGetUser(headers);
+    public ResponseEntity sendEmail(@RequestHeader(name = "Credentials") String credentials) {
+        User user = authenticationHelper.tryGetUser(credentials);
         Token token = tokenService.create(user);
         emailService.sendEmail(user.getEmail(), EMAIL_SUBJECT, token.getCode());
-        return ResponseEntity.ok("EMAIL SEND!");
+        return ResponseEntity.ok("EMAIL SENT!");
     }
 
+    @Operation(summary = "Send transaction email", description = "Send a transaction email to the user.")
     @PostMapping("/sendTransaction")
-    public ResponseEntity sendTransactionEmail(@RequestHeader HttpHeaders headers) {
-        User user = authenticationHelper.tryGetUser(headers);
+    public ResponseEntity sendTransactionEmail(@RequestHeader(name = "Credentials") String credentials) {
+        User user = authenticationHelper.tryGetUser(credentials);
         Token token = tokenService.create(user);
-        emailService.sendTransactionEmail(user.getEmail(), LARGE_TRANSACTION_SUBJECT, token.getCode());
-        return ResponseEntity.ok("EMAIL SEND!");
+        emailService.sendTransactionEmail(user.getEmail(), token.getCode());
+        return ResponseEntity.ok("EMAIL SENT!");
     }
-
 }

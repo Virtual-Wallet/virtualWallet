@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.services;
 
+import org.example.virtual_wallet.exceptions.EntityDuplicateException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
 import org.example.virtual_wallet.exceptions.InvalidOperationException;
 import org.example.virtual_wallet.exceptions.UnauthorizedOperationException;
@@ -28,8 +29,13 @@ public class SpendingCategoryServiceImpl implements SpendingCategoryService {
 
     @Override
     public void create(SpendingCategory category, User user) {
-        category.setCreator(user);
-        repository.create(category);
+        try {
+            getByCategoryAndUser(category.getName(), user);
+            throw new EntityDuplicateException("There is already defined category with that name");
+        } catch (EntityNotFoundException e) {
+            category.setCreator(user);
+            repository.create(category);
+        }
     }
 
     @Override

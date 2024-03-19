@@ -27,7 +27,7 @@ public class UserRepositoryImpl extends AbstractCRUDRepository<User> implements 
 
     @Override
     public List<User> getAll() {
-        try(Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             Query<User> query = session.createQuery("from User", User.class);
             return query.list();
         }
@@ -35,11 +35,11 @@ public class UserRepositoryImpl extends AbstractCRUDRepository<User> implements 
 
     @Override
     public User getById(int id) {
-        try(Session session = sessionFactory.openSession()) {
-            Query <User> query = session.createQuery("from User where id =:id",User.class);
-            query.setParameter("id",id);
+        try (Session session = sessionFactory.openSession()) {
+            Query<User> query = session.createQuery("from User where id =:id", User.class);
+            query.setParameter("id", id);
             if (query.list().isEmpty()) {
-                throw new EntityNotFoundException("User",id);
+                throw new EntityNotFoundException("User", id);
             }
             return query.list().get(0);
         }
@@ -84,10 +84,10 @@ public class UserRepositoryImpl extends AbstractCRUDRepository<User> implements 
 
     @Override
     public List<Card> getAllUserCards(int userId) {
-        try(Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             Query<Card> query = session.createQuery("from Card where user.id =:userId", Card.class);
-            query.setParameter("userId",userId);
-            if (query.list().isEmpty()){
+            query.setParameter("userId", userId);
+            if (query.list().isEmpty()) {
                 throw new EntityNotFoundException("There is no cards!");
             }
             return query.list();

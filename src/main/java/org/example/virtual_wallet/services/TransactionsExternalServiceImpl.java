@@ -33,6 +33,7 @@ public class TransactionsExternalServiceImpl implements TransactionsExternalServ
 
     @Override
     public TransactionsExternal createWithdrawal(TransactionsExternal transfer) {
+        checkForLargeTransaction(transfer);
         walletService.withdraw(transfer.getUser().getWallet(), transfer.getAmount());
         repository.create(transfer);
         return transfer;

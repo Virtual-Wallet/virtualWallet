@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.controllers.Rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
@@ -27,6 +28,7 @@ public class CurrencyRestController {
         this.currencyMapper = currencyMapper;
     }
 
+    @Operation(summary = "Create a new currency", description = "Create a new currency.")
     @PostMapping
     public void create(@Valid @RequestBody CurrencyDto currencyDto) {
         try {
@@ -37,6 +39,7 @@ public class CurrencyRestController {
         }
     }
 
+    @Operation(summary = "Get currency by abbreviation", description = "Retrieve a currency by its abbreviation.")
     @GetMapping("/{abbreviation}")
     public Currency get(@PathVariable String abbreviation) {
         try {
@@ -46,11 +49,13 @@ public class CurrencyRestController {
         }
     }
 
+    @Operation(summary = "Get all currencies", description = "Retrieve a list of all currencies.")
     @GetMapping
     public List<Currency> getAll() {
         return currencyService.getAll();
     }
 
+    @Operation(summary = "Update a currency by abbreviation", description = "Update a currency by its abbreviation.")
     @PutMapping("/{abbreviation}")
     public void update(@PathVariable String abbreviation,
                        @Valid @RequestBody CurrencyDto currencyDto) {
@@ -64,6 +69,7 @@ public class CurrencyRestController {
         }
     }
 
+    @Operation(summary = "Delete a currency by abbreviation", description = "Delete a currency by its abbreviation.")
     @DeleteMapping("/{abbreviation}")
     public void delete(@PathVariable String abbreviation) {
         try {
