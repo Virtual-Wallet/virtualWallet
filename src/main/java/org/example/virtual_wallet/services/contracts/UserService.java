@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface UserService {
     List<User> getAll(User user);
+    List<User> getAll();
     Page<User> findPage(List<User> filteredList, Pageable pageable);
 
     List<User> getAllFiltered(UserFilterOptions userFilterOptions,User user);
