@@ -45,6 +45,7 @@ public class UserMapper {
         UserDto userDto = new UserDto();
         userDto.setEmail(user.getEmail());
         userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setRoleType(user.getRoleType());
         userDto.setPhotoUrl(user.getPicture());
         return userDto;
     }

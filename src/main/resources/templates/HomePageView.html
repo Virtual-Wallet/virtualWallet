@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta charset="UTF-8">
+    <title>Create a saving wallet</title>
+    <link href="../static/navbar.css" th:href="@{/navbar.css}" rel="stylesheet">
+    <link href="../static/footer.css" th:href="@{/footer.css}" rel="stylesheet">
 
-    <title>Arsha Bootstrap Template - Index</title>
-    <meta content="" name="description">
-    <meta content="" name="keywords">
 
-    <!-- Favicons -->
-    <link href="../static/assets/img/favicon.png" rel="icon">
-    <link href="../static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-          rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100' rel='stylesheet' type='text/css'>
 
     <!-- Vendor CSS Files -->
-    <link href="../static/assets/vendor/aos/aos.css" rel="stylesheet">
-    <link href="../static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="../static/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-    <link href="../static/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-    <link href="../static/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-    <link href="../static/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-    <!-- Template Main CSS File -->
-    <link href="../static/assets/css/style.css" rel="stylesheet">
+    <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!--    Template Main CSS File-->
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- =======================================================
     * Template Name: Arsha
@@ -42,87 +36,164 @@
 
 
 <body>
-<div th:replace="~{/NavBar.html :: navbar}"></div>
+<div th:replace="~{/NavBar :: navbar}"></div>
+
+
+<section id="faq" class="faq section-bg">
+    <div class="container">
+        <br><br>
+    <div class="row">
+        <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1"
+             data-aos="fade-up" data-aos-delay="200">
+
+            <div th:if="${currentUser.wallet == null}">
+                <h3 id="no-wallets" th:text="#{wallet.title.empty}">YOU STILL HAVE NO WALLET</h3>
+                <div class="buttons">
+                     <a th:href="@{/wallets/new}">
+                            <button type="submit" class="buttonDeposit" th:text="#{wallet.label.create}">Create Wallet</button>
+                        </a>
+                    </div>
+            </div>
+
+            <div class="containerWallet" data-aos="fade-up" th:if="${currentUser.wallet != null and currentUser.wallet.isActive()}">
+                <div class="section-title">
+                    <h2>Wallet</h2>
+                </div>
+                <p class="wallet-balance">
+                    Balance: <span th:text="${currentUser.getWallet().getBalance()}"></span>
+                    <span class="currency" th:text="${currentUser.getWallet().getCurrency().currency}"></span>
+                </p>
+                <div class="buttons">
+                    <div>
+                        <a th:href="@{/cards/deposit}">
+                            <button type="submit" class="buttonDeposit" th:text="#{deposit.label}">Deposit</button>
+                        </a>
+                        <a th:href="@{/cards/withdraw}">
+                            <button type="button" class="buttonWithdraw" th:text="#{withdraw.label}">Withdraw</button>
+                        </a>
+                        <a th:href="@{/cards/withdraw}">
+                            <button type="button" class="buttonTransfer" th:text="#{transfer.label}">Transfer</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
+            <img src="../assets/img/hero-img.png" class="img-fluid animated" alt="">
+        </div>
+    </div>
+    </div>
+</section>
+<!-- End About Us Section -->
+
+<section id="contact" class="contact">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1"
+                 data-aos="fade-up" data-aos-delay="200">
+
+
+                <div class="section-title">
+                    <h2>Contact List</h2>
+                </div>
+                <div th:if="${currentUser.contactLists.isEmpty()}">
+                    <h3 id="no-categories" th:text="#{contact.title.empty}">YOU STILL HAVE NO CONTACTS</h3>
+                </div>
+
+                <div id="contact-list" th:unless="${currentUser.contactLists.isEmpty()}">
+                    <div class="faq-list">
+                        <ul>
+
+                            <!-- Loop through user contact list -->
+                            <th:block th:each="contact : ${currentUser.contactLists}">
+                                <li data-aos="fade-up" data-aos-delay="100">
+                                    <i class="fa fa-user"></i>
+                                    <span th:text="${contact.username}"></span>
+                                    <div class="buttons">
+                                        <a th:href="@{/users/remove/{contactId}(contactId=${contact.id})}">
+                                            <button class="edit-btn" value='Remove' title="Remove"><i
+                                                    class="fa fa-trash"></i></button>
+                                        </a>
+
+                                        <a th:href="@{/users/remove/{contactId}(contactId=${contact.id})}">
+                                            <button class="edit-btn" value='Transfer' title="Transfer">
+                                                <i class="fas fa-exchange-alt"></i></button>
+                                        </a>
+
+                                    </div>
+                                    <br><br>
+                                </li>
+                            </th:block>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 d-flex align-items-center" data-aos="fade-right" data-aos-delay="100">
+                <img src="../mobile-banking.png" alt="">
+            </div>
+            <br><br>
+        </div>
+    </div>
+</section>
+<!-- ======= Team Section ======= -->
+<section id="team" class="team section-bg">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+            <h2>Team</h2>
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="100">
+                <div class="member d-flex align-items-start">
+                    <div class="pic"><img src="../assets/img/team/Katrin.jpg" class="img-fluid" alt=""></div>
+                    <div class="member-info">
+                        <h4>Katrin Panayotova</h4>
+                        <span>Junior Java Developer</span>
+                        <p>Kpanayotova98@gmail.com</p>
+                        <div class="social">
+                            <a href="https://www.linkedin.com/in/katrinpanayotova?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"> <i class="ri-linkedin-box-fill"></i> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="200">
+                <div class="member d-flex align-items-start">
+                    <div class="pic"><img src="../assets/img/team/Grisha.png" class="img-fluid" alt=""></div>
+                    <div class="member-info">
+                        <h4>Grisha Daradzhanov</h4>
+                        <span>Junior Java Developer</span>
+                        <p>daradjanov@gmail.com</p>
+                        <div class="social">
+                            <a href="https://www.linkedin.com/in/grisha-daradjanov-b2b6b02a7/"> <i class="ri-linkedin-box-fill"></i> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mt-4" data-aos="zoom-in" data-aos-delay="300">
+                <div class="member d-flex align-items-start">
+                    <div class="pic"><img src="../assets/img/team/Georgi.png" class="img-fluid" alt=""></div>
+                    <div class="member-info">
+                        <h4>Georgi Valchanov</h4>
+                        <span>Junior Java Developer</span>
+                        <p>valchanov.biz@gmail.com</p>
+                        <div class="social">
+                            <a href="https://www.linkedin.com/in/g-valchanov/"> <i class="ri-linkedin-box-fill"></i> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section><!-- End Team Section -->
 
 <br><br>
-<section id="fag" class="faq section-bg">
-
-    <!-- ======= Hero Section ======= -->
-    <section id="hero" class="d-flex align-items-center">
-
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1"
-                     data-aos="fade-up" data-aos-delay="200">
-                    <h1>Better Solutions For Your Business</h1>
-                    <h2>We are team of talented designers making websites with Bootstrap</h2>
-                    <div class="d-flex justify-content-center justify-content-lg-start">
-                        <a href="#about" class="btn-get-started scrollto">Get Started</a>
-                        <a href="https://www.youtube.com/watch?v=jDDaplaOz7Q" class="glightbox btn-watch-video"><i
-                                class="bi bi-play-circle"></i><span>Watch Video</span></a>
-                    </div>
-                </div>
-                <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
-                    <img src="../static/assets/img/hero-img.png" class="img-fluid animated" alt="">
-                </div>
-            </div>
-        </div>
-
-    </section><!-- End Hero -->
-
-    <!-- ======= Services Section ======= -->
-    <section id="services" class="services section-bg">
-        <div class="container" data-aos="fade-up">
-
-            <div class="section-title">
-                <h2>Services</h2>
-                <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint
-                    consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia
-                    fugiat sit in iste officiis commodi quidem hic quas.</p>
-            </div>
-
-            <div class="row">
-                <div class="col-xl-3 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="icon-box">
-                        <div class="icon"><i class="bx bxl-dribbble"></i></div>
-                        <h4><a href="">Lorem Ipsum</a></h4>
-                        <p>Number of Users: <span th:text="${allUsers}"></span></p>
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="zoom-in"
-                     data-aos-delay="200">
-                    <div class="icon-box">
-                        <div class="icon"><i class="bx bx-file"></i></div>
-                        <h4><a href="">Sed ut perspici</a></h4>
-                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in"
-                     data-aos-delay="300">
-                    <div class="icon-box">
-                        <div class="icon"><i class="bx bx-tachometer"></i></div>
-                        <h4><a href="">Magni Dolores</a></h4>
-                        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in"
-                     data-aos-delay="400">
-                    <div class="icon-box">
-                        <div class="icon"><i class="bx bx-layer"></i></div>
-                        <h4><a href="">Nemo Enim</a></h4>
-                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-    </section>
-    <!-- End Services Section -->
-
 
     <section id="faq" class="faq section-bg">
         <div class="container" data-aos="fade-up">
@@ -167,27 +238,138 @@
             </div>
     </section>
 
-    <div th:replace="~{/PageFrame :: footer}"></div>
+<div th:replace="~{/PageFrame :: footer}"></div>
 
-    <!-- Vendor JS Files -->
-    <script src="../static/assets/vendor/aos/aos.js"></script>
-    <script src="../static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../static/assets/vendor/glightbox/js/glightbox.min.js"></script>
-    <script src="../static/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-    <script src="../static/assets/vendor/swiper/swiper-bundle.min.js"></script>
-    <script src="../static/assets/vendor/waypoints/noframework.waypoints.js"></script>
-    <script src="../static/assets/vendor/php-email-form/validate.js"></script>
-    <script src="../static/assets/js/main.js"></script>
 
-    <!-- Template Main JS File -->
-    <script src="../static/assets/js/main.js"></script>
-    <!-- Template and Script for Tables -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('.transactionsTable').DataTable();
-        });
-    </script>
+<!-- Vendor JS Files -->
+<script src="../assets/vendor/aos/aos.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="../assets/vendor/php-email-form/validate.js"></script>
+<script src="../assets/js/main.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<!-- Template Main JS File -->
+<script src="../assets/js/main.js"></script>
+<!-- Template Main JS File -->
+<script src="../assets/js/main.js"></script>
+<!-- Template and Script for Tables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.transactionsTable').DataTable();
+    });
+</script>
+
+<style>
+    /* Styles for the wallet balance */
+    .wallet-balance {
+        font-size: 24px; /* Increase font size */
+        font-weight: bold; /* Make it bold */
+        color: #007bff; /* Blue color */
+        margin-top: 10px; /* Add some top margin */
+    }
+
+    /* Styles for the currency */
+    .currency {
+        font-size: 18px; /* Decrease font size */
+        color: #333; /* Dark color */
+    }
+
+    /* Style for the container */
+    .containerWallet {
+        text-align: center; /* Center align content */
+        margin-top: 50px; /* Add some top margin */
+    }
+
+    .buttonDeposit {
+        background-color: #47b2e4;
+        color: white;
+        border: none;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .buttonWithdraw {
+        background-color: #28a745; /* Green */
+        color: white;
+        border: none;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .buttonTransfer {
+        background-color: #8c54ff; /* Purple */
+        color: white;
+        border: none;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    /* Style for the contact list */
+    #contact-list {
+        margin-top: 20px;
+        text-align: center; /* Center align the list */
+    }
+
+    .faq-list {
+        list-style-type: none;
+        padding: 0;
+        max-width: 400px; /* Example maximum width for the list */
+        margin: 0 auto; /* Center the list horizontally */
+    }
+
+    .faq-list li {
+        border-bottom: 1px solid #ccc;
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Center the items horizontally */
+    }
+
+    .edit-btn {
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .edit-btn:hover {
+        background-color: #47b2e4; /* Change color as needed */
+    }
+
+    .buttons {
+        margin-left: auto;
+    }
+
+    /* Optional: Add hover effect on list items */
+    .faq-list li:hover {
+        background-color: #f4f4f4; /* Change color as needed */
+    }
+
+</style>
 </body>
 </html>
