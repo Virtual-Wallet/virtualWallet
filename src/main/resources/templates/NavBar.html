@@ -87,6 +87,7 @@
 
                 <li th:if="${!isAuthenticated}"><a class="getstarted scrollto" th:href="@{/authentication/register}">Start
                     Flexing</a>
+                <li th:if="${isAuthenticated}"><a class="getstarted scrollto" th:href="@{/users/MyProfile}">My Profile</a>
 
 <!--                <li th:if="${isAuthenticated}">-->
 <!--                    <div class="flex-shrink-0">-->
