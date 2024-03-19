@@ -104,41 +104,43 @@ public class TransactionsRestController {
         }
     }
 
+    @Operation(summary = "Get incoming transactions filtered", description = "Retrieve a list of incoming transactions for the authenticated user.")
     @GetMapping("/filterIncoming")
     public List<TransactionsInternal> getFilteredIncoming(
-            @RequestHeader HttpHeaders httpHeaders,
+            @RequestHeader(name = "Credentials") String credentials,
             @RequestParam(required = false) Integer senderWalletId,
             @RequestParam(required = false) Integer recipientWalletId,
             @RequestParam(required = false) Timestamp timestamp,
-            @RequestParam(required = false) Double amount) {
+            @RequestParam(required = false) Double amount,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortOrder) {
 
         try {
-            User user = authenticationHelper.tryGetUser(httpHeaders);
+            User user = authenticationHelper.tryGetUser(credentials);
             TransactionFilterOptions filterOptions =
-                    new TransactionFilterOptions(senderWalletId, recipientWalletId, timestamp, amount);
+                    new TransactionFilterOptions(senderWalletId, recipientWalletId, timestamp, amount, sortBy, sortOrder);
             return service.getFilteredIncoming(filterOptions, user);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
+    @Operation(summary = "Get outgoing transactions filtered", description = "Retrieve a list of outgoing transactions for the authenticated user.")
     @GetMapping("/filterOutgoing")
     public List<TransactionsInternal> getFilteredOutgoing(
-            @RequestHeader HttpHeaders httpHeaders,
+            @RequestHeader(name = "Credentials") String credentials,
             @RequestParam(required = false) Integer senderWalletId,
             @RequestParam(required = false) Integer recipientWalletId,
             @RequestParam(required = false) Timestamp timestamp,
-            @RequestParam(required = false) Double amount) {
+            @RequestParam(required = false) Double amount,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortOrder) {
 
         try {
-            User user = authenticationHelper.tryGetUser(httpHeaders);
+            User user = authenticationHelper.tryGetUser(credentials);
             TransactionFilterOptions filterOptions =
-                    new TransactionFilterOptions(senderWalletId, recipientWalletId, timestamp, amount);
+                    new TransactionFilterOptions(senderWalletId, recipientWalletId, timestamp, amount, sortBy, sortOrder);
             return service.getFilteredOutgoing(filterOptions, user);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }

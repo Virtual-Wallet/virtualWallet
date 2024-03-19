@@ -109,6 +109,6 @@ public class TransactionsInternalServiceImpl implements TransactionsInternalServ
 
     @Override
     public List<TransactionsInternal> getFilteredOutgoing(TransactionFilterOptions filterOptions, User user) {
-        return repository.getFilteredIncoming(filterOptions, user);
+        return repository.getFilteredOutgoing(filterOptions, user);
     }
 }

@@ -118,7 +118,41 @@ public class TransactionsInternalRepositoryImpl extends AbstractCRUDRepository<T
 
     @Override
     public List<TransactionsInternal> getFilteredOutgoing(TransactionFilterOptions filterOptions, User user) {
-        return null;
+        int walletId = user.getWallet().getId();
+
+        try (Session session = sessionFactory.openSession()) {
+
+            List<String> filters = new ArrayList<>();
+            Map<String, Object> params = new HashMap<>();
+
+            filterOptions.getRecipientWalletId().ifPresent(value -> {
+                filters.add("recipient_wallet_id =: recipientWalletId");
+                params.put("recipientWalletId", value);
+            });
+
+            filterOptions.getTimestamp().ifPresent(value -> {
+                filters.add("timestamp =: timestamp");
+                params.put("timestamp", value);
+            });
+
+            filterOptions.getAmount().ifPresent(value -> {
+                filters.add("amount =: amount");
+                params.put("amount", value);
+            });
+
+            StringBuilder queryString = new StringBuilder("from TransactionsInternal");
+            if (!filters.isEmpty()) {
+                queryString
+                        .append(" WHERE ")
+                        .append(String.join(" AND ", filters));
+            }
+            queryString.append(generateOrderBy(filterOptions));
+
+            Query<TransactionsInternal> query = session.createQuery(
+                    "FROM TransactionsInternal WHERE senderWalletId =:walletId", TransactionsInternal.class);
+            query.setParameter("walletId", walletId);
+            return query.list();
+        }
     }
 
     private String generateOrderBy(TransactionFilterOptions filterOptions) {

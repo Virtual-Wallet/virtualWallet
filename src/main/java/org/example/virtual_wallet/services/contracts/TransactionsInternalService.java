@@ -20,5 +20,6 @@ public interface TransactionsInternalService {
     List<TransactionsInternal> getOutgoingPerCategory(int categoryId, User user);
 
     List<TransactionsInternal> getFilteredIncoming(TransactionFilterOptions filterOptions, User user);
+
     List<TransactionsInternal> getFilteredOutgoing(TransactionFilterOptions filterOptions, User user);
 }
