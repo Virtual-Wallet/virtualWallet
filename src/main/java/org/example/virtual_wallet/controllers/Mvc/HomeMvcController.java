@@ -31,10 +31,10 @@ public class HomeMvcController {
         return session.getAttribute("currentUser") != null;
     }
 
-    @ModelAttribute("allUsers")
-    public int allUsers() {
-        return userService.getAll().size();
-    }
+//    @ModelAttribute("allUsers")
+//    public int allUsers() {
+//        return userService.getAll().size();
+//    }
 
     @ModelAttribute("allCurrencies")
     public int allCurrencies() {
@@ -52,8 +52,18 @@ public class HomeMvcController {
         if (populateIsAuthenticated(session)) {
             String currentUsername = (String) session.getAttribute("currentUser");
             model.addAttribute("currentUser", userService.getByUsername(currentUsername));
+            return "HomePageView";
+        } else {
+//            model.addAttribute("mostCommentedPosts", postService.getMostCommented());
+//            model.addAttribute("mostRecentPosts", postService.getMostRecent());
+//            model.addAttribute("postCount", postService.getPostCount());
+//            return "HomePageNotLogged";
+            return "index";
         }
 
-        return "index";
+
     }
+
+
+
 }
