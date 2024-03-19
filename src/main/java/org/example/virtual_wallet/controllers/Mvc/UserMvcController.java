@@ -2,7 +2,6 @@ package org.example.virtual_wallet.controllers.Mvc;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.example.virtual_wallet.exceptions.AuthorizationException;
 import org.example.virtual_wallet.exceptions.EmailDuplicateException;
 import org.example.virtual_wallet.exceptions.EntityDuplicateException;
@@ -12,7 +11,6 @@ import org.example.virtual_wallet.helpers.mappers.UserMapper;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.dtos.UserDto;
 import org.example.virtual_wallet.services.contracts.UserService;
-import org.springframework.boot.autoconfigure.pulsar.PulsarProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,7 +46,7 @@ public class UserMvcController {
         try {
             User user = userService.getById(userId);
             model.addAttribute("user", user);
-            return "ProfileTestView";
+            return "ProfileView";
         } catch (EntityNotFoundException e) {
             return "error";
         }
