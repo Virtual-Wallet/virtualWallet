@@ -29,7 +29,6 @@ public class UserMvcController {
 
     public UserMvcController(UserService userService, AuthenticationHelper authenticationHelper, UserMapper userMapper) {
         this.userService = userService;
-
         this.authenticationHelper = authenticationHelper;
         this.userMapper = userMapper;
     }
@@ -39,21 +38,6 @@ public class UserMvcController {
         return session.getAttribute(CURRENT_USER) != null;
     }
 
-//    @GetMapping("/{userId}")
-//    public String showUserPage(@PathVariable int userId, Model model, HttpSession session) {
-//        try {
-//            authenticationHelper.tryGetCurrentUser(session);
-//        } catch (AuthorizationException e) {
-//            return "redirect:/authentication/login";
-//        }
-//        try {
-//            User user = userService.getById(userId);
-//            model.addAttribute("user", user);
-//            return "ProfileTestView";
-//        } catch (EntityNotFoundException e) {
-//            return "error";
-//        }
-//    }
     @GetMapping("/MyProfile")
     public String showUserPage(UserDto userDto,
                                Model model,
