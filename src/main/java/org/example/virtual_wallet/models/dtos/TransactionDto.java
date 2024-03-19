@@ -22,6 +22,9 @@ public class TransactionDto {
         this.category = category;
     }
 
+    public TransactionDto() {
+    }
+
     public String getUsername() {
         return username;
     }
