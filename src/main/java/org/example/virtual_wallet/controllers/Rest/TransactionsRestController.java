@@ -3,6 +3,7 @@ package org.example.virtual_wallet.controllers.Rest;
 import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.AuthorizationException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
+import org.example.virtual_wallet.filters.TransactionFilterOptions;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.helpers.mappers.TransactionsInternalMapper;
 import org.example.virtual_wallet.models.TransactionsInternal;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -73,8 +75,6 @@ public class TransactionsRestController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
 
@@ -95,6 +95,46 @@ public class TransactionsRestController {
         try {
             User user = authenticationHelper.tryGetUser(httpHeaders);
             return service.getIncoming(user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
+    @GetMapping("/filterIncoming")
+    public List<TransactionsInternal> getFilteredIncoming(
+            @RequestHeader HttpHeaders httpHeaders,
+            @RequestParam(required = false) Integer senderWalletId,
+            @RequestParam(required = false) Integer recipientWalletId,
+            @RequestParam(required = false) Timestamp timestamp,
+            @RequestParam(required = false) Double amount) {
+
+        try {
+            User user = authenticationHelper.tryGetUser(httpHeaders);
+            TransactionFilterOptions filterOptions =
+                    new TransactionFilterOptions(senderWalletId, recipientWalletId, timestamp, amount);
+            return service.getFilteredIncoming(filterOptions, user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
+    @GetMapping("/filterOutgoing")
+    public List<TransactionsInternal> getFilteredOutgoing(
+            @RequestHeader HttpHeaders httpHeaders,
+            @RequestParam(required = false) Integer senderWalletId,
+            @RequestParam(required = false) Integer recipientWalletId,
+            @RequestParam(required = false) Timestamp timestamp,
+            @RequestParam(required = false) Double amount) {
+
+        try {
+            User user = authenticationHelper.tryGetUser(httpHeaders);
+            TransactionFilterOptions filterOptions =
+                    new TransactionFilterOptions(senderWalletId, recipientWalletId, timestamp, amount);
+            return service.getFilteredOutgoing(filterOptions, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {

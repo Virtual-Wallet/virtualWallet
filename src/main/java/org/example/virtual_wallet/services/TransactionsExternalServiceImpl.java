@@ -1,6 +1,7 @@
 package org.example.virtual_wallet.services;
 
 import org.example.virtual_wallet.exceptions.LargeTransactionDetectedException;
+import org.example.virtual_wallet.filters.TransferFilterOptions;
 import org.example.virtual_wallet.models.TransactionsExternal;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.repositories.contracts.TransactionsExternalRepository;
@@ -51,6 +52,12 @@ public class TransactionsExternalServiceImpl implements TransactionsExternalServ
     public List<TransactionsExternal> getWithdrawals(User user) {
         return repository.getWithdrawals(user);
     }
+
+    @Override
+    public List<TransactionsExternal> getFiltered(TransferFilterOptions filterOptions, User user) {
+        return repository.getFiltered(filterOptions, user);
+    }
+
 
     @Override
     public void checkForLargeTransaction(TransactionsExternal transaction) {

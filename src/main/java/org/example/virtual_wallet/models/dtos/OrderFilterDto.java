@@ -1,14 +1,10 @@
 package org.example.virtual_wallet.models.dtos;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
+import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 
-@Entity()
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@MappedSuperclass
 public class OrderFilterDto {
     @Id
     private String id;

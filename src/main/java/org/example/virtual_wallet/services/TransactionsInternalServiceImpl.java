@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.services;
 
+import org.example.virtual_wallet.filters.TransactionFilterOptions;
 import org.example.virtual_wallet.models.TransactionsInternal;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.Wallet;
@@ -57,21 +58,26 @@ public class TransactionsInternalServiceImpl implements TransactionsInternalServ
         return walletService.getById(transaction.getRecipientWallet().getId());
     }
 
-    private BigDecimal calculateAmountSourceToTransactional(TransactionsInternal transaction, Wallet senderWallet) throws IOException {
+    private BigDecimal calculateAmountSourceToTransactional(TransactionsInternal transaction,
+                                                            Wallet senderWallet) throws IOException {
         Map<String, Double> rates = currencyService.getRates(senderWallet.getCurrency());
         double sourceToTransactionalRate = rates.get(transaction.getCurrency().getCurrency());
         BigDecimal amountSourceToTransactional = new BigDecimal(transaction.getAmount() / sourceToTransactionalRate);
         return amountSourceToTransactional.setScale(2, RoundingMode.HALF_DOWN);
     }
 
-    private BigDecimal calculateAmountTransactionalToTarget(TransactionsInternal transaction, Wallet recipientWallet) throws IOException {
+    private BigDecimal calculateAmountTransactionalToTarget(TransactionsInternal transaction,
+                                                            Wallet recipientWallet) throws IOException {
         Map<String, Double> rates = currencyService.getRates(transaction.getCurrency());
         double transactionalToTargetRate = rates.get(recipientWallet.getCurrency().getCurrency());
         BigDecimal amountTransactionalToTarget = new BigDecimal(transaction.getAmount() * transactionalToTargetRate);
         return amountTransactionalToTarget.setScale(2, RoundingMode.HALF_DOWN);
     }
 
-    private void performTransaction(Wallet senderWallet, Wallet recipientWallet, BigDecimal amountSourceToTransactional, BigDecimal amountTransactionalToTarget) {
+    private void performTransaction(Wallet senderWallet,
+                                    Wallet recipientWallet,
+                                    BigDecimal amountSourceToTransactional,
+                                    BigDecimal amountTransactionalToTarget) {
         walletService.withdraw(senderWallet, amountSourceToTransactional.doubleValue());
         walletService.deposit(recipientWallet, amountTransactionalToTarget.doubleValue());
     }
@@ -94,5 +100,15 @@ public class TransactionsInternalServiceImpl implements TransactionsInternalServ
     @Override
     public List<TransactionsInternal> getOutgoingPerCategory(int categoryId, User user) {
         return repository.getOutgoingPerCategory(categoryId, user);
+    }
+
+    @Override
+    public List<TransactionsInternal> getFilteredIncoming(TransactionFilterOptions filterOptions, User user) {
+        return repository.getFilteredIncoming(filterOptions, user);
+    }
+
+    @Override
+    public List<TransactionsInternal> getFilteredOutgoing(TransactionFilterOptions filterOptions, User user) {
+        return repository.getFilteredIncoming(filterOptions, user);
     }
 }
