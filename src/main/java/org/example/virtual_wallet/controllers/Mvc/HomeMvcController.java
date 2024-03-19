@@ -2,9 +2,16 @@ package org.example.virtual_wallet.controllers.Mvc;
 
 import jakarta.servlet.http.HttpSession;
 import org.example.virtual_wallet.exceptions.AuthorizationException;
+import org.example.virtual_wallet.exceptions.EntityNotFoundException;
+import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.models.Currency;
+import org.example.virtual_wallet.models.SpendingCategory;
+import org.example.virtual_wallet.models.TransactionsInternal;
 import org.example.virtual_wallet.models.User;
+import org.example.virtual_wallet.models.dtos.CategoryDto;
+import org.example.virtual_wallet.models.dtos.TransactionDto;
 import org.example.virtual_wallet.services.contracts.CurrencyService;
+import org.example.virtual_wallet.services.contracts.TransactionsInternalService;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +27,17 @@ public class HomeMvcController {
 
     private final UserService userService;
     private final CurrencyService currencyService;
+    private final TransactionsInternalService transactionsInternalService;
+    private final AuthenticationHelper authenticationHelper;
 
-    public HomeMvcController(UserService userService, CurrencyService currencyService) {
+    public HomeMvcController(UserService userService,
+                             CurrencyService currencyService,
+                             TransactionsInternalService transactionsInternalService,
+                             AuthenticationHelper authenticationHelper) {
         this.userService = userService;
         this.currencyService = currencyService;
+        this.transactionsInternalService = transactionsInternalService;
+        this.authenticationHelper = authenticationHelper;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -31,10 +45,10 @@ public class HomeMvcController {
         return session.getAttribute("currentUser") != null;
     }
 
-    @ModelAttribute("allUsers")
-    public int allUsers() {
-        return userService.getAll().size();
-    }
+//    @ModelAttribute("allUsers")
+//    public int allUsers() {
+//        return userService.getAll().size();
+//    }
 
     @ModelAttribute("allCurrencies")
     public int allCurrencies() {
@@ -49,11 +63,23 @@ public class HomeMvcController {
 //                        new FilterOptionsTransaction(null, null, null, null, null, null, null, null))
 //                .size());
 
-        if (populateIsAuthenticated(session)) {
-            String currentUsername = (String) session.getAttribute("currentUser");
-            model.addAttribute("currentUser", userService.getByUsername(currentUsername));
+        User user;
+
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/authentication/login";
         }
 
-        return "index";
+        try {
+            List<TransactionsInternal> transactionsIncoming = transactionsInternalService.getIncoming(user);
+            model.addAttribute("transactionsIncoming", transactionsIncoming);
+            model.addAttribute("currentUser", user);
+            model.addAttribute("transactionDto", new TransactionsInternal());
+            return "HomePageView";
+        } catch (EntityNotFoundException e) {
+            return "categoriesView" /* OPRAVI ME */;
+        }
     }
+
 }
