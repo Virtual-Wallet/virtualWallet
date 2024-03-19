@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.example.virtual_wallet.enums.RoleType;
 import org.springframework.http.ResponseEntity;
 
 public class UserDto {
@@ -24,6 +25,7 @@ public class UserDto {
     @Size(min = 10, max = 10, message = "Invalid phone format!")
     private String phoneNumber;
     private String photoUrl;
+    private RoleType roleType;
 
     public UserDto() {
 
@@ -76,5 +78,13 @@ public class UserDto {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public RoleType getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(RoleType roleType) {
+        this.roleType = roleType;
     }
 }

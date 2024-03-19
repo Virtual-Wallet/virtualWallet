@@ -81,32 +81,31 @@
         <h2>Change your details</h2>
         <p>You can change only your email and phone number</p>
     </div>
-    <section id="category-update-container">
+    <section id="category-update-container" style="margin-left: 417pt;
+    margin-top: 2%;
+    margin-right: 10%;
+    min-width: 25%;">
         <div class="centered-input">
             <form action="#" th:action="@{/users/edit}" th:object="${dto}" method="post">
                 <label>E-mail</label>
                 <br/>
                 <input class="input-group-text" type="text" th:field="*{email}" th:value="${dto.email}"/>
-                <!--            <br/><label id="passwordError" style="color: red; font-weight: normal;" th:errors="*{email}">email-->
-                <!--            error placeholder</label>-->
-                <!--            <br/>-->
+                <br/><label id="passwordError" style="color: red; font-weight: normal;" th:errors="*{email}">email
+                error placeholder</label>
+                <br/>
                 <br>
                 <label>Phone number</label>
                 <br/>
                 <input class="input-group-text" type="text" th:field="*{phoneNumber}" th:value="${dto.phoneNumber}"/>
-                <!--            <br/><label style="color: red;display: none; font-weight: normal;" th:errors="*{phoneNumber}">Phone-->
-                <!--            error-->
-                <!--            placeholder</label>-->
+                <br/><label style="color: red;display: none; font-weight: normal;" th:errors="*{phoneNumber}">Phone
+                error
+                placeholder</label>
+                <br/>
+                <p>Please enter photo URL</p>
+                <input class="input-group-text" type="text" th:field="*{photoUrl}" th:value="${dto.phoneNumber}"/>
 
-
-                <!--    <label th:text="#{user.label.photo-url}">Last Name</label>-->
-                <!--    <br/>-->
-                <!--    <input type="text" th:field="*{photoUrl}"/>-->
-                <!--    <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{photoUrl}">Last name-->
-                <!--    error placeholder</label>-->
-                <!--    <br/>-->
-                <br>
-                <input class="buttonLogIn" type="submit" value="Submit"></input>
+                <br/>
+                <input class="buttonLogIn" type="submit" value="Submit">
             </form>
         </div>
     </section>

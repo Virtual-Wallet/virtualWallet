@@ -48,12 +48,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Card> cards;
 
-
-
     @Enumerated(EnumType.STRING)
     @Column(name = "role_type")
     private RoleType roleType;
-
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

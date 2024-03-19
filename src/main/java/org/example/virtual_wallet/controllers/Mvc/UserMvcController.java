@@ -13,6 +13,7 @@ import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.dtos.UserDto;
 import org.example.virtual_wallet.services.contracts.UserService;
 import org.springframework.boot.autoconfigure.pulsar.PulsarProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,18 +39,40 @@ public class UserMvcController {
         return session.getAttribute(CURRENT_USER) != null;
     }
 
-    @GetMapping("/{userId}")
-    public String showUserPage(@PathVariable int userId, Model model, HttpSession session) {
+//    @GetMapping("/{userId}")
+//    public String showUserPage(@PathVariable int userId, Model model, HttpSession session) {
+//        try {
+//            authenticationHelper.tryGetCurrentUser(session);
+//        } catch (AuthorizationException e) {
+//            return "redirect:/authentication/login";
+//        }
+//        try {
+//            User user = userService.getById(userId);
+//            model.addAttribute("user", user);
+//            return "ProfileTestView";
+//        } catch (EntityNotFoundException e) {
+//            return "error";
+//        }
+//    }
+    @GetMapping("/MyProfile")
+    public String showUserPage(UserDto userDto,
+                               Model model,
+                               HttpSession session) {
+
+        User currentUser;
         try {
-            authenticationHelper.tryGetCurrentUser(session);
+            currentUser = authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e) {
             return "redirect:/authentication/login";
         }
+
         try {
-            User user = userService.getById(userId);
-            model.addAttribute("user", user);
-            return "ProfileTestView";
+            UserDto userDetails = userMapper.userToDto(currentUser);
+            model.addAttribute("currentUser", userDetails);
+            return "ProfileView";
         } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
             return "error";
         }
     }

@@ -112,13 +112,13 @@
     min-width: 25%;
     max-width: 50%;">
 
-        <img th:src="@{${user.picture != null ? user.picture : '/pictures/images.jpeg'}}" alt="images.jpeg"
+        <img th:src="@{${currentUser.photoUrl != null ? currentUser.photoUrl : '/pictures/images.jpeg'}}" alt="images.jpeg"
              class="profile-picture">
         <div class="profile-info">
-            <h2>Username: <span th:text="${user.username}">JohnDoe</span></h2>
-            <p>Email: <span th:text="${user.email}">johndoe@example.com</span></p>
-            <p>Phone Number: <span th:text="${user.phoneNumber}">123-456-7890</span></p>
-            <p>Account Status: <span th:tect="${user.getRoleType()}">Regular</span></p>
+            <h2>Username: <span th:text="${currentUser.username}">JohnDoe</span></h2>
+            <p>Email: <span th:text="${currentUser.email}">johndoe@example.com</span></p>
+            <p>Phone Number: <span th:text="${currentUser.phoneNumber}">123-456-7890</span></p>
+            <p>Account Status: <span th:tect="${currentUser.roleType}">Regular</span></p>
         </div>
         <div class="profile-actions">
             <a th:href="@{/users/edit}">
