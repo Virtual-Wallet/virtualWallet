@@ -3,10 +3,7 @@ package org.example.virtual_wallet.controllers.Mvc;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
-import org.example.virtual_wallet.exceptions.AuthorizationException;
-import org.example.virtual_wallet.exceptions.EmailDuplicateException;
-import org.example.virtual_wallet.exceptions.EntityDuplicateException;
-import org.example.virtual_wallet.exceptions.EntityNotFoundException;
+import org.example.virtual_wallet.exceptions.*;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.helpers.mappers.UserMapper;
 import org.example.virtual_wallet.models.User;
@@ -142,4 +139,43 @@ public class UserMvcController {
         return "redirect:/authentication/login";
     }
 
+    @GetMapping("/remove/{userId}")
+    public String removeFromContactList (@PathVariable int userId, Model model, HttpSession session) {
+        try {
+            authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/authentication/login";
+        }
+
+        User user = authenticationHelper.tryGetCurrentUser(session);
+
+
+        try {
+            userService.removeUserFromContactList(user, userService.getById(userId));
+            return "redirect:/";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("error", e.getMessage());
+            return "NotFoundView";
+        }
+    }
+
+    @GetMapping("/add/{userId}")
+    public String addToContactList (@PathVariable int userId, Model model, HttpSession session) {
+        try {
+            authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/authentication/login";
+        }
+
+        User user = authenticationHelper.tryGetCurrentUser(session);
+
+
+        try {
+            userService.addUserToContactList(user, userService.getById(userId));
+            return "HomePageView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("error", e.getMessage());
+            return "NotFoundView";
+        }
+    }
 }
