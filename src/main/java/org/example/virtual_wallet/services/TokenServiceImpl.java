@@ -51,6 +51,8 @@ public class TokenServiceImpl implements TokenService {
         if (!tokenRepository.getUserToken(user.getId()).getCode().equals(token.getCode())) {
             throw new InvalidTokenException(WRONG_TOKEN_CODE_MSG);
         }
+        token.setActive(false);
+        tokenRepository.update(token);
     }
 
     @Override

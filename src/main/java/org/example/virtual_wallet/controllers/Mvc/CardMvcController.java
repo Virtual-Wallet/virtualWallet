@@ -361,15 +361,16 @@ public class CardMvcController {
         }
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
-//            token = tokenService.getUserToken(user.getId());
+            token = tokenService.getUserToken(user.getId());
             tokenService.validateCorrectToken(token, user);
             session.setAttribute(CURRENT_USER, user);
-            userService.advanceAccountStatus(user);
 
             return "SuccessfulTransactionView";
         } catch (InvalidTokenException | EntityNotFoundException e) {
             bindingResult.rejectValue("code", "code_error", e.getMessage());
             return "TransactionVerify";
+        }catch (AuthorizationException e){
+            return "redirect:/authentication/login";
         }
     }
 
