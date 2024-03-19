@@ -117,7 +117,8 @@
         <img th:src="@{${currentUser.photoUrl != null ? currentUser.photoUrl : '/pictures/images.jpeg'}}" alt="images.jpeg"
              class="profile-picture">
         <div class="profile-info">
-            <h2>Username: <span th:text="${currentUser.username}">JohnDoe</span></h2>
+            <br>
+            <p>Username: <span th:text="${currentUser.username}">TestName</span></p>
             <p>Email: <span th:text="${currentUser.email}">johndoe@example.com</span></p>
             <p>Phone Number: <span th:text="${currentUser.phoneNumber}">123-456-7890</span></p>
             <p>Account Status: <span th:tect="${currentUser.roleType}">Regular</span></p>

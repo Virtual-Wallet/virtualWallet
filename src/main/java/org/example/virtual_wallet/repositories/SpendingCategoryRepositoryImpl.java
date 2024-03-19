@@ -45,7 +45,7 @@ public class SpendingCategoryRepositoryImpl extends AbstractCRUDRepository<Spend
                             SpendingCategory.class)
                     .setParameter("id", user.getId());
             if (query.list().isEmpty()) {
-                throw new EntityNotFoundException("Category", user.getId());
+                throw new EntityNotFoundException(String.format("No Categories under User with ID %s", user.getId()));
             }
             return query.list();
         }

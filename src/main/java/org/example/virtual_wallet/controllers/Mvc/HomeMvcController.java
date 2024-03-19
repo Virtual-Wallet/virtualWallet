@@ -30,10 +30,7 @@ public class HomeMvcController {
     private final TransactionsInternalService transactionsInternalService;
     private final AuthenticationHelper authenticationHelper;
 
-    public HomeMvcController(UserService userService,
-                             CurrencyService currencyService,
-                             TransactionsInternalService transactionsInternalService,
-                             AuthenticationHelper authenticationHelper) {
+    public HomeMvcController(UserService userService, CurrencyService currencyService) {
         this.userService = userService;
         this.currencyService = currencyService;
         this.transactionsInternalService = transactionsInternalService;
@@ -62,7 +59,12 @@ public class HomeMvcController {
 //        model.addAttribute("transactionsCount", transactionService.get(
 //                        new FilterOptionsTransaction(null, null, null, null, null, null, null, null))
 //                .size());
-        if (!populateIsAuthenticated(session)) {
+
+        if (populateIsAuthenticated(session)) {
+            String currentUsername = (String) session.getAttribute("currentUser");
+            model.addAttribute("currentUser", userService.getByUsername(currentUsername));
+            return "HomePageView";
+        } else {
             return "index";
         }
 
