@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.controllers.Rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.AuthorizationException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
@@ -42,14 +43,15 @@ public class TransfersRestController {
         this.transactionsExternalMapper = transactionsExternalMapper;
     }
 
+    @Operation(summary = "Perform financial operation", description = "Perform a financial operation such as deposit or withdrawal.")
     @PostMapping({"/{action}"})
-    public TransactionsExternal financialOperation(@RequestHeader HttpHeaders httpHeaders,
+    public TransactionsExternal financialOperation(@RequestHeader(name = "Credentials") String credentials,
                                                    @PathVariable String action,
                                                    @Valid @RequestBody TransferDto transferDto) {
         User user = new User();
 
         try {
-            user = authenticationHelper.tryGetUser(httpHeaders);
+            user = authenticationHelper.tryGetUser(credentials);
             TransactionsExternal transfer = new TransactionsExternal();
             switch (action) {
                 case "deposit":
@@ -74,17 +76,18 @@ public class TransfersRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }catch (RestClientException e){
+        } catch (RestClientException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INSUFFICIENT_AVAILABILITY);
         }
 
         return null;
     }
 
+    @Operation(summary = "Get deposits", description = "Retrieve a list of deposits for the authenticated user.")
     @GetMapping("/deposits")
-    public List<TransactionsExternal> getDeposits(@RequestHeader HttpHeaders httpHeaders) {
+    public List<TransactionsExternal> getDeposits(@RequestHeader(name = "Credentials") String credentials) {
         try {
-            User user = authenticationHelper.tryGetUser(httpHeaders);
+            User user = authenticationHelper.tryGetUser(credentials);
             return service.getDeposits(user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -93,10 +96,11 @@ public class TransfersRestController {
         }
     }
 
+    @Operation(summary = "Get withdrawals", description = "Retrieve a list of withdrawals for the authenticated user.")
     @GetMapping("/withdrawals")
-    public List<TransactionsExternal> getWithdrawals(@RequestHeader HttpHeaders httpHeaders) {
+    public List<TransactionsExternal> getWithdrawals(@RequestHeader(name = "Credentials") String credentials) {
         try {
-            User user = authenticationHelper.tryGetUser(httpHeaders);
+            User user = authenticationHelper.tryGetUser(credentials);
             return service.getWithdrawals(user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

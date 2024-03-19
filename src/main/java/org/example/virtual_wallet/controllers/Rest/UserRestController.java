@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.controllers.Rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.*;
 import org.example.virtual_wallet.filters.UserFilterOptions;
@@ -39,19 +40,19 @@ public class UserRestController {
         this.cardService = cardService;
         this.authenticationHelper = authenticationHelper;
     }
-
+    @Operation(summary = "Get all users", description = "Retrieve a list of all users.")
     @GetMapping
-    public List<User> getAll(@RequestHeader HttpHeaders headers) {
+    public List<User> getAll( @RequestHeader(name = "Credentials") String credentials) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             return userService.getAll(user);
         } catch (InvalidOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
-
+    @Operation(summary = "Filter users", description = "Filter users based on given criteria.")
     @GetMapping("/search")
-    public List<User> getFiltered(@RequestHeader HttpHeaders headers,
+    public List<User> getFiltered( @RequestHeader(name = "Credentials") String credentials,
                                   @RequestParam(required = false) String username,
                                   @RequestParam(required = false) String email,
                                   @RequestParam(required = false) String phoneNumber,
@@ -66,7 +67,7 @@ public class UserRestController {
         int pageSize = size.orElse(2);
 
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             List<User> filteredList = userService.getAllFiltered(userFilterOptions, user);
             Page<User> usersPage = userService.findPage(filteredList, PageRequest.of(currentPage - 1, pageSize));
             int totalPages = usersPage.getTotalPages();
@@ -85,10 +86,11 @@ public class UserRestController {
 
     }
 
+    @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID.")
     @GetMapping("/{id}")
-    public User getById(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    public User getById( @RequestHeader(name = "Credentials") String credentials, @PathVariable int id) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             return userService.getById(id);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -97,6 +99,7 @@ public class UserRestController {
         }
     }
 
+    @Operation(summary = "Create a new user", description = "Create a new user.")
     @PostMapping
     public void create(@Valid @RequestBody UserDto userDto) {
         try {
@@ -107,10 +110,11 @@ public class UserRestController {
         }
     }
 
+    @Operation(summary = "Update a user", description = "Update an existing user.")
     @PutMapping("/{id}")
-    public void update(@RequestHeader HttpHeaders headers, @PathVariable int id, @Valid @RequestBody UserDto userDto) {
+    public void update( @RequestHeader(name = "Credentials") String credentials, @PathVariable int id, @Valid @RequestBody UserDto userDto) {
         try {
-            authenticationHelper.tryGetUser(headers);
+            authenticationHelper.tryGetUser(credentials);
             User user = userMapper.updateUser(id, userDto);
             userService.update(user);
         } catch (EntityDuplicateException e) {
@@ -122,10 +126,11 @@ public class UserRestController {
         }
     }
 
+    @Operation(summary = "Get all cards for a user", description = "Retrieve all cards associated with a user.")
     @GetMapping("/{userId}/cards")
-    public List<Card> getAllUserCards(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
+    public List<Card> getAllUserCards( @RequestHeader(name = "Credentials") String credentials, @PathVariable int userId) {
         try {
-            User executor = authenticationHelper.tryGetUser(headers);
+            User executor = authenticationHelper.tryGetUser(credentials);
             User user = userService.getById(userId);
 
             return userService.getAllUserCards(user.getId(), executor);
@@ -137,11 +142,12 @@ public class UserRestController {
         }
     }
 
+    @Operation(summary = "Add user to contact list", description = "Add another user to the contact list of the authenticated user.")
     @PostMapping("/add/{toAddId}")
-    public void addToContactList(@RequestHeader HttpHeaders headers, @PathVariable int toAddId) {
+    public void addToContactList( @RequestHeader(name = "Credentials") String credentials, @PathVariable int toAddId) {
         try {
 
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
 
             User userToAdd = userService.getById(toAddId);
 
@@ -153,10 +159,11 @@ public class UserRestController {
         }
     }
 
+    @Operation(summary = "Remove user from contact list", description = "Remove a user from the contact list of the authenticated user.")
     @PostMapping("/remove/{toAddId}")
-    public void removeFromContactList(@RequestHeader HttpHeaders headers, @PathVariable int toAddId) {
+    public void removeFromContactList( @RequestHeader(name = "Credentials") String credentials, @PathVariable int toAddId) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
 
             User toRemove = userService.getById(toAddId);
             userService.removeUserFromContactList(user, toRemove);
@@ -165,10 +172,11 @@ public class UserRestController {
         }
     }
 
+    @Operation(summary = "Block user", description = "Block a user by their ID.")
     @PutMapping("/{userId}/block")
-    public void blockUser(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
+    public void blockUser( @RequestHeader(name = "Credentials") String credentials, @PathVariable int userId) {
         try {
-            User executor = authenticationHelper.tryGetUser(headers);
+            User executor = authenticationHelper.tryGetUser(credentials);
 
             User toBlock = userService.getById(userId);
             userService.blockUserByAdmin(toBlock, executor);
@@ -179,10 +187,11 @@ public class UserRestController {
         }
     }
 
+    @Operation(summary = "Unblock user", description = "Unblock a user by their ID.")
     @PutMapping("/{userId}/active")
-    public void unblockUser(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
+    public void unblockUser( @RequestHeader(name = "Credentials") String credentials, @PathVariable int userId) {
         try {
-            User executor = authenticationHelper.tryGetUser(headers);
+            User executor = authenticationHelper.tryGetUser(credentials);
 
             User toUnBlock = userService.getById(userId);
             userService.unblockUserByAdmin(toUnBlock, executor);
@@ -193,10 +202,11 @@ public class UserRestController {
         }
     }
 
+    @Operation(summary = "Promote user to admin", description = "Promote a user to admin by their ID.")
     @PutMapping("/{userId}/promote")
-    public void promoteToAdmin(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
+    public void promoteToAdmin( @RequestHeader(name = "Credentials") String credentials, @PathVariable int userId) {
         try {
-            User admin = authenticationHelper.tryGetUser(headers);
+            User admin = authenticationHelper.tryGetUser(credentials);
             User toPromote = userService.getById(userId);
 
             userService.promoteUserToAdmin(toPromote, admin);
@@ -207,6 +217,7 @@ public class UserRestController {
         }
     }
 
+    @Operation(summary = "Advance account status", description = "Advance the account status of a user by their ID.")
     @PutMapping("{userId}/advance")
     public void advanceAccStatus(@PathVariable int userId){
         try{
@@ -218,6 +229,8 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
+
+    @Operation(summary = "Revert account status", description = "Revert the account status of a user by their ID.")
     @PutMapping("{userId}/revert")
     public void revertAccStatus(@PathVariable int userId){
         try{

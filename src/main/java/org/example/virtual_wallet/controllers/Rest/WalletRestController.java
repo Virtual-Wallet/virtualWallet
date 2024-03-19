@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.controllers.Rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.AuthorizationException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
@@ -35,30 +36,34 @@ public class WalletRestController {
         this.authenticationHelper = authenticationHelper;
         this.walletMapper = walletMapper;
     }
+
+    @Operation(summary = "Get all wallets", description = "Retrieve a list of all wallets.")
     @GetMapping
-    public List<Wallet> getAll(@RequestHeader HttpHeaders httpHeaders){
+    public List<Wallet> getAll( @RequestHeader(name = "Credentials") String credentials){
         try {
-            User user = authenticationHelper.tryGetUser(httpHeaders);
+            User user = authenticationHelper.tryGetUser(credentials);
             return walletService.getAllWallets();
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
+    @Operation(summary = "Get wallet by ID", description = "Retrieve a wallet by its ID.")
     @GetMapping("/{id}")
-    public Wallet getById(@PathVariable int id, @RequestHeader HttpHeaders httpHeaders) {
+    public Wallet getById(@PathVariable int id,  @RequestHeader(name = "Credentials") String credentials) {
         try {
-            User user = authenticationHelper.tryGetUser(httpHeaders);
+            User user = authenticationHelper.tryGetUser(credentials);
             return walletService.getById(id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
+    @Operation(summary = "Create a new wallet", description = "Create a new wallet.")
     @PostMapping
-    public Wallet create(@RequestHeader HttpHeaders httpHeaders, @Valid @RequestBody WalletDto dto) {
+    public Wallet create( @RequestHeader(name = "Credentials") String credentials, @Valid @RequestBody WalletDto dto) {
         try {
-            User user = authenticationHelper.tryGetUser(httpHeaders);
+            User user = authenticationHelper.tryGetUser(credentials);
             Wallet wallet = walletMapper.dtoWalletCreate(dto, user);
             walletService.create(wallet, user);
             return wallet;
@@ -82,10 +87,11 @@ public class WalletRestController {
 //        }
 //    }
 
+    @Operation(summary = "Delete wallet by ID", description = "Delete a wallet by its ID.")
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id, @RequestHeader HttpHeaders headers) {
+    public void delete(@PathVariable int id,  @RequestHeader(name = "Credentials") String credentials) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             walletService.delete(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

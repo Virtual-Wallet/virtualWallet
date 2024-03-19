@@ -33,7 +33,22 @@ public class AuthenticationHelper {
         String password = getPassword(userInfo);
         return verifyAuthentication(username, password);
     }
+    public User tryGetUser(String headers) {
 
+        if (headers == null) {
+            throw new AuthorizationException("Invalid authorization header");
+        }
+
+        String[] parts = headers.split(":");
+        if (parts.length != 2) {
+            throw new AuthorizationException("Invalid username/password format");
+        }
+
+        String username = parts[0];
+        String password = parts[1];
+
+        return verifyAuthentication(username, password);
+    }
     public User tryGetCurrentUser(HttpSession session) {
         String currentUsername = (String) session.getAttribute("currentUser");
 

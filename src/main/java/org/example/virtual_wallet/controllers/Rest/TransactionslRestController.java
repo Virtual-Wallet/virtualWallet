@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.controllers.Rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.example.virtual_wallet.exceptions.AuthorizationException;
 import org.example.virtual_wallet.exceptions.EntityNotFoundException;
@@ -39,15 +40,15 @@ public class TransactionslRestController {
         this.transactionsInternalMapper = transactionsInternalMapper;
     }
 
+    @Operation(summary = "Create a new transaction", description = "Create a new transaction.")
     @PostMapping
-    public TransactionsInternal create(@RequestHeader HttpHeaders httpHeaders,
+    public TransactionsInternal create(@RequestHeader(name = "Credentials") String credentials,
                                        @Valid @RequestBody TransactionDto dto) {
-
-        User sender = new User();
-        User recipient = new User();
+        User sender;
+        User recipient;
 
         try {
-            sender = authenticationHelper.tryGetUser(httpHeaders);
+            sender = authenticationHelper.tryGetUser(credentials);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
@@ -73,15 +74,13 @@ public class TransactionslRestController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
-
+    @Operation(summary = "Get outgoing transactions", description = "Retrieve a list of outgoing transactions for the authenticated user.")
     @GetMapping("/outgoing")
-    public List<TransactionsInternal> getOutgoing(@RequestHeader HttpHeaders httpHeaders) {
+    public List<TransactionsInternal> getOutgoing(@RequestHeader(name = "Credentials") String credentials) {
         try {
-            User user = authenticationHelper.tryGetUser(httpHeaders);
+            User user = authenticationHelper.tryGetUser(credentials);
             return service.getOutgoing(user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -90,10 +89,11 @@ public class TransactionslRestController {
         }
     }
 
+    @Operation(summary = "Get incoming transactions", description = "Retrieve a list of incoming transactions for the authenticated user.")
     @GetMapping("/incoming")
-    public List<TransactionsInternal> getIncoming(@RequestHeader HttpHeaders httpHeaders) {
+    public List<TransactionsInternal> getIncoming(@RequestHeader(name = "Credentials") String credentials) {
         try {
-            User user = authenticationHelper.tryGetUser(httpHeaders);
+            User user = authenticationHelper.tryGetUser(credentials);
             return service.getIncoming(user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
