@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add To Favorits</title>
+    <link href="../static/category.css" th:href="@{/category.css}" rel="stylesheet">
+    <link href="../static/navbar.css" th:href="@{/navbar.css}" rel="stylesheet">
+    <link href="../static/footer.css" th:href="@{/footer.css}" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="../../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!--     Template Main CSS File-->
+    <link href="../../assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+<div th:replace="~{/NavBar.html :: navbar}"></div>
+
+<br><br>
+<section id="faq" class="faq section-bg">
+    <div class="section-title">
+        <h2>Update Category</h2>
+    </div>
+    <section id="category-update-container">
+        <form id="category-update-form" action="#" th:action="@{/users/add}" th:object="${currentUser}" method="post">
+            <label id="category-update-title">Please enter username:</label>
+            <br/>
+            <input id="category-updated-name" type="text" name="username"/>
+<!--            <label class="error" th:errors="*{name}">Title error placeholder</label>-->
+            <br/>
+            <input id="update-category-button" type="submit" value="add"/>
+        </form>
+    </section>
+</section>
+<div th:replace="~{/PageFrame :: footer}"></div>
+
+<script src="../assets/vendor/aos/aos.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="../assets/vendor/php-email-form/validate.js"></script>
+<script src="../assets/js/main.js"></script>
+
+<!-- Template Main JS File -->
+<script src="../assets/js/main.js"></script>
+</script>
+</body>
+</html>

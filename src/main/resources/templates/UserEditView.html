@@ -99,9 +99,7 @@
                 <label>Phone number</label>
                 <br/>
                 <input class="input-group-text" type="text" th:field="*{phoneNumber}" th:value="${dto.phoneNumber}"/>
-                <br/><label style="color: red;display: none; font-weight: normal;" th:errors="*{phoneNumber}">Phone
-                error
-                placeholder</label>
+                <br/><label style="color: red;display: none; font-weight: normal;" th:errors="*{phoneNumber}">Phone</label>
                 <br/>
                 <p>Please enter photo URL</p>
                 <input class="input-group-text" type="text" th:field="*{photoUrl}" th:value="${dto.phoneNumber}"/>

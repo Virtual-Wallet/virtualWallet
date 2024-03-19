@@ -78,7 +78,7 @@ public class UserMvcController {
                                  Model model) {
         User user;
         if (bindingResult.hasErrors()) {
-            model.addAttribute(CURRENT_USER, userDto);
+            model.addAttribute("dto", userDto);
             return "UserEditView";
         }
         try {
@@ -98,6 +98,9 @@ public class UserMvcController {
             return "UserEditView";
         } catch (EmailDuplicateException e) {
             bindingResult.rejectValue("email", "email-exist", "Email already exists");
+            return "UserEditView";
+        } catch (Exception e) {
+            bindingResult.rejectValue("phoneNumber", "invalid-phone", "Invalid phone number");
             return "UserEditView";
         }
     }
@@ -140,7 +143,7 @@ public class UserMvcController {
     }
 
     @GetMapping("/remove/{userId}")
-    public String removeFromContactList (@PathVariable int userId, Model model, HttpSession session) {
+    public String removeFromContactList(@PathVariable int userId, Model model, HttpSession session) {
         try {
             authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e) {
@@ -159,23 +162,40 @@ public class UserMvcController {
         }
     }
 
-    @GetMapping("/add/{userId}")
-    public String addToContactList (@PathVariable int userId, Model model, HttpSession session) {
+    @GetMapping("/add")
+    public String showContactListView(HttpSession session) {
         try {
             authenticationHelper.tryGetCurrentUser(session);
+            return "AddToContactList";
+        } catch (AuthorizationException e) {
+            return "redirect:/authentication/login";
+        }
+    }
+
+    @PostMapping("/add")
+    public String addToContactList(Model model, HttpSession session, @RequestParam String username) {
+        User currentUser;
+        try {
+            currentUser = authenticationHelper.tryGetCurrentUser(session);
+            model.addAttribute("currentUser", currentUser);
         } catch (AuthorizationException e) {
             return "redirect:/authentication/login";
         }
 
-        User user = authenticationHelper.tryGetCurrentUser(session);
-
-
+        User contact;
         try {
-            userService.addUserToContactList(user, userService.getById(userId));
-            return "HomePageView";
+            contact = userService.getByUsername(username);
         } catch (EntityNotFoundException e) {
             model.addAttribute("error", e.getMessage());
             return "NotFoundView";
+        }
+
+        try {
+            userService.addUserToContactList(currentUser, contact);
+            return "redirect:/";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "UserEditView";
         }
     }
 }
