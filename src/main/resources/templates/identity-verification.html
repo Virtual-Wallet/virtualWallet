@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title> Verify identity </title>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css'>
+
+    <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="../assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+<div>
+    <div th:replace="~{/NavBar :: navbar}"></div>
+    <br><br><br>
+    <main class="cd__main">
+        <!-- Start DEMO HTML (Use the following code into your project)-->
+        <body class="container-fluid bg-body-tertiary d-block">
+
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-6 col-lg-4" style="min-width: 500px;">
+                    <div class="card bg-white mb-5 mt-5 border-0" style="box-shadow: 0 12px 15px rgba(0, 0, 0, 0.02);">
+                        <div class="card-body p-5 text-center">
+                            <h4>Verify your identity</h4>
+                            <p style="text-align: justify">Welcome to our identity verification process. To ensure the security of your account, we
+                                require a few steps for identity verification:</p>
+                            <p style="text-align: justify">1. Take a clear picture of your ID document (such as passport or driver's license). Make sure all details are visible and legible. </p>
+                            <p style="text-align: justify">2. Capture a series of three selfies. Follow the on-screen instructions for positioning and lighting.</p>
+                            <p style="text-align: justify">Once you've completed these steps, our automated system will securely process and verify
+                                your information. This helps us maintain a safe and secure environment for all our
+                                users. Thank you for your cooperation.</p>
+                                <script src="https://js.stripe.com/v3/"></script>
+
+                                 <button id="verify-button" class="btn btn-primary mb-3" type="submit" value="submit">
+                                    Verify
+                                </button>
+
+
+                            <script type="text/javascript">
+                                // Set your publishable key: remember to change this to your live publishable key in production
+                                // See your keys here: https://dashboard.stripe.com/apikeys
+                                var stripe = Stripe('pk_test_51OnmGhDmJUkFXVmInRS3yIQkBWIlNxKS9qezUKAjyVIXVtX5OTP6tj478FHiGes7eGWwc34bzJudNRPblBTUf5CK00wcHQbDE3')
+
+                                var verifyButton = document.getElementById('verify-button');
+
+                                verifyButton.addEventListener('click', function() {
+                                    // Get the VerificationSession client secret using the server-side
+                                    // endpoint you created in step 3.
+                                    fetch('/authentication/id-verification', {
+                                        method: 'POST',
+                                    })
+                                        .then(function(response) {
+                                            return response.json();
+                                        })
+                                        .then(function(session) {
+                                            // Show the verification modal.
+                                            return stripe.verifyIdentity(session.client_secret);
+                                        })
+                                        .then(function(result) {
+                                            // If `verifyIdentity` fails, you should display the error message
+                                            // using `error.message`.
+                                            if (result.error) {
+                                                alert("Please, click Verify and follow the instructions!");
+                                            } else {
+                                                window.location.href = 'submit-session';
+                                            }
+                                        })
+                                        .catch(function(error) {
+                                            console.error('Error:', error);
+                                        });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+    </main>
+</div>
+<div th:replace="~{/PageFrame :: footer}"></div>
+<!-- Vendor JS Files -->
+<script src="../assets/vendor/aos/aos.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="../assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="../assets/vendor/php-email-form/validate.js"></script>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

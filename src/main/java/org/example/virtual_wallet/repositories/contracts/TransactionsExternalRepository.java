@@ -1,5 +1,6 @@
 package org.example.virtual_wallet.repositories.contracts;
 
+import org.example.virtual_wallet.filters.TransferFilterOptions;
 import org.example.virtual_wallet.models.TransactionsExternal;
 import org.example.virtual_wallet.models.User;
 
@@ -13,4 +14,6 @@ public interface TransactionsExternalRepository {
     List<TransactionsExternal> getDeposits(User user);
 
     List<TransactionsExternal> getWithdrawals(User user);
+
+    List<TransactionsExternal> getFiltered(TransferFilterOptions filterOptions, User user);
 }

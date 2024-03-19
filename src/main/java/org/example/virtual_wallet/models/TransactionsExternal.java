@@ -1,6 +1,7 @@
 package org.example.virtual_wallet.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import org.example.virtual_wallet.enums.TransferType;
 
@@ -8,6 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "external_transactions")
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class TransactionsExternal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +40,6 @@ public class TransactionsExternal {
 
     public TransactionsExternal() {
     }
-
 
     public int getExternalTransactionId() {
         return externalTransactionId;
