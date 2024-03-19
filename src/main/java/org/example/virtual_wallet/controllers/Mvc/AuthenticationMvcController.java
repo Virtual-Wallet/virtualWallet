@@ -15,12 +15,10 @@ import org.example.virtual_wallet.enums.AccountStatus;
 import org.example.virtual_wallet.exceptions.*;
 import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.helpers.mappers.UserMapper;
-import org.example.virtual_wallet.models.Sessions;
 import org.example.virtual_wallet.models.Token;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.models.dtos.LogInDto;
 import org.example.virtual_wallet.models.dtos.UserDto;
-import org.example.virtual_wallet.repositories.SessionsRepository;
 import org.example.virtual_wallet.services.contracts.EmailService;
 import org.example.virtual_wallet.services.contracts.TokenService;
 import org.example.virtual_wallet.services.contracts.UserService;
@@ -47,20 +45,16 @@ public class AuthenticationMvcController {
     private final UserMapper userMapper;
     private final AuthenticationHelper authenticationHelper;
 
-    private final SessionsRepository sessionsRepository;
-
     public AuthenticationMvcController(EmailService emailService,
                                        UserService userService,
                                        TokenService tokenService,
                                        UserMapper userMapper,
-                                       AuthenticationHelper authenticationHelper,
-                                       SessionsRepository sessionsRepository) {
+                                       AuthenticationHelper authenticationHelper) {
         this.emailService = emailService;
         this.userService = userService;
         this.tokenService = tokenService;
         this.userMapper = userMapper;
         this.authenticationHelper = authenticationHelper;
-        this.sessionsRepository = sessionsRepository;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -199,6 +193,10 @@ public class AuthenticationMvcController {
             return "redirect:/authentication/login";
         }
 
+        User user = authenticationHelper.tryGetCurrentUser(session);
+        userService.advanceAccountStatus(user);
+        userService.advanceAccountStatus(user);
+
         return "submitted";
     }
 
@@ -224,11 +222,6 @@ public class AuthenticationMvcController {
         VerificationSession verificationSession = VerificationSession.create(params);
 
         Map<String, String> responseBody = new HashMap<>();
-
-        Sessions secret = new Sessions();
-        secret.setSecret(verificationSession.getClientSecret());
-
-        sessionsRepository.create(secret);
 
         responseBody.put("client_secret", verificationSession.getClientSecret());
 
@@ -263,7 +256,8 @@ public class AuthenticationMvcController {
                 // All the verification checks passed
                 verificationSession = (VerificationSession) dataObjectDeserializer.getObject().get();
                 if (dataObjectDeserializer.getObject().isPresent()) {
-                    if (sessionsRepository.getSecret(verificationSession.getClientSecret()) != null) System.out.println("yes");;
+
+
                 } else {
                     // Deserialization failed, probably due to an API version mismatch.
                     // Refer to the Javadoc documentation on `EventDataObjectDeserializer` for
