@@ -61,7 +61,7 @@
                         <a th:href="@{/cards/withdraw}">
                             <button type="button" class="buttonWithdraw" th:text="#{withdraw.label}">Withdraw</button>
                         </a>
-                        <a th:href="@{/cards/withdraw}">
+                        <a th:href="@{/wallets/transfer}">
                             <button type="button" class="buttonTransfer" th:text="#{transfer.label}">Transfer</button>
                         </a>
                     </div>
@@ -106,7 +106,7 @@
                                                     class="fa fa-trash"></i></button>
                                         </a>
 
-                                        <a th:href="@{/users/remove/{contactId}(contactId=${contact.id})}">
+                                        <a th:href="@{/wallets/transfer}">
                                             <button class="edit-btn" value='Transfer' title="Transfer">
                                                 <i class="fas fa-exchange-alt"></i></button>
                                         </a>
