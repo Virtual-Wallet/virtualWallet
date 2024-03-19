@@ -156,6 +156,10 @@
     background: #209dd8;
     color: #fff;
     text-decoration: none;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
 }
 
 #footer .footer-bottom {
