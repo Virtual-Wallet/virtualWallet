@@ -32,6 +32,11 @@ public class AdminMvc {
         this.userService = userService;
     }
 
+    @ModelAttribute("isAuthenticated")
+    public boolean populateIsAuthenticated(HttpSession session) {
+        return session.getAttribute("currentUser") != null;
+    }
+
     @GetMapping
     public String showAdminView(
             @ModelAttribute("filter") UserFilterDto userFilterDto,
@@ -42,6 +47,7 @@ public class AdminMvc {
         User user;
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
+            model.addAttribute("currentUser", user);
         } catch (AuthorizationException e) {
             return "redirect:/authentication/login";
         }
@@ -68,7 +74,7 @@ public class AdminMvc {
             }
             model.addAttribute("filterOptions", userFilterDto);
             model.addAttribute("users", usersPage);
-            model.addAttribute("currentRole",user.getRoleType());
+            model.addAttribute("currentRole", user.getRoleType());
 
             return "AdminView";
         } catch (UnauthorizedOperationException e) {

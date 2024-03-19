@@ -115,11 +115,24 @@
                     <h2>Contact List</h2>
                 </div>
                 <div th:if="${currentUser.contactLists.isEmpty()}">
-                    <h3 id="no-categories" th:text="#{contact.title.empty}">YOU STILL HAVE NO CONTACTS</h3>
+                    <a th:href="@{/users/add}"style="  display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;">
+                        <button type="submit" class="buttonWithdraw" >Add
+                        </button>
+                    </a>
+                    <h3 id="no-categories" th:text="#{contact.title.empty}" style="  display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;">YOU STILL HAVE NO CONTACTS</h3>
                 </div>
 
                 <div id="contact-list" th:unless="${currentUser.contactLists.isEmpty()}">
                     <div class="faq-list">
+                        <a th:href="@{/users/add}">
+                            <button type="submit" class="buttonWithdraw">Add</button>
+                        </a>
                         <ul>
 
                             <!-- Loop through user contact list -->
