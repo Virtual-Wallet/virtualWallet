@@ -50,22 +50,44 @@ public class HomeMvcController {
 //        return userService.getAll().size();
 //    }
 
+
     @ModelAttribute("allCurrencies")
     public int allCurrencies() {
         return currencyService.getAll().size();
     }
+    @ModelAttribute("transactionsIncoming")
+    public List<TransactionsInternal> transactionsIncoming() {
+        return new ArrayList<>();
+    }
+    @ModelAttribute("transactionsOutgoing")
+    public List<TransactionsInternal> transactionsOutgoing() {
+        return new ArrayList<>();
+    }
 
     @GetMapping
     public String showHomePage(Model model, HttpSession session) {
-//        model.addAttribute("usersCount", userService.getAll(new FilterOptionsUser()).size());
-//        model.addAttribute("currenciesCount", currencyRepository.getAll().size());
-//        model.addAttribute("transactionsCount", transactionService.get(
-//                        new FilterOptionsTransaction(null, null, null, null, null, null, null, null))
-//                .size());
+
+
+//        User user;
+//
+//        try {
+//            user = authenticationHelper.tryGetCurrentUser(session);
+//        } catch (AuthorizationException e) {
+//            return "redirect:/authentication/login";
+//        }
 
         if (populateIsAuthenticated(session)) {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+
             String currentUsername = (String) session.getAttribute("currentUser");
             model.addAttribute("currentUser", userService.getByUsername(currentUsername));
+            List<TransactionsInternal> transactionsIncoming = transactionsInternalServices.getIncoming(user);
+            List<TransactionsInternal> transactionsOutgoing = transactionsInternalServices.getOutgoing(user);
+            model.addAttribute("transactionsIncoming", transactionsIncoming);
+            model.addAttribute("transactionsOutgoing", transactionsOutgoing);
+            model.addAttribute("currentUser", user);
+            model.addAttribute("transactionDto", new TransactionsInternal());
+
             return "HomePageView";
         } else {
             return "index";
@@ -73,7 +95,6 @@ public class HomeMvcController {
 
 
     }
-
 
 
 }

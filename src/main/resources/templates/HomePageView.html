@@ -23,6 +23,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Include DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+
+
 </head>
 
 
@@ -145,6 +149,90 @@
         </div>
     </div>
 </section>
+
+<section id="faqS" class="faq section-bg">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+            <h2>My incoming transactions</h2>
+            <br><br>
+        </div>
+
+        <div id="categories" th:unless="${transactionsIncoming.isEmpty()}">
+            <div class="faq-list">
+<!--                <ul>-->
+
+                        <div class="table-responsive-sm">
+                            <table class="table table-hover table-sm transactionsTable">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Currency</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Recipient</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="transaction : ${transactionsIncoming}">
+                                    <td th:text="${transaction.id}"></td>
+                                    <td th:text="${transaction.amount}"></td>
+                                    <td th:text="${transaction.currency.currency}"></td>
+                                    <td th:text="${transaction.timestamp}"></td>
+                                    <td th:text="${transaction.recipientWallet.getUser().username}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+<!--                </ul>-->
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="faqU" class="faq section-bg">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+            <h2>My outgoing transactions</h2>
+            <br><br>
+        </div>
+        <!--//STOP-->
+        <div th:unless="${transactionsOutgoing.isEmpty()}">
+            <div class="faq-list">
+                <ul>
+                        <div class="table-responsive-sm">
+                            <table class="table table-hover table-sm transactionsTable">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Currency</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Recipient</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="transaction : ${transactionsOutgoing}">
+                                    <td th:text="${transaction.id}"></td>
+                                    <td th:text="${transaction.amount}"></td>
+                                    <td th:text="${transaction.currency.currency}"></td>
+                                    <td th:text="${transaction.timestamp}"></td>
+                                    <td th:text="${transaction.recipientWallet.getUser().username}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 <!-- ======= Team Section ======= -->
 <section id="team" class="team section-bg">
     <div class="container" data-aos="fade-up">
@@ -219,7 +307,14 @@
 
 <!-- Template Main JS File -->
 <script src="../assets/js/main.js"></script>
-
+<!-- Template and Script for Tables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.transactionsTable').DataTable();
+    });
+</script>
 
 <style>
     /* Styles for the wallet balance */
