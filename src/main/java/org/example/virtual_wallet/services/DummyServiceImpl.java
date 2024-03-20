@@ -28,7 +28,7 @@ public class DummyServiceImpl implements DummyService {
         return random > 50;
     }
 
-    private void expirationDateIsValid(String expirationPeriod) {
+    public void expirationDateIsValid(String expirationPeriod) {
         String[] expirationDateData = expirationPeriod.split("/");
 
         int expMonth = Integer.parseInt(expirationDateData[0]);
