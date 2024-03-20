@@ -43,6 +43,9 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public void delete(int walletId, User user) {
         Wallet wallet = getById(walletId);
+        if (wallet == null) {
+            throw new EntityNotFoundException("Wallet with ID " + walletId + " not found");
+        }
         authorizationHelper.validateUserIsWalletOwner(user, wallet);
         validateBalanceIfZero(wallet);
         wallet.setDeleted(true);
