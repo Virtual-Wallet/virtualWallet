@@ -50,16 +50,17 @@
             <div th:if="${user.getCards().isEmpty()}">
                 <br><br>
                 <h3 id="no-categories" th:text="#{cards.title.empty}">YOU STILL HAVE NO CARDS</h3>
-            </div>
 
-            <div style="margin-top: 50px;">
-                <div class="centered">
-                    <a th:href="@{/cards/new}">
-                        <div class="plus" id="plus">
-                            <div class="plus__line plus__line--v"></div>
-                            <div class="plus__line plus__line--h"></div>
-                        </div>
-                    </a>
+
+                <div style="margin-top: 50px;">
+                    <div class="centered">
+                        <a th:href="@{/cards/new}">
+                            <div class="plus" id="plus">
+                                <div class="plus__line plus__line--v"></div>
+                                <div class="plus__line plus__line--h"></div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

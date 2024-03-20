@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create a saving wallet</title>
+    <title>Home</title>
     <link href="../static/navbar.css" th:href="@{/navbar.css}" rel="stylesheet">
     <link href="../static/footer.css" th:href="@{/footer.css}" rel="stylesheet">
 
@@ -146,7 +146,7 @@
                                                     class="fa fa-trash"></i></button>
                                         </a>
 
-                                        <a th:href="@{/wallets/transfer}">
+                                        <a th:href="@{/wallets/transfer/{contactId}(contactId=${contact.id})}">
                                             <button class="edit-btn" value='Transfer' title="Transfer">
                                                 <i class="fas fa-exchange-alt"></i></button>
                                         </a>

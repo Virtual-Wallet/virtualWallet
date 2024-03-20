@@ -258,4 +258,73 @@ public class WalletMvcController {
 
     }
     }
+
+    @GetMapping("/transfer/{recipientId}")
+    public String showContactTransferPage(@PathVariable int recipientId,
+            @Valid Model model, HttpSession session){
+
+        User user;
+
+        try{
+            user = authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e){
+            return "redirect:/authentication/login";
+        }
+
+        if (user.getWallet() == null){
+            return "redirect:/";
+        }
+        try {
+            User recipient = userService.getById(recipientId);
+            TransactionDtoIn transactionDtoIn = new TransactionDtoIn();
+            transactionDtoIn.setTargetUserIdentity(recipient.getUsername());
+            model.addAttribute("user", user);
+            model.addAttribute("recipient", recipient);
+            model.addAttribute("transactionDto", transactionDtoIn);
+            model.addAttribute("categories", categoryService.getAllUserCategories(user));
+            return "TransferView";
+        }catch (EntityNotFoundException e){
+            model.addAttribute("error", e.getMessage());
+            return "redirect:/categories";
+        }
+    }
+    @PostMapping("/transfer/{recipientId}")
+    public String transfer(@PathVariable int recipientId,
+            @Valid @ModelAttribute("transactionDto") TransactionDtoIn transactionDto,
+            BindingResult bindingResult,
+            Model model,
+            HttpSession session) {
+
+        User user;
+
+        try{
+            user = authenticationHelper.tryGetCurrentUser(session);
+        }catch (AuthorizationException e){
+            return "redirect:/authentication/login";
+        }
+
+        if (user.getWallet() == null){
+            throw new InvalidOperationException("You do not have wallet created yet!");
+        }
+
+        if (bindingResult.hasErrors()){
+            return "TransferView";
+        }
+
+        try {
+            TransactionsInternal transactionsInternal = transactionsInternalMapper.createDto(user, transactionDto);
+            transactionsInternalService.create(transactionsInternal);
+
+            return "SuccessfulTransactionView";
+        } catch (EntityNotFoundException e){
+            model.addAttribute("error", e.getMessage());
+            return "NotFoundView";
+        }catch (InsufficientAmountException | InvalidOperationException | IllegalArgumentException e){
+            model.addAttribute("error", e.getMessage());
+            return "UnsuccessfulBankOperationView";
+        }  catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
