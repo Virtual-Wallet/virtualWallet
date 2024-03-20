@@ -52,10 +52,10 @@ public class CurrencyServiceImpl implements CurrencyService {
         return currencyRepository.getById(id);
     }
 
-    @Override
-    public List<Currency> getAll() {
-        return currencyRepository.getAll();
-    }
+        @Override
+        public List<Currency> getAll() {
+            return currencyRepository.getAll();
+        }
 
     @Override
     public void update(CurrencyDto currencyDto, Currency target) {
