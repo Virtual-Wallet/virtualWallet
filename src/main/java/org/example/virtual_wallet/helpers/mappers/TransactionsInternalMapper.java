@@ -39,10 +39,6 @@ public class TransactionsInternalMapper {
         transaction.setTimestamp(timestamp);
         transaction.setCurrency(currencyService.get(dto.getCurrency()));
 
-        // GV TODO: Should findByCategoryName
-        transaction.setSpendingCategory(categoryService.getById(1));
-//        transaction.setSpendingCategory(categoryService.getByCategory(dto.getCategory()));
-        System.out.println();
         return transaction;
     }
 
