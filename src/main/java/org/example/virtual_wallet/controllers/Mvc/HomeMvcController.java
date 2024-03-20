@@ -84,14 +84,7 @@ public class HomeMvcController {
         } else {
             return "index";
         }
-//
-//
-//        try {
-//
-//            return "HomePageView";
-//        } catch (EntityNotFoundException e) {
-//            return "NotFoundView";
-//        }
+
 
     }
 
