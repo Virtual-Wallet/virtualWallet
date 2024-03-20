@@ -1,123 +1,135 @@
-package org.forum.web.forum;
+package org.example.virtual_wallet;
 
-import org.forum.web.forum.models.*;
-import org.forum.web.forum.models.filters.PostFilterOptions;
-import org.forum.web.forum.models.filters.UserFilterOptions;
+import org.example.virtual_wallet.enums.AccountStatus;
+import org.example.virtual_wallet.enums.RoleType;
+import org.example.virtual_wallet.enums.TransferType;
+import org.example.virtual_wallet.models.*;
+import org.example.virtual_wallet.models.Currency;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.*;
 
 public class Helpers {
-    public static Post createMockPost() {
-        var mockPost = new Post();
-        Set<LikePost> likes = new HashSet<>();
-        Set<Tag> tags = new HashSet<>();
-        mockPost.setContent("This is a mock content for post creation.");
-        mockPost.setTitle("Mock title for mock post.");
-        mockPost.setId(1);
-        mockPost.setCreator(createMockUser());
-        mockPost.setCreationDate(new Timestamp(2024, 2, 17, 13, 13, 13, 13));
-        mockPost.setNewLike(createMockUser());
-        mockPost.setTags(tags);
-        return mockPost;
-    }
 
-    public static Comment createMockComment() {
-        var mockComment = new Comment();
-        Set<Like> likes = new HashSet<>();
-
-        mockComment.setId(1);
-        mockComment.setCreator(createMockUser());
-        mockComment.setPost(createMockPost());
-        mockComment.setContent("This is a mock content for comment creation.");
-        mockComment.setCreationDate(new Timestamp(2024, 2, 18, 18, 18, 18, 18));
-
-        return mockComment;
-    }
-
-    public static Like createMockLikeComment() {
-        var mockLikeComment = new Like();
-        mockLikeComment.setId(1);
-        mockLikeComment.setUser(createMockUser());
-        mockLikeComment.setComment(createMockComment());
-
-        return mockLikeComment;
-    }
-
-    public static User createMockUser() {
+    public static User createMockUserRegular() {
         var mockUser = new User();
-        mockUser.setUserId(1);
-        mockUser.setAdminStatus(false);
-        mockUser.setEmail("mockmail@gmail.com");
-        mockUser.setPassword("Aa123456@");
+        mockUser.setId(1);
         mockUser.setUsername("mockUsername");
-        mockUser.setFirstName("MockFirstName");
-        mockUser.setLastName("MockLastName");
+        mockUser.setPassword("Aa123456@");
+        mockUser.setEmail("mockmail@gmail.com");
+        mockUser.setPhoneNumber("0888123456");
+        mockUser.setCreationDate(Timestamp.valueOf(LocalDate.now().toString()));
+        mockUser.setAccountStatus(AccountStatus.ACTIVE);
+        mockUser.setRoleType(RoleType.REGULAR);
 
         return mockUser;
     }
 
-    public static LikePost createMockLike() {
-        var mockLike = new LikePost();
-        mockLike.setId(1);
-        mockLike.setPost(createMockPost());
-        mockLike.setUser(createMockUser());
-        return mockLike;
+    public static User createMockUserAdmin() {
+        var mockUser = new User();
+        Set<Card> mockCards = new HashSet<>();
+        mockUser.setId(2);
+        mockUser.setUsername("mockUsername");
+        mockUser.setPassword("Aa123456@");
+        mockUser.setEmail("mockmail@gmail.com");
+        mockUser.setPhoneNumber("0888123456");
+        mockUser.setCreationDate(Timestamp.valueOf(LocalDate.now().toString()));
+        mockUser.setAccountStatus(AccountStatus.ACTIVE);
+        mockUser.setRoleType(RoleType.ADMIN);
+        mockUser.setCards(mockCards);
+
+        return mockUser;
     }
 
-    public static Tag createMockTag() {
-        var mockTag = new Tag();
-        mockTag.setId(1);
-        mockTag.setContent("This is a mock tag.");
-        return mockTag;
+    public static User createMockUserBanned() {
+        var mockUser = new User();
+        Set<Card> mockCards = new HashSet<>();
+        mockUser.setId(3);
+        mockUser.setUsername("mockUsername");
+        mockUser.setPassword("Aa123456@");
+        mockUser.setEmail("mockmail@gmail.com");
+        mockUser.setPhoneNumber("0888123456");
+        mockUser.setCreationDate(Timestamp.valueOf(LocalDate.now().toString()));
+        mockUser.setAccountStatus(AccountStatus.ACTIVE);
+        mockUser.setRoleType(RoleType.BANNED);
+        mockUser.setCards(mockCards);
+
+        return mockUser;
     }
 
-    public static PostFilterOptions createMockPostFilterOptions() {
-        return new PostFilterOptions(
-                "user",
-                "mockTitle",
-                "sort",
-                "order"
-        );
+    public static Wallet createMockWallet() {
+        var mockWallet = new Wallet();
+        mockWallet.setId(1);
+        mockWallet.setBalance(1000.0);
+        mockWallet.setActive(true);
+        mockWallet.setDeleted(false);
+
+        return mockWallet;
     }
 
-    public static List<Post> createMockPostList() {
-        var mockPostList = new ArrayList<Post>();
-        mockPostList.add(createMockPost());
-        return mockPostList;
+    public static Currency createMockCurrency() {
+        var mockCurrency = new Currency();
+        mockCurrency.setId(1);
+        mockCurrency.setCurrency("EUR");
+
+        return mockCurrency;
     }
 
-    public static List<Comment> createMockCommentList() {
-        var mockCommentList = new ArrayList<Comment>();
-        mockCommentList.add(createMockComment());
-        return mockCommentList;
+    public static TransactionsExternal transactionDeposit() {
+        var transactionDeposit = new TransactionsExternal();
+        transactionDeposit.setExternalTransactionId(1);
+        transactionDeposit.setType(TransferType.DEPOSIT);
+        transactionDeposit.setTimestamp(Timestamp.valueOf(LocalDate.now().toString()));
+        transactionDeposit.setAmount(1000);
+
+        return transactionDeposit;
     }
 
-    public static User createMockBanUser() {
-        var blockUser = new User();
-        blockUser.setUserId(3);
-        blockUser.setUsername("blockedUser");
-        blockUser.setBanStatus(true);
-        return blockUser;
+    public static TransactionsExternal transactionWithdrawal() {
+        var transactionWithdrawal = new TransactionsExternal();
+        transactionWithdrawal.setExternalTransactionId(1);
+        transactionWithdrawal.setType(TransferType.WITHDRAWAL);
+        transactionWithdrawal.setTimestamp(Timestamp.valueOf(LocalDate.now().toString()));
+        transactionWithdrawal.setAmount(1000);
+
+        return transactionWithdrawal;
     }
 
-    public static User createMockAdminUser() {
-        var adminUser = new User();
-        adminUser.setUserId(3);
-        adminUser.setUsername("adminUser");
-        adminUser.setAdminStatus(true);
+    public static TransactionsInternal transactionsIncoming() {
+        var transactionsIncoming = new TransactionsInternal();
+        transactionsIncoming.setId(1);
+        transactionsIncoming.setAmount(50);
+        transactionsIncoming.setTimestamp(Timestamp.valueOf(LocalDate.now().toString()));
 
-        return adminUser;
+        return transactionsIncoming;
     }
 
-    public static UserFilterOptions createMockUserFilterOptions() {
-        return new UserFilterOptions(
-                "firstName",
-                "lastName",
-                "username",
-                "email",
-                "sortBy",
-                "sortOrder"
-        );
+    public static TransactionsInternal transactionsOutgoing() {
+        var transactionsOutgoing = new TransactionsInternal();
+        transactionsOutgoing.setId(2);
+        transactionsOutgoing.setAmount(20);
+        transactionsOutgoing.setTimestamp(Timestamp.valueOf(LocalDate.now().toString()));
+
+        return transactionsOutgoing;
     }
+
+    public static SpendingCategory spendingCategory() {
+        var spendingCategory = new SpendingCategory();
+        spendingCategory.setSpendingCategoryId(1);
+        spendingCategory.setName("mockCategory");
+        spendingCategory.setDeleted(false);
+
+        return spendingCategory;
+    }
+
+    public static Token mockToken() {
+        var mockToken = new Token();
+        mockToken.setId(1);
+        mockToken.setCode("12345678");
+        mockToken.setActive(true);
+
+        return mockToken;
+    }
+
 }
