@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+>
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
@@ -31,7 +32,6 @@
 
 <section id="faq" class="faq section-bg">
     <div class="container">
-        //admin panel
         <br><br>
     <div class="row">
         <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1"
@@ -64,6 +64,10 @@
                         </a>
                         <a th:href="@{/wallets/transfer}">
                             <button type="button" class="buttonTransfer" th:text="#{transfer.label}">Transfer</button>
+                        </a>
+
+                        <a th:href="@{/admin}" th:if="${currentUser.roleType == AdminRole}">
+                            <button  type="button" class="buttonTransfer" >Admin panel</button>
                         </a>
                     </div>
                 </div>

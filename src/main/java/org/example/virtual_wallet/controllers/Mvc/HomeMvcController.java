@@ -34,12 +34,16 @@ public class HomeMvcController {
     public boolean populateIsAuthenticated(HttpSession session) {
         return session.getAttribute("currentUser") != null;
     }
-
-    @ModelAttribute("isAdmin")
-    public boolean populateIsAdmin(HttpSession session) {
-        User user = authenticationHelper.tryGetCurrentUser(session);
-        return user.getRoleType().equals(RoleType.ADMIN);
+    @ModelAttribute("AdminRole")
+    public RoleType populateIsAdmin() {
+      return RoleType.ADMIN;
     }
+
+//    @ModelAttribute("isAdmin")
+//    public boolean populateIsAdmin(HttpSession session) {
+//        User user = authenticationHelper.tryGetCurrentUser(session);
+//        return user.getRoleType().equals(RoleType.ADMIN);
+//    }
 
 //    @ModelAttribute("allUsers")
 //    public int allUsers() {
@@ -69,6 +73,7 @@ public class HomeMvcController {
 
 
     }
+
 
 
 }
