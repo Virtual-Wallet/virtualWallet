@@ -84,12 +84,6 @@ public class SpendingCategoryServiceImpl implements SpendingCategoryService {
         return transactionsInternalService.getOutgoingPerCategory(categoryID, user);
     }
 
-    private void checkCreator(int categoryId, User user) {
-        if (categoryId != user.getId()) {
-            throw new UnauthorizedOperationException("You cannot modify the category, as you are not the creator!");
-        }
-    }
-
     private void checkAnyTransactions(int categoryId, User user) {
         try {
             transactionsInternalService.getOutgoingPerCategory(categoryId, user);
