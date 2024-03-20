@@ -21,7 +21,7 @@ public class Helpers {
         mockUser.setPhoneNumber("0888123456");
         mockUser.setAccountStatus(AccountStatus.ACTIVE);
         mockUser.setRoleType(RoleType.REGULAR);
-
+        mockUser.setCards(new HashSet<>());
         return mockUser;
     }
 
@@ -48,7 +48,7 @@ public class Helpers {
         mockUser.setPassword("Aa123456@");
         mockUser.setEmail("mockmail@gmail.com");
         mockUser.setPhoneNumber("0888123456");
-        mockUser.setCreationDate(Timestamp.valueOf(LocalDate.now().toString()));
+        mockUser.setCreationDate(Timestamp.valueOf("2024-03-20 12:34:56.123456"));
         mockUser.setAccountStatus(AccountStatus.ACTIVE);
         mockUser.setRoleType(RoleType.BANNED);
         mockUser.setCards(mockCards);
@@ -128,6 +128,31 @@ public class Helpers {
         mockToken.setActive(true);
 
         return mockToken;
+    }
+
+    public static Card createMockCard() {
+        var mockCard = new Card();
+        mockCard.setUser(createMockUserRegular());
+        mockCard.setId(1);
+        mockCard.setCardNumber("1234512345123454");
+        mockCard.setCardholderName("Mock Holder");
+        mockCard.setExpirationDate("12/50");
+        mockCard.setCsv("123");
+        mockCard.setDeleted(false);
+
+
+        return mockCard;
+    }
+    public static Card createMockCardTwo() {
+        var mockCard = new Card();
+        mockCard.setId(2);
+        mockCard.setCardNumber("1234512345123454");
+        mockCard.setCardholderName("Mock Holder");
+        mockCard.setExpirationDate("12/33");
+        mockCard.setCsv("123");
+        mockCard.setDeleted(false);
+
+        return mockCard;
     }
 
 }

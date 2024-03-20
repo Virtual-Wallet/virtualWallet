@@ -51,6 +51,7 @@ public class CardServiceImpl implements CardService {
         authorizationHelper.validateUserIsCardOwner(user, card);
         card.setDeleted(true);
         cardRepository.update(card);
+        user.getCards().remove(card);
     }
 
     @Override
@@ -74,23 +75,17 @@ public class CardServiceImpl implements CardService {
         return cardRepository.getByCardNumber(cardNumber);
     }
 
-    private void verifyCardNumber(Card card){
-        boolean isExisting = true;
-        try {
-            Card duplicate = getByCardNumber(card.getCardNumber());
-            if(duplicate.getId() == card.getId()){
-                isExisting = false;
-            }
-        } catch (EntityNotFoundException e) {
-            isExisting = false;
-        }
-        if (isExisting){
+    private void verifyCardNumber(Card card) {
+        Card duplicate = getByCardNumber(card.getCardNumber());
+        if (duplicate != null && duplicate.getCardNumber().equals(card.getCardNumber())) {
             throw new EntityDuplicateException("Card", "number", card.getCardNumber());
         }
-
     }
 
     private void expirationDateIsValid(String expirationPeriod) {
+        if (expirationPeriod == null) {
+            throw new IllegalArgumentException("Expiration period cannot be null"); // Or handle it differently
+        }
         String[] expirationDateData = expirationPeriod.split("/");
 
         int expMonth = Integer.parseInt(expirationDateData[0]);

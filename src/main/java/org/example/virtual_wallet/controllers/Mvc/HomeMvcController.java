@@ -32,7 +32,6 @@ public class HomeMvcController {
         this.userService = userService;
         this.currencyService = currencyService;
         this.authenticationHelper = authenticationHelper;
-
         this.transactionsInternalService = transactionsInternalService;
     }
 
