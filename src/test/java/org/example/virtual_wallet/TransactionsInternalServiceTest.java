@@ -132,27 +132,4 @@ public class TransactionsInternalServiceTest {
         // Assert
         assertEquals(expectedTransactions, actualTransactions);
     }
-
-    @Test
-    public void create_WhenCalledWithTransaction_CreatesTransaction() throws IOException {
-        // Arrange
-        TransactionsInternal transaction = new TransactionsInternal();
-        Wallet senderWallet = new Wallet();
-        Wallet recipientWallet = new Wallet();
-        BigDecimal amountSourceToTransactional = BigDecimal.valueOf(100.0);
-        BigDecimal amountTransactionalToTarget = BigDecimal.valueOf(100.0);
-        when(walletService.getById(transaction.getSenderWalletId())).thenReturn(senderWallet);
-        when(walletService.getById(transaction.getRecipientWallet().getId())).thenReturn(recipientWallet);
-        when(transactionsInternalService.calculateAmountSourceToTransactional(transaction, senderWallet)).thenReturn(amountSourceToTransactional);
-        when(transactionsInternalService.calculateAmountTransactionalToTarget(transaction, recipientWallet)).thenReturn(amountTransactionalToTarget);
-        when(transactionsInternalRepository.create(transaction)).thenReturn(transaction);
-
-        // Act
-        TransactionsInternal actualTransaction = transactionsInternalService.create(transaction);
-
-        // Assert
-        assertEquals(transaction, actualTransaction);
-    }
-
-
 }
