@@ -22,6 +22,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Include DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+
+
 </head>
 
 
@@ -33,46 +37,19 @@
     <div class="container">
         //admin panel
         <br><br>
-        <div class="row">
-            <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1"
-                 data-aos="fade-up" data-aos-delay="200">
+    <div class="row">
+        <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1"
+             data-aos="fade-up" data-aos-delay="200">
 
-                <div th:if="${currentUser.wallet == null}">
-                    <h3 id="no-wallets" th:text="#{wallet.title.empty}">YOU STILL HAVE NO WALLET</h3>
-                    <div class="buttons">
-                        <a th:href="@{/wallets/new}">
-                            <button type="submit" class="buttonDeposit" th:text="#{wallet.label.create}">Create Wallet
-                            </button>
+            <div th:if="${currentUser.wallet == null}">
+                <h3 id="no-wallets" th:text="#{wallet.title.empty}">YOU STILL HAVE NO WALLET</h3>
+                <div class="buttons">
+                     <a th:href="@{/wallets/new}">
+                            <button type="submit" class="buttonDeposit" th:text="#{wallet.label.create}">Create Wallet</button>
                         </a>
                     </div>
-                </div>
-
-                <div class="containerWallet" data-aos="fade-up"
-                     th:if="${currentUser.wallet != null and currentUser.wallet.isActive()}">
-                    <div class="section-title">
-                        <h2>Wallet</h2>
-                    </div>
-                    <p class="wallet-balance">
-                        Balance: <span th:text="${currentUser.getWallet().getBalance()}"></span>
-                        <span class="currency" th:text="${currentUser.getWallet().getCurrency().currency}"></span>
-                    </p>
-                    <div class="buttons">
-                        <div>
-                            <a th:href="@{/cards/deposit}">
-                                <button type="submit" class="buttonDeposit" th:text="#{deposit.label}">Deposit</button>
-                            </a>
-                            <a th:href="@{/cards/withdraw}">
-                                <button type="button" class="buttonWithdraw" th:text="#{withdraw.label}">Withdraw
-                                </button>
-                            </a>
-                            <a th:href="@{/cards/withdraw}">
-                                <button type="button" class="buttonTransfer" th:text="#{transfer.label}">Transfer
-                                </button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
+
             <div class="containerWallet" data-aos="fade-up" th:if="${currentUser.wallet != null and currentUser.wallet.isActive()}">
                 <div class="section-title">
                     <h2>Wallet</h2>
@@ -97,10 +74,10 @@
             </div>
         </div>
 
-            <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
-                <img src="../assets/img/hero-img.png" class="img-fluid animated" alt="">
-            </div>
+        <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
+            <img src="../assets/img/hero-img.png" class="img-fluid animated" alt="">
         </div>
+    </div>
     </div>
 </section>
 <!-- End About Us Section -->
@@ -168,68 +145,8 @@
         </div>
     </div>
 </section>
-<!-- ======= Team Section ======= -->
-<section id="team" class="team section-bg">
-    <div class="container" data-aos="fade-up">
 
-        <div class="section-title">
-            <h2>Team</h2>
-        </div>
-
-        <div class="row">
-
-            <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="100">
-                <div class="member d-flex align-items-start">
-                    <div class="pic"><img src="../assets/img/team/Katrin.jpg" class="img-fluid" alt=""></div>
-                    <div class="member-info">
-                        <h4>Katrin Panayotova</h4>
-                        <span>Junior Java Developer</span>
-                        <p>Kpanayotova98@gmail.com</p>
-                        <div class="social">
-                            <a href="https://www.linkedin.com/in/katrinpanayotova?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app">
-                                <i class="ri-linkedin-box-fill"></i> </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6 mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="200">
-                <div class="member d-flex align-items-start">
-                    <div class="pic"><img src="../assets/img/team/Grisha.png" class="img-fluid" alt=""></div>
-                    <div class="member-info">
-                        <h4>Grisha Daradzhanov</h4>
-                        <span>Junior Java Developer</span>
-                        <p>daradjanov@gmail.com</p>
-                        <div class="social">
-                            <a href="https://www.linkedin.com/in/grisha-daradjanov-b2b6b02a7/"> <i
-                                    class="ri-linkedin-box-fill"></i> </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6 mt-4" data-aos="zoom-in" data-aos-delay="300">
-                <div class="member d-flex align-items-start">
-                    <div class="pic"><img src="../assets/img/team/Georgi.png" class="img-fluid" alt=""></div>
-                    <div class="member-info">
-                        <h4>Georgi Valchanov</h4>
-                        <span>Junior Java Developer</span>
-                        <p>valchanov.biz@gmail.com</p>
-                        <div class="social">
-                            <a href="https://www.linkedin.com/in/g-valchanov/"> <i class="ri-linkedin-box-fill"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</section><!-- End Team Section -->
-
-<br><br>
-
-<section id="faq" class="faq section-bg">
+<section id="faqS" class="faq section-bg">
     <div class="container" data-aos="fade-up">
 
         <div class="section-title">
@@ -239,9 +156,8 @@
 
         <div id="categories" th:unless="${transactionsIncoming.isEmpty()}">
             <div class="faq-list">
-                <ul>
-                    <!-- Loop through user categories -->
-                    <li>
+<!--                <ul>-->
+
                         <div class="table-responsive-sm">
                             <table class="table table-hover table-sm transactionsTable">
                                 <thead class="thead-dark">
@@ -264,26 +180,25 @@
                                 </tbody>
                             </table>
                         </div>
-                    </li>
-                </ul>
+
+<!--                </ul>-->
             </div>
         </div>
+    </div>
 </section>
 
 
-<section id="faq" class="faq section-bg">
+<section id="faqU" class="faq section-bg">
     <div class="container" data-aos="fade-up">
 
         <div class="section-title">
             <h2>My outgoing transactions</h2>
             <br><br>
         </div>
-<!--//STOP-->
+        <!--//STOP-->
         <div th:unless="${transactionsOutgoing.isEmpty()}">
             <div class="faq-list">
                 <ul>
-                    <!-- Loop through user categories -->
-                    <li>
                         <div class="table-responsive-sm">
                             <table class="table table-hover table-sm transactionsTable">
                                 <thead class="thead-dark">
@@ -306,11 +221,71 @@
                                 </tbody>
                             </table>
                         </div>
-                    </li>
+
                 </ul>
             </div>
         </div>
+    </div>
 </section>
+
+
+<!-- ======= Team Section ======= -->
+<section id="team" class="team section-bg">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+            <h2>Team</h2>
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="100">
+                <div class="member d-flex align-items-start">
+                    <div class="pic"><img src="../assets/img/team/Katrin.jpg" class="img-fluid" alt=""></div>
+                    <div class="member-info">
+                        <h4>Katrin Panayotova</h4>
+                        <span>Junior Java Developer</span>
+                        <p>Kpanayotova98@gmail.com</p>
+                        <div class="social">
+                            <a href="https://www.linkedin.com/in/katrinpanayotova?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"> <i class="ri-linkedin-box-fill"></i> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="200">
+                <div class="member d-flex align-items-start">
+                    <div class="pic"><img src="../assets/img/team/Grisha.png" class="img-fluid" alt=""></div>
+                    <div class="member-info">
+                        <h4>Grisha Daradzhanov</h4>
+                        <span>Junior Java Developer</span>
+                        <p>daradjanov@gmail.com</p>
+                        <div class="social">
+                            <a href="https://www.linkedin.com/in/grisha-daradjanov-b2b6b02a7/"> <i class="ri-linkedin-box-fill"></i> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mt-4" data-aos="zoom-in" data-aos-delay="300">
+                <div class="member d-flex align-items-start">
+                    <div class="pic"><img src="../assets/img/team/Georgi.png" class="img-fluid" alt=""></div>
+                    <div class="member-info">
+                        <h4>Georgi Valchanov</h4>
+                        <span>Junior Java Developer</span>
+                        <p>valchanov.biz@gmail.com</p>
+                        <div class="social">
+                            <a href="https://www.linkedin.com/in/g-valchanov/"> <i class="ri-linkedin-box-fill"></i> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section><!-- End Team Section -->
+
+<br><br>
 
 <div th:replace="~{/PageFrame :: footer}"></div>
 
@@ -326,8 +301,6 @@
 <script src="../assets/js/main.js"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
-<!-- Template Main JS File -->
-<script src="../assets/js/main.js"></script>
 <!-- Template Main JS File -->
 <script src="../assets/js/main.js"></script>
 <!-- Template and Script for Tables -->
