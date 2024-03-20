@@ -71,6 +71,7 @@ public class HomeMvcController {
 
         if (populateIsAuthenticated(session)) {
             User user = authenticationHelper.tryGetCurrentUser(session);
+
             String currentUsername = (String) session.getAttribute("currentUser");
             model.addAttribute("currentUser", userService.getByUsername(currentUsername));
             List<TransactionsInternal> transactionsIncoming = transactionsInternalServices.getIncoming(user);
