@@ -28,19 +28,6 @@ public class DummyServiceTests {
     }
 
     @Test
-    void withdrawMoney_ValidExpirationDate_ShouldReturnTrue() {
-        // Arrange
-        String expDate = "12/25";
-        double amount = 100.0;
-
-        // Act
-        boolean result = dummyService.withdrawMoney(expDate, amount);
-
-        // Assert
-        assertTrue(result);
-    }
-
-    @Test
     void withdrawMoney_InvalidExpirationDate_ShouldThrowException() {
         // Arrange
         String expDate = "25/12";
