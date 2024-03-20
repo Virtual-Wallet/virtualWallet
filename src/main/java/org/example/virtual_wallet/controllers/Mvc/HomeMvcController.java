@@ -1,7 +1,9 @@
 package org.example.virtual_wallet.controllers.Mvc;
 
 import jakarta.servlet.http.HttpSession;
+import org.example.virtual_wallet.enums.RoleType;
 import org.example.virtual_wallet.exceptions.AuthorizationException;
+import org.example.virtual_wallet.helpers.AuthenticationHelper;
 import org.example.virtual_wallet.models.Currency;
 import org.example.virtual_wallet.models.User;
 import org.example.virtual_wallet.services.contracts.CurrencyService;
@@ -20,15 +22,23 @@ public class HomeMvcController {
 
     private final UserService userService;
     private final CurrencyService currencyService;
+    private final AuthenticationHelper authenticationHelper;
 
-    public HomeMvcController(UserService userService, CurrencyService currencyService) {
+    public HomeMvcController(UserService userService, CurrencyService currencyService, AuthenticationHelper authenticationHelper) {
         this.userService = userService;
         this.currencyService = currencyService;
+        this.authenticationHelper = authenticationHelper;
     }
 
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
         return session.getAttribute("currentUser") != null;
+    }
+
+    @ModelAttribute("isAdmin")
+    public boolean populateIsAdmin(HttpSession session) {
+        User user = authenticationHelper.tryGetCurrentUser(session);
+        return user.getRoleType().equals(RoleType.ADMIN);
     }
 
 //    @ModelAttribute("allUsers")
@@ -59,7 +69,6 @@ public class HomeMvcController {
 
 
     }
-
 
 
 }
