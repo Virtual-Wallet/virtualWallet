@@ -19,7 +19,6 @@ public class Helpers {
         mockUser.setPassword("Aa123456@");
         mockUser.setEmail("mockmail@gmail.com");
         mockUser.setPhoneNumber("0888123456");
-        mockUser.setCreationDate(Timestamp.valueOf(LocalDate.now().toString()));
         mockUser.setAccountStatus(AccountStatus.ACTIVE);
         mockUser.setRoleType(RoleType.REGULAR);
 
@@ -34,7 +33,6 @@ public class Helpers {
         mockUser.setPassword("Aa123456@");
         mockUser.setEmail("mockmail@gmail.com");
         mockUser.setPhoneNumber("0888123456");
-        mockUser.setCreationDate(Timestamp.valueOf(LocalDate.now().toString()));
         mockUser.setAccountStatus(AccountStatus.ACTIVE);
         mockUser.setRoleType(RoleType.ADMIN);
         mockUser.setCards(mockCards);
